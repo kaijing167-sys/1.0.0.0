@@ -51,9 +51,6 @@ uvicorn main:app --reload
 
 默认数据库是当前目录下的 SQLite `game.db`，方便先运行。若需使用 PostgreSQL，可复制 `.env.example` 中的连接字符串并设置 `DATABASE_URL` 环境变量。Redis 相关模块已实现，但当前基础接口不会在启动时强制连接 Redis。
 
-## 测试
-pip install -r requirements-dev.txt
-pytest -q
 
 ## 已开放接口
 POST	/exam/calculate_result	根据三项考场策略计算成绩和校排名
