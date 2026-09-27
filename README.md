@@ -14,7 +14,12 @@
 
 ## 后端基础项目
 
-本项目根据《高中模拟器文字游戏：后端架构与全套系统设计白皮书》还原。当前只实现白皮书已经明确描述的基础内容，没有接入院校志愿填报数据库，也没有新增剧情线。
+版本：后端原型 2.0.0
+自动测试：6 项通过
+内容数据：15 个主线事件、10 个成就
+默认存储：SQLite
+可选组件：PostgreSQL、Redis
+API 文档：启动后访问 http://127.0.0.1:8000/docs
 
 ## 已实现
 
@@ -45,6 +50,17 @@ uvicorn main:app --reload
 打开 `http://127.0.0.1:8000/docs` 查看和调用接口。
 
 默认数据库是当前目录下的 SQLite `game.db`，方便先运行。若需使用 PostgreSQL，可复制 `.env.example` 中的连接字符串并设置 `DATABASE_URL` 环境变量。Redis 相关模块已实现，但当前基础接口不会在启动时强制连接 Redis。
+
+## 测试
+pip install -r requirements-dev.txt
+pytest -q
+
+## 已开放接口
+POST	/exam/calculate_result	根据三项考场策略计算成绩和校排名
+POST	/social/send_gift	NPC 送礼、好感变化和阶段锁
+POST	/weekend/visit_location	周末商业街行动
+POST	/ng_plus/start_new_game	使用遗产点选择天资并开始新周目
+GET	/epilogue/stream_letter	通过 SSE 输出逐字毕业信
 
 ## 主要文件
 
