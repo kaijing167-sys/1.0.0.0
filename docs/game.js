@@ -1,8 +1,17 @@
 const SAVE_KEY = "qinghe-game-v2";
+const SETTINGS_KEY = "qinghe-game-settings-v1";
 const TOTAL_DAYS = 1092;
 const DAYS_PER_WEEK = 7;
 const BASE_ATTR = 50;
 const EXTRA_POINTS = 40;
+const DEFAULT_SETTINGS = {
+  largeText: false,
+  compact: false,
+  reducedMotion: false,
+  actionsPerWeek: 4,
+  autoEvents: true,
+  confirmEarlyWeek: true,
+};
 
 const ATTRIBUTES = [
   ["insight", "学力", "影响学习效率与考试发挥"],
@@ -226,15 +235,17 @@ const EVENTS = [
   },
 ];
 
+let settings = loadSettings();
 let game = loadGame();
 let draft = {
   name: "",
   attrs: {...PRESETS.balanced},
   preset: "balanced",
 };
-let eventQueue = [];
 let currentModal = null;
 let modalLocked = false;
+
+applyPreferences();
 
 function $(selector){return document.querySelector(selector)}
 function clamp(value,min=0,max=100){return Math.max(min,Math.min(max,value))}
@@ -242,8 +253,24 @@ function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&"
 function loadGame(){
   try{
     const data=JSON.parse(localStorage.getItem(SAVE_KEY));
-    return data&&data.version===2?data:null;
+    if(!data||data.version!==2)return null;
+    if(!Array.isArray(data.pendingEvents))data.pendingEvents=[];
+    return data;
   }catch{return null}
+}
+function loadSettings(){
+  try{
+    return {...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")};
+  }catch{return {...DEFAULT_SETTINGS}}
+}
+function persistSettings(){
+  localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));
+  applyPreferences();
+}
+function applyPreferences(){
+  document.body.classList.toggle("pref-large",!!settings.largeText);
+  document.body.classList.toggle("pref-compact",!!settings.compact);
+  document.body.classList.toggle("pref-reduced-motion",!!settings.reducedMotion);
 }
 function persist(){
   if(game)localStorage.setItem(SAVE_KEY,JSON.stringify(game));
@@ -258,6 +285,8 @@ function weekForDay(day){return Math.floor((day-1)/DAYS_PER_WEEK)+1}
 function daysLeft(day){return Math.max(0,TOTAL_DAYS-day+1)}
 function progressForDay(day){return clamp((day-1)/(TOTAL_DAYS-1)*100,0,100)}
 function nextEvent(){
+  const pending=game.pendingEvents.map(id=>EVENTS.find(event=>event.id===id)).find(Boolean);
+  if(pending)return pending;
   return EVENTS.find(event=>!game.fired.includes(event.id)&&event.day>game.day)||null;
 }
 function toast(text){
@@ -270,6 +299,10 @@ function toast(text){
 function addLog(text){
   game.log.unshift({day:game.day,text});
   game.log=game.log.slice(0,30);
+}
+function markEventResolved(id){
+  game.pendingEvents=game.pendingEvents.filter(eventId=>eventId!==id);
+  if(!game.fired.includes(id))game.fired.push(id);
 }
 function initialState(name,attrs){
   return {
@@ -284,6 +317,7 @@ function initialState(name,attrs){
     money:300,
     subjects:{chinese:60,math:60,english:60,science:50,humanities:50},
     fired:[],
+    pendingEvents:[],
     weekendResolved:false,
     log:[{day:1,text:`${name}走进了青禾高中，新的三年从今天开始。`}],
     completed:false,
@@ -361,7 +395,7 @@ function renderGame(){
           <strong>${gradeForDay(game.day)}</strong>
         </div>
         <div class="top-actions">
-          <button class="ghost-button" data-action="new-game">重新开始</button>
+          <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
         </div>
       </header>
       <main id="main" class="game-main">
@@ -388,7 +422,7 @@ function renderGame(){
             <section class="game-panel">
               <div class="panel-heading">
                 <h2>本周行动</h2>
-                <small>剩余 ${game.actionPoints} / 4 次</small>
+                <small>剩余 ${game.actionPoints} / ${settings.actionsPerWeek} 次</small>
               </div>
               <div class="action-grid">
                 ${actionCard("study","▤","专注学习","选择一门课程，提升对应成绩。")}
@@ -397,8 +431,11 @@ function renderGame(){
                 ${actionCard("social","♧","与人相处","和朋友聊天，改善心情与关系。")}
               </div>
               <div class="week-footer">
-                <p>${game.actionPoints===0?"本周行动已经用完，结束后进入下一周。":"行动不必全部用完，你也可以提前结束本周。"}</p>
-                <button class="primary-button" data-action="end-week">结束本周 →</button>
+                <p>${game.pendingEvents.length?`有 ${game.pendingEvents.length} 个事件等待处理。`:game.actionPoints===0?"本周行动已经用完，结束后进入下一周。":"行动不必全部用完，你也可以提前结束本周。"}</p>
+                <div class="week-actions">
+                  ${game.pendingEvents.length?`<button class="ghost-button pending-event-button" data-action="show-pending">处理待触发事件 (${game.pendingEvents.length})</button>`:""}
+                  <button class="primary-button" data-action="end-week">结束本周 →</button>
+                </div>
               </div>
             </section>
 
@@ -579,7 +616,7 @@ function resolveWeekend(index){
 }
 
 function endWeek(){
-  if(game.actionPoints>0){
+  if(game.actionPoints>0&&settings.confirmEarlyWeek){
     openModal(`
       <div class="eyebrow">NEXT WEEK</div>
       <h2>现在就结束本周吗？</h2>
@@ -588,7 +625,7 @@ function endWeek(){
     `);
     return;
   }
-  if(!game.weekendResolved){
+  if(game.actionPoints===0&&!game.weekendResolved){
     openWeekend();
     return;
   }
@@ -598,21 +635,26 @@ function endWeek(){
 function advanceWeek(){
   const previous=game.day;
   game.day=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
-  game.actionPoints=4;
+  game.actionPoints=settings.actionsPerWeek;
   game.energy=clamp(game.energy+15,0,100);
   game.stress=clamp(game.stress-8,0,100);
   game.weekendResolved=false;
   addLog(`进入第 ${weekForDay(game.day)} 周，距离高考还有 ${daysLeft(game.day)} 天。`);
   const due=EVENTS.filter(event=>!game.fired.includes(event.id)&&event.day>previous&&event.day<=game.day);
-  eventQueue.push(...due);
+  game.pendingEvents.push(...due.map(event=>event.id));
   persist();
   render();
-  if(eventQueue.length)setTimeout(showNextEvent,300);
+  if(settings.autoEvents&&game.pendingEvents.length)setTimeout(showNextEvent,300);
 }
 
 function showNextEvent(){
-  if(currentModal||!eventQueue.length)return;
-  const event=eventQueue.shift();
+  if(currentModal||!game.pendingEvents.length)return;
+  const event=EVENTS.find(item=>item.id===game.pendingEvents[0]);
+  if(!event){
+    game.pendingEvents.shift();
+    persist();
+    return showNextEvent();
+  }
   openEvent(event);
 }
 
@@ -635,7 +677,7 @@ function resolveEventChoice(index){
   const event=currentModal.event;
   const choice=event.choices[index];
   applyEffects(choice.effects);
-  game.fired.push(event.id);
+  markEventResolved(event.id);
   addLog(`${event.title}：${choice.result}`);
   persist();
   currentModal=null;
@@ -672,7 +714,7 @@ function calculateExam(event,style){
   const score=clamp(Math.round(raw),120,750);
   game.examResults.push({day:game.day,title:event.title,score});
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
-  game.fired.push(event.id);
+  markEventResolved(event.id);
   addLog(`${event.title}成绩：${score} 分。`);
   persist();
   currentModal={type:"exam-result",event};
@@ -693,7 +735,7 @@ function continueAfterEvent(){
   currentModal=null;
   closeModal(true);
   render();
-  if(eventQueue.length)setTimeout(showNextEvent,280);
+  if(settings.autoEvents&&game.pendingEvents.length)setTimeout(showNextEvent,280);
 }
 
 function completeGame(score){
@@ -744,6 +786,113 @@ function closeModal(force=false){
   currentModal=null;
   modalLocked=false;
 }
+function openSettings(){
+  const toggle=(name,title,text)=>`
+    <label class="setting-row">
+      <span><b>${title}</b><small>${text}</small></span>
+      <input class="setting-toggle" type="checkbox" data-setting="${name}" ${settings[name]?"checked":""}>
+    </label>`;
+  openModal(`
+    <div class="eyebrow">SETTINGS</div>
+    <h2>设置</h2>
+    <p>把显示、游戏节奏和存档操作集中在这里。所有设置会自动保存在当前浏览器。</p>
+    <div class="settings-content">
+      <section class="settings-section">
+        <h3>角色</h3>
+        <div class="settings-inline">
+          <input id="settings-name" maxlength="12" value="${escapeHtml(game.name)}" aria-label="角色名称">
+          <button class="ghost-button" data-action="save-name">保存名称</button>
+        </div>
+      </section>
+      <section class="settings-section">
+        <h3>显示</h3>
+        ${toggle("largeText","大字体模式","放大正文与按钮文字，方便阅读。")}
+        ${toggle("compact","紧凑布局","减少面板间距，在同一屏里显示更多内容。")}
+        ${toggle("reducedMotion","减少动态效果","关闭过渡动画和移动效果。")}
+      </section>
+      <section class="settings-section">
+        <h3>游戏节奏</h3>
+        <label class="setting-row">
+          <span><b>每周行动次数</b><small>调整每星期可以安排的行动数量。</small></span>
+          <select id="settings-actions" aria-label="每周行动次数">
+            ${[3,4,5].map(value=>`<option value="${value}" ${settings.actionsPerWeek===value?"selected":""}>${value} 次</option>`).join("")}
+          </select>
+        </label>
+        ${toggle("autoEvents","自动触发事件","考试、周末和主线事件到期后自动弹出。")}
+        ${toggle("confirmEarlyWeek","提前结束确认","还有行动时，结束本周前先确认。")}
+      </section>
+      <section class="settings-section">
+        <h3>存档</h3>
+        <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
+        <div class="settings-buttons">
+          <button class="ghost-button" data-action="export-save">导出存档</button>
+          <label class="ghost-button file-button">导入存档<input id="import-save" type="file" accept="application/json,.json" hidden></label>
+          <button class="ghost-button danger-button" data-action="new-game">重新开始</button>
+        </div>
+      </section>
+    </div>
+  `);
+}
+
+function updateSetting(name,value){
+  if(name==="actionsPerWeek"){
+    const next=Number(value);
+    if(game){
+      const delta=next-settings.actionsPerWeek;
+      game.actionPoints=clamp(game.actionPoints+delta,0,next);
+      persist();
+    }
+    settings.actionsPerWeek=next;
+  }else{
+    settings[name]=value;
+  }
+  persistSettings();
+  if(game)render();
+  if(name==="autoEvents"&&value&&game?.pendingEvents.length){
+    closeModal(true);
+    setTimeout(showNextEvent,220);
+  }
+}
+
+function saveCharacterName(){
+  const input=$("#settings-name");
+  const name=input?.value.trim();
+  if(!name)return toast("名字不能为空");
+  game.name=name;
+  persist();
+  render();
+  toast("角色名称已更新");
+}
+
+function exportSave(){
+  const payload={exportedAt:new Date().toISOString(),game,settings};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.download=`qinghe-save-${game.name||"player"}-day-${game.day}.json`;
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+  toast("存档已经导出");
+}
+
+async function importSave(file){
+  try{
+    const parsed=JSON.parse(await file.text());
+    const imported=parsed.game||parsed;
+    if(!imported||imported.version!==2||!imported.attrs||!imported.subjects)throw new Error("invalid");
+    if(!Array.isArray(imported.pendingEvents))imported.pendingEvents=[];
+    game=imported;
+    if(parsed.settings)settings={...DEFAULT_SETTINGS,...parsed.settings};
+    persist();
+    persistSettings();
+    closeModal(true);
+    render();
+    toast("存档导入成功");
+  }catch{
+    toast("无法读取这个存档文件");
+  }
+}
+
 function confirmNewGame(){
   openModal(`
     <div class="eyebrow">NEW GAME</div>
@@ -755,7 +904,6 @@ function confirmNewGame(){
 function resetGame(){
   localStorage.removeItem(SAVE_KEY);
   game=null;
-  eventQueue=[];
   closeModal(true);
   draft={name:"",attrs:{...PRESETS.balanced},preset:"balanced"};
   render();
@@ -774,6 +922,10 @@ document.addEventListener("click",event=>{
   if(button.hasAttribute("data-continue-event"))return continueAfterEvent();
   if(button.hasAttribute("data-confirm-week")){closeModal();return advanceWeek()}
   if(button.hasAttribute("data-confirm-new"))return resetGame();
+  if(button.dataset.action==="settings")return openSettings();
+  if(button.dataset.action==="save-name")return saveCharacterName();
+  if(button.dataset.action==="export-save")return exportSave();
+  if(button.dataset.action==="show-pending")return showNextEvent();
   if(button.dataset.action==="resume"){
     game=loadGame();
     if(game)render();
@@ -792,6 +944,12 @@ document.addEventListener("submit",event=>{
 
 document.addEventListener("input",event=>{
   if(event.target.id==="player-name")draft.name=event.target.value;
+});
+
+document.addEventListener("change",event=>{
+  if(event.target.matches("[data-setting]"))return updateSetting(event.target.dataset.setting,event.target.checked);
+  if(event.target.id==="settings-actions")return updateSetting("actionsPerWeek",event.target.value);
+  if(event.target.id==="import-save"&&event.target.files?.[0])return importSave(event.target.files[0]);
 });
 
 document.addEventListener("keydown",event=>{

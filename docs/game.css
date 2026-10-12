@@ -331,6 +331,35 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .log-item:last-child{border-bottom:0;padding-bottom:0}
 .log-item time{color:#9aabad}
 .empty-copy{font-size:11px;color:#899da1;text-align:center;padding:18px 5px}
+.week-actions{display:flex;align-items:center;gap:9px}
+.pending-event-button{border-color:#e1c28e;color:#956d31;background:#fffaf0}
+
+.settings-button{padding:9px 14px;background:#f8fcfa}
+.settings-content{display:grid;gap:14px;margin-top:20px}
+.settings-section{border:1px solid #dce9e8;border-radius:11px;background:#fff;padding:15px}
+.settings-section h3{font-size:11px;letter-spacing:2px;color:#729099;margin:0 0 11px;text-transform:uppercase}
+.settings-note{font-size:10px;color:#859a9e;line-height:1.7;margin:0 0 11px}
+.settings-inline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px}
+.settings-inline input{width:100%;border:1px solid #d3e3e5;border-radius:8px;padding:10px 11px;color:var(--ink);background:#fbfdfc}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px dashed #e3eceb}
+.setting-row:last-child{border-bottom:0;padding-bottom:0}
+.setting-row>span{min-width:0}
+.setting-row b{display:block;font-size:11px;color:#507682}
+.setting-row small{display:block;font-size:9px;color:#8ca0a4;line-height:1.6;margin-top:4px}
+.setting-toggle{width:38px;height:21px;flex:none;accent-color:#3f8eac}
+.setting-row select{border:1px solid #cddfe2;border-radius:8px;background:#fbfdfc;color:#4b7582;padding:8px 9px;font-size:11px}
+.settings-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.file-button{display:inline-flex;align-items:center;cursor:pointer}
+.danger-button{color:#a65e54;border-color:#e9cfc9}
+.danger-button:hover{background:#fff5f2}
+
+body.pref-large{font-size:16px}
+body.pref-large .action-card h3,body.pref-large .panel-heading h2,body.pref-large .choice-button strong{font-size:16px}
+body.pref-large .action-card p,body.pref-large .setting-row b,body.pref-large .dialog-card>p,body.pref-large .choice-button small{font-size:12px}
+body.pref-compact .game-panel{padding:15px}
+body.pref-compact .dashboard,body.pref-compact .dashboard-column,body.pref-compact .action-grid{gap:11px}
+body.pref-compact .action-card{min-height:105px;padding:13px}
+body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-motion *:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 
 .game-dialog[hidden]{display:none}
 .game-dialog{
@@ -452,7 +481,9 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
   .action-grid{grid-template-columns:1fr}
   .action-card{min-height:110px}
   .week-footer{display:block}
-  .week-footer .primary-button{width:100%;margin-top:12px}
+  .week-actions{display:grid;width:100%;margin-top:12px}
+  .week-actions button{width:100%}
+  .settings-inline{grid-template-columns:1fr}
   .dialog-card{padding:24px 19px;border-radius:13px}
   .dialog-card h2{font-size:25px}
   .final-screen{padding:32px 16px}
