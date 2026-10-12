@@ -114,7 +114,8 @@
       e.preventDefault();e.stopImmediatePropagation();openEditor(e.target);
     },true);
     document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(active)setMode(false);else $('#review-panel').classList.remove('open')}});
-    new MutationObserver(()=>requestAnimationFrame(applyMarkers)).observe($('#main'),{childList:true,subtree:true});
+    const markerRoot=$('#game-root')||$('#main')||document.body;
+    new MutationObserver(()=>requestAnimationFrame(applyMarkers)).observe(markerRoot,{childList:true,subtree:true});
     render();applyMarkers();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build();
