@@ -34,3 +34,16 @@
 @media(max-width:900px){.final-locked{grid-template-columns:1fr}.final-lock-copy{align-items:flex-start}.final-locked .primary{grid-column:auto;justify-self:start}.final-hero{grid-template-columns:1fr}.final-score{min-height:190px;border-left:0;border-top:1px solid #d7e7e5;padding:24px}.final-score strong{font-size:70px}.final-grid .right-column{display:grid;grid-template-columns:1fr 1fr;gap:16px}.final-grid .right-column .note{grid-column:1/-1}}
 @media(max-width:620px){.final-hero-copy{padding:25px 20px}.final-hero-copy h2{font-size:26px}.final-actions{display:grid;grid-template-columns:1fr}.final-actions button{width:100%}.final-score{min-height:170px}.final-score strong{font-size:62px}.final-metrics{grid-template-columns:1fr 1fr;gap:9px}.final-metrics article{padding:14px}.final-metrics strong{font-size:16px}.final-grid .right-column{grid-template-columns:1fr}.final-locked{padding:23px 19px}.final-lock-copy{display:block}.final-locked h2{font-size:24px}.final-locked:after{font-size:78px;bottom:-20px}.final-seal{width:62px;height:62px;font-size:14px;margin-bottom:17px}.final-progress{min-width:0}.final-friend .avatar{width:38px;height:38px}}
 @media print{body{background:#fff!important}.sidebar,header,footer,#dialog,#toast,.final-actions,.final-legacy .primary{display:none!important}.shell{margin:0!important}main{max-width:none!important;padding:0!important}.final-hero,.final-metrics article,.panel{box-shadow:none!important;break-inside:avoid}.final-grid{display:block!important}.final-grid .right-column{display:block!important}.final-grid .right-column>*{margin-top:14px}}
+
+/* 阅读性调整：主内容整体放大一档，标题加强字重。 */
+body{font-size:14px}
+h1{font-size:30px;font-weight:700;letter-spacing:.4px}
+.page-heading .sub{font-size:12px;font-weight:500}
+.hero h2{font-size:31px;font-weight:600}
+.hero p{font-size:12px}
+.section-title h2{font-size:17px;font-weight:700}
+.event h3{font-size:21px;font-weight:600}
+.event p,.action p,.feature-card p,.page-intro,.note p,.journal-entry{font-size:12px}
+.action h3,.feature-card h3{font-weight:600}
+.subject-row,.friend-info strong,.status-badge,.tag,.journal-entry time{font-size:11px}
+@media(max-width:620px){h1{font-size:25px}.hero h2{font-size:28px}.section-title h2{font-size:16px}.event h3{font-size:19px}}
