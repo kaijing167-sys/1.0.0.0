@@ -352,6 +352,22 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .file-button{display:inline-flex;align-items:center;cursor:pointer}
 .danger-button{color:#a65e54;border-color:#e9cfc9}
 .danger-button:hover{background:#fff5f2}
+.music-button{border-color:#c6dce1;color:#397a8f}
+.music-volume-row>input[type="range"]{width:118px;accent-color:#3f8eac}
+.music-library{display:grid;gap:10px;margin-top:18px;max-height:58vh;overflow:auto;padding-right:4px}
+.music-library-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#eef7f4;border:1px solid #d6e7e4;border-radius:10px;padding:12px}
+.music-library-tools>span{font-size:10px;color:#769098}
+.music-theme{border:1px solid #dce9e8;border-radius:10px;background:#fff;overflow:hidden}
+.music-theme summary{list-style:none;display:flex;justify-content:space-between;gap:12px;padding:12px 14px;background:#f8fbf9;color:#4e7781;font-size:11px;cursor:pointer}
+.music-theme summary::-webkit-details-marker{display:none}.music-theme summary span{color:#8ba0a4;font-weight:400}
+.music-track-list{display:grid;gap:0;padding:0 12px}
+.music-track{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px;border-top:1px dashed #e4eceb}
+.music-track>div:first-child{min-width:0}
+.music-track b{display:block;font-size:11px;color:#4f7480}
+.music-track small{display:block;font-size:9px;color:#92a3a6;margin-top:4px}
+.music-track.loaded b{color:#35765b}.music-track.loaded small{color:#6d9a7d}
+.music-track-actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.music-track-actions .ghost-button{padding:6px 8px;font-size:9px}
 
 body.pref-large{font-size:16px}
 body.pref-large .action-card h3,body.pref-large .panel-heading h2,body.pref-large .choice-button strong{font-size:16px}
@@ -484,6 +500,11 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .week-actions{display:grid;width:100%;margin-top:12px}
   .week-actions button{width:100%}
   .settings-inline{grid-template-columns:1fr}
+  .music-volume-row{display:grid}
+  .music-volume-row>input[type="range"]{width:100%;margin-top:10px}
+  .music-library{max-height:64vh}
+  .music-track{display:block}
+  .music-track-actions{justify-content:flex-start;margin-top:9px}
   .dialog-card{padding:24px 19px;border-radius:13px}
   .dialog-card h2{font-size:25px}
   .final-screen{padding:32px 16px}

@@ -11,6 +11,9 @@ const DEFAULT_SETTINGS = {
   actionsPerWeek: 4,
   autoEvents: true,
   confirmEarlyWeek: true,
+  musicEnabled: true,
+  eventMusic: true,
+  musicVolume: 25,
 };
 
 const ATTRIBUTES = [
@@ -34,6 +37,113 @@ const SUBJECTS = [
   ["science", "理科"],
   ["humanities", "文科"],
 ];
+
+const MUSIC_THEMES = {
+  bright: {
+    label: "美好 · 欢快",
+    tracks: [
+      ["bright-qinghuaci", "青花瓷"],
+      ["bright-qingtian", "晴天"],
+      ["bright-daoxiang", "稻香"],
+      ["bright-summer-wind", "夏天的风"],
+      ["bright-childhood", "童年"],
+      ["bright-beautiful-wind", "最美的风"],
+      ["bright-beauty-beat", "Beauty and Beat"],
+    ],
+  },
+  love: {
+    label: "恋爱",
+    tracks: [
+      ["love-us", "我们俩"],
+      ["love-high-heels", "纯高跟鞋"],
+      ["love-courage", "勇气"],
+      ["love-friends", "普通朋友"],
+      ["love-nothing-wrong", "有何不可"],
+      ["love-love-song", "情歌"],
+      ["love-like-you", "喜欢你"],
+    ],
+  },
+  breakup: {
+    label: "分手",
+    tracks: [
+      ["breakup-miss", "我怀念的"],
+      ["breakup-quiet", "安静"],
+      ["breakup-rain-love", "雨爱"],
+      ["breakup-preference", "偏爱（痛）"],
+      ["breakup-step-back", "退后"],
+      ["breakup-serious-snow", "认真的雪"],
+    ],
+  },
+  sad: {
+    label: "忧伤",
+    tracks: [
+      ["sad-ten-years", "十年"],
+      ["sad-see-you-again", "See You Again"],
+    ],
+  },
+  calm: {
+    label: "舒缓",
+    tracks: [
+      ["calm-mitsuha", "三葉のテーマ"],
+      ["calm-sacred-place", "Sacred Play Secret Place"],
+      ["calm-magnolia", "Magnolia"],
+    ],
+  },
+  tense: {
+    label: "紧张 · 轻快",
+    tracks: [["tense-life-line", "Life Line"]],
+  },
+  focus: {
+    label: "学习 · 专注",
+    tracks: [["focus-life-line", "Life Line"]],
+  },
+  sadEn: {
+    label: "忧伤 · 英文",
+    tracks: [
+      ["saden-memories", "Memories"],
+      ["saden-free-lucky", "Free lucky"],
+      ["saden-merry-christmas", "Merry Christmas…"],
+    ],
+  },
+  pain: {
+    label: "痛 · 心碎向",
+    tracks: [
+      ["pain-call-of-silence", "Call of Silence"],
+      ["pain-born-a-stranger", "Born a Stranger"],
+      ["pain-south-city-flowers", "城南花已开"],
+    ],
+  },
+  regret: {
+    label: "遗憾",
+    tracks: [
+      ["regret-hanabi", "Hanabi（烟火）"],
+      ["regret-truth", "The truth that you leave"],
+      ["regret-farewell", "诀别书"],
+      ["regret-dont-talk", "We don't Talk Anymore"],
+    ],
+  },
+};
+
+const EVENT_MUSIC = {
+  opening: "bright",
+  military: "focus",
+  monthly_1: "tense",
+  class_election: "bright",
+  midterm_1: "tense",
+  sports_meet: "bright",
+  final_1: "tense",
+  direction: "calm",
+  summer: "bright",
+  midterm_2: "tense",
+  arts_festival: "bright",
+  midterm_3: "tense",
+  stress: "sad",
+  mock_1: "tense",
+  pledge: "tense",
+  mock_2: "tense",
+  graduation: "regret",
+  gaokao: "tense",
+};
 
 const WEEKEND_ACTIVITIES = [
   {
@@ -244,8 +354,16 @@ let draft = {
 };
 let currentModal = null;
 let modalLocked = false;
+const musicAudio = [new Audio(), new Audio()];
+let musicCache = new Map();
+let musicUrlCache = new Map();
+let activeAudioIndex = 0;
+let currentMusicTrack = null;
+let currentMusicTheme = "calm";
+let musicRotation = {};
 
 applyPreferences();
+musicAudio.forEach(audio=>{audio.loop=true;audio.preload="auto";audio.volume=0});
 
 function $(selector){return document.querySelector(selector)}
 function clamp(value,min=0,max=100){return Math.max(min,Math.min(max,value))}
@@ -271,6 +389,145 @@ function applyPreferences(){
   document.body.classList.toggle("pref-large",!!settings.largeText);
   document.body.classList.toggle("pref-compact",!!settings.compact);
   document.body.classList.toggle("pref-reduced-motion",!!settings.reducedMotion);
+}
+function musicTrackCount(){
+  return Object.values(MUSIC_THEMES).reduce((total,theme)=>total+theme.tracks.length,0);
+}
+function openMusicDB(){
+  return new Promise((resolve,reject)=>{
+    const request=indexedDB.open("qinghe-music-v2",1);
+    request.onupgradeneeded=()=>{
+      if(!request.result.objectStoreNames.contains("files"))request.result.createObjectStore("files",{keyPath:"id"});
+    };
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error);
+  });
+}
+async function putMusicFile(id,file){
+  const db=await openMusicDB();
+  await new Promise((resolve,reject)=>{
+    const tx=db.transaction("files","readwrite");
+    tx.objectStore("files").put({id,blob:file,name:file.name,updatedAt:Date.now()});
+    tx.oncomplete=resolve;
+    tx.onerror=()=>reject(tx.error);
+  });
+  const oldUrl=musicUrlCache.get(id);
+  if(oldUrl)URL.revokeObjectURL(oldUrl);
+  musicCache.set(id,file);
+  musicUrlCache.set(id,URL.createObjectURL(file));
+}
+async function deleteMusicFile(id){
+  const db=await openMusicDB();
+  await new Promise((resolve,reject)=>{
+    const tx=db.transaction("files","readwrite");
+    tx.objectStore("files").delete(id);
+    tx.oncomplete=resolve;
+    tx.onerror=()=>reject(tx.error);
+  });
+  musicCache.delete(id);
+  const url=musicUrlCache.get(id);
+  if(url)URL.revokeObjectURL(url);
+  musicUrlCache.delete(id);
+}
+async function initializeMusicLibrary(){
+  try{
+    const db=await openMusicDB();
+    const records=await new Promise((resolve,reject)=>{
+      const tx=db.transaction("files","readonly");
+      const request=tx.objectStore("files").getAll();
+      request.onsuccess=()=>resolve(request.result||[]);
+      request.onerror=()=>reject(request.error);
+    });
+    musicCache=new Map(records.map(record=>[record.id,record.blob]));
+    musicUrlCache=new Map(records.map(record=>[record.id,URL.createObjectURL(record.blob)]));
+  }catch{
+    musicCache=new Map();
+    musicUrlCache=new Map();
+  }
+}
+function availableMusic(themeId){
+  const theme=MUSIC_THEMES[themeId];
+  if(!theme)return [];
+  return theme.tracks.filter(([id])=>musicCache.has(id));
+}
+function unlockMusic(){
+  const audio=musicAudio[activeAudioIndex];
+  if(audio?.src)audio.play().catch(()=>{});
+}
+async function pauseMusic(){
+  for(const audio of musicAudio){
+    try{audio.pause()}catch{}
+  }
+}
+async function playTheme(themeId,{force=false}={}){
+  if(!settings.musicEnabled)return;
+  if(!force&&themeId===currentMusicTheme&&currentMusicTrack)return;
+  currentMusicTheme=themeId;
+  const available=availableMusic(themeId);
+  if(!available.length){
+    currentMusicTrack=null;
+    return;
+  }
+  const rotation=musicRotation[themeId]||0;
+  const [trackId,label]=available[rotation%available.length];
+  musicRotation[themeId]=(rotation+1)%available.length;
+  if(!force&&trackId===currentMusicTrack&&musicAudio[activeAudioIndex]?.src)return;
+  currentMusicTrack=trackId;
+  await crossfadeTo(musicUrlCache.get(trackId),label);
+}
+async function crossfadeTo(url,label){
+  const nextIndex=1-activeAudioIndex;
+  const oldAudio=musicAudio[activeAudioIndex];
+  const nextAudio=musicAudio[nextIndex];
+  if(!url)return;
+  nextAudio.pause();
+  nextAudio.src=url;
+  nextAudio.currentTime=0;
+  nextAudio.volume=0;
+  try{
+    await nextAudio.play();
+  }catch{
+    return;
+  }
+  const target=settings.musicVolume/100;
+  const oldVolume=oldAudio.volume;
+  const start=performance.now();
+  const duration=settings.reducedMotion?0:1100;
+  activeAudioIndex=nextIndex;
+  if(!duration){
+    nextAudio.volume=target;
+    oldAudio.pause();
+    return;
+  }
+  const fade=now=>{
+    const progress=Math.min(1,(now-start)/duration);
+    nextAudio.volume=target*progress;
+    oldAudio.volume=oldVolume*(1-progress);
+    if(progress<1)requestAnimationFrame(fade);
+    else oldAudio.pause();
+  };
+  requestAnimationFrame(fade);
+}
+function normalizeMusicName(value){
+  return value.toLowerCase().replace(/\.[a-z0-9]+$/,"").replace(/[\s_\-—·.,，。()（）[\]【】'’"]/g,"");
+}
+function matchTrackIds(filename){
+  const normalized=normalizeMusicName(filename);
+  const matches=[];
+  for(const theme of Object.values(MUSIC_THEMES)){
+    for(const [id,title] of theme.tracks){
+      const target=normalizeMusicName(title);
+      if((normalized.includes(target)||target.includes(normalized))&&!matches.includes(id))matches.push(id);
+    }
+  }
+  return matches;
+}
+function trackById(trackId){
+  for(const theme of Object.values(MUSIC_THEMES)){
+    const match=theme.tracks.find(([id])=>id===trackId);
+    if(match)return match;
+  }
+  return null;
 }
 function persist(){
   if(game)localStorage.setItem(SAVE_KEY,JSON.stringify(game));
@@ -395,6 +652,7 @@ function renderGame(){
           <strong>${gradeForDay(game.day)}</strong>
         </div>
         <div class="top-actions">
+          <button class="ghost-button music-button" data-action="toggle-music">${settings.musicEnabled?"♫ 音乐开":"♫ 音乐关"}</button>
           <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
         </div>
       </header>
@@ -539,12 +797,14 @@ function startGame(){
   game=initialState(name,draft.attrs);
   persist();
   render();
+  playTheme("bright",{force:true});
   setTimeout(()=>openEvent(EVENTS[0]),260);
 }
 
 function performAction(type){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   if(type==="study"){
+    playTheme("focus",{force:true});
     openModal(`
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
@@ -593,6 +853,7 @@ function studySubject(id){
 
 function openWeekend(){
   if(game.weekendResolved||game.actionPoints>0)return;
+  playTheme("bright",{force:true});
   const weekend=WEEKEND_ACTIVITIES[0];
   openModal(`
     <div class="eyebrow">WEEKEND · 自动触发</div>
@@ -660,6 +921,7 @@ function showNextEvent(){
 
 function openEvent(event){
   currentModal={type:"event",event};
+  if(settings.eventMusic)playTheme(EVENT_MUSIC[event.id]||"calm",{force:true});
   if(event.type==="exam"||event.type==="gaokao"){
     openExam(event);
     return;
@@ -716,6 +978,7 @@ function calculateExam(event,style){
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
   markEventResolved(event.id);
   addLog(`${event.title}成绩：${score} 分。`);
+  if(settings.eventMusic)playTheme(score>=650?"bright":score<460?"sad":"calm",{force:true});
   persist();
   currentModal={type:"exam-result",event};
   openModal(`
@@ -750,9 +1013,11 @@ function completeGame(score){
   else if(score>=460)game.ending="平凡之路：每种青春都有自己的方向";
   else game.ending="重新出发：这一页结束，不是故事结束";
   game.mood=clamp(game.mood+(bestSubject>=100?8:0),0,100);
+  const endingTheme=score>=650&&relation>=65?"love":score>=650?"bright":score>=560?"calm":score>=460?"sad":"pain";
   persist();
   closeModal(true);
   render();
+  if(settings.eventMusic)playTheme(endingTheme,{force:true});
 }
 
 function applyEffects(effects={}){
@@ -785,6 +1050,7 @@ function closeModal(force=false){
   document.body.classList.remove("modal-open");
   currentModal=null;
   modalLocked=false;
+  playTheme("calm");
 }
 function openSettings(){
   const toggle=(name,title,text)=>`
@@ -822,6 +1088,18 @@ function openSettings(){
         ${toggle("confirmEarlyWeek","提前结束确认","还有行动时，结束本周前先确认。")}
       </section>
       <section class="settings-section">
+        <h3>音乐</h3>
+        ${toggle("musicEnabled","开启背景音乐","关闭后所有场景音乐都会暂停。")}
+        ${toggle("eventMusic","启用事件专属音乐","考试、低谷、毕业和结局会切换到对应主题。")}
+        <label class="setting-row music-volume-row">
+          <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicCache.size} / ${musicTrackCount()} 首已导入</small></span>
+          <input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量">
+        </label>
+        <div class="settings-buttons">
+          <button class="ghost-button" data-action="music-library">管理本地音乐库</button>
+        </div>
+      </section>
+      <section class="settings-section">
         <h3>存档</h3>
         <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
         <div class="settings-buttons">
@@ -843,10 +1121,20 @@ function updateSetting(name,value){
       persist();
     }
     settings.actionsPerWeek=next;
+  }else if(name==="musicVolume"){
+    settings.musicVolume=Number(value);
+    for(const audio of musicAudio)audio.volume=settings.musicVolume/100;
   }else{
     settings[name]=value;
   }
   persistSettings();
+  if(name==="musicEnabled"){
+    if(value)playTheme(currentMusicTheme,{force:true});
+    else pauseMusic();
+  }
+  if(name==="eventMusic"){
+    playTheme(value&&currentModal?.event?(EVENT_MUSIC[currentModal.event.id]||"calm"):"calm",{force:true});
+  }
   if(game)render();
   if(name==="autoEvents"&&value&&game?.pendingEvents.length){
     closeModal(true);
@@ -893,6 +1181,87 @@ async function importSave(file){
   }
 }
 
+function openMusicLibrary(){
+  const sections=Object.entries(MUSIC_THEMES).map(([themeId,theme])=>`
+    <details class="music-theme" open>
+      <summary><b>${theme.label}</b><span>${theme.tracks.filter(([id])=>musicCache.has(id)).length} / ${theme.tracks.length}</span></summary>
+      <div class="music-track-list">
+        ${theme.tracks.map(([trackId,title])=>{
+          const loaded=musicCache.has(trackId);
+          return `<div class="music-track ${loaded?"loaded":""}">
+            <div><b>${escapeHtml(title)}</b><small>${loaded?"已导入，可在对应场景播放":"尚未导入音频文件"}</small></div>
+            <div class="music-track-actions">
+              <button class="ghost-button" data-preview-track="${trackId}" ${loaded?"":"disabled"}>试听</button>
+              <label class="ghost-button file-button">${loaded?"替换":"选择文件"}<input type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" data-music-file="${trackId}" hidden></label>
+              ${loaded?`<button class="ghost-button danger-button" data-clear-track="${trackId}">移除</button>`:""}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </details>`).join("");
+  openModal(`
+    <div class="eyebrow">LOCAL MUSIC LIBRARY</div>
+    <h2>本地音乐库</h2>
+    <p>音乐文件只保存在当前浏览器。可以逐个选择，也可以直接选择存放这些歌曲的文件夹，系统会按文件名自动匹配。</p>
+    <div class="music-library">
+      <div class="music-library-tools">
+        <label class="primary-button file-button">批量导入音乐文件夹<input id="music-folder-import" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" webkitdirectory multiple hidden></label>
+        <span>${musicCache.size} / ${musicTrackCount()} 首已导入</span>
+      </div>
+      ${sections}
+    </div>
+    <div class="dialog-footer"><button class="ghost-button" data-action="back-settings">返回设置</button></div>
+  `);
+}
+
+async function saveMusicTrack(trackId,file){
+  if(!file)return;
+  await putMusicFile(trackId,file);
+  openMusicLibrary();
+  toast(`${trackById(trackId)?.[1]||"音乐"} 已导入`);
+  playTheme(currentMusicTheme,{force:true});
+}
+
+function isAudioFile(file){
+  return file.type.startsWith("audio/")||/\.(mp3|m4a|ogg|wav|flac)$/i.test(file.name);
+}
+
+async function importMusicFolder(fileList){
+  const files=[...fileList].filter(isAudioFile);
+  if(!files.length)return toast("这个文件夹里没有找到音频文件");
+  let matched=0;
+  for(const file of files){
+    const trackIds=matchTrackIds(file.name);
+    for(const trackId of trackIds){
+      await putMusicFile(trackId,file);
+      matched++;
+    }
+  }
+  openMusicLibrary();
+  toast(`扫描 ${files.length} 首，匹配并导入 ${matched} 首`);
+  playTheme(currentMusicTheme,{force:true});
+}
+
+async function removeMusicTrack(trackId){
+  await deleteMusicFile(trackId);
+  if(currentMusicTrack===trackId){
+    currentMusicTrack=null;
+    await pauseMusic();
+    currentMusicTheme="calm";
+    playTheme("calm",{force:true});
+  }
+  openMusicLibrary();
+  toast("已从本地音乐库移除");
+}
+
+function previewMusicTrack(trackId){
+  const url=musicUrlCache.get(trackId);
+  if(!url)return toast("请先导入这个音频文件");
+  currentMusicTheme="preview";
+  currentMusicTrack=trackId;
+  crossfadeTo(url,trackById(trackId)?.[1]);
+}
+
 function confirmNewGame(){
   openModal(`
     <div class="eyebrow">NEW GAME</div>
@@ -911,6 +1280,7 @@ function resetGame(){
 
 document.addEventListener("click",event=>{
   const button=event.target.closest("button");
+  unlockMusic();
   if(!button||button.disabled)return;
   if(button.dataset.preset)return applyPreset(button.dataset.preset);
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
@@ -922,7 +1292,12 @@ document.addEventListener("click",event=>{
   if(button.hasAttribute("data-continue-event"))return continueAfterEvent();
   if(button.hasAttribute("data-confirm-week")){closeModal();return advanceWeek()}
   if(button.hasAttribute("data-confirm-new"))return resetGame();
+  if(button.dataset.action==="toggle-music")return updateSetting("musicEnabled",!settings.musicEnabled);
   if(button.dataset.action==="settings")return openSettings();
+  if(button.dataset.action==="music-library")return openMusicLibrary();
+  if(button.dataset.action==="back-settings")return openSettings();
+  if(button.dataset.previewTrack)return previewMusicTrack(button.dataset.previewTrack);
+  if(button.dataset.clearTrack)return removeMusicTrack(button.dataset.clearTrack);
   if(button.dataset.action==="save-name")return saveCharacterName();
   if(button.dataset.action==="export-save")return exportSave();
   if(button.dataset.action==="show-pending")return showNextEvent();
@@ -944,12 +1319,15 @@ document.addEventListener("submit",event=>{
 
 document.addEventListener("input",event=>{
   if(event.target.id==="player-name")draft.name=event.target.value;
+  if(event.target.id==="settings-volume")updateSetting("musicVolume",event.target.value);
 });
 
 document.addEventListener("change",event=>{
   if(event.target.matches("[data-setting]"))return updateSetting(event.target.dataset.setting,event.target.checked);
   if(event.target.id==="settings-actions")return updateSetting("actionsPerWeek",event.target.value);
   if(event.target.id==="import-save"&&event.target.files?.[0])return importSave(event.target.files[0]);
+  if(event.target.matches("[data-music-file]")&&event.target.files?.[0])return saveMusicTrack(event.target.dataset.musicFile,event.target.files[0]);
+  if(event.target.id==="music-folder-import"&&event.target.files?.length)return importMusicFolder(event.target.files);
 });
 
 document.addEventListener("keydown",event=>{
@@ -957,3 +1335,6 @@ document.addEventListener("keydown",event=>{
 });
 
 render();
+initializeMusicLibrary().then(()=>{
+  if(game&&!game.completed)playTheme("calm",{force:true});
+});
