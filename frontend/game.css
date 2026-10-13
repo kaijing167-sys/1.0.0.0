@@ -197,35 +197,39 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .game-shell{min-height:100vh;background:#eef7f5}
 .topbar{
   position:sticky;
-  top:0;
+  top:10px;
   z-index:20;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:18px;
-  min-height:66px;
-  padding:11px clamp(18px,3vw,42px);
-  border-bottom:1px solid rgba(188,217,220,.8);
-  background:rgba(249,253,252,.88);
-  backdrop-filter:blur(18px);
+  gap:10px;
+  width:min(620px,calc(100% - 28px));
+  min-height:0;
+  margin:10px 0 0 18px;
+  padding:8px 10px;
+  border:1px solid rgba(188,217,220,.9);
+  border-radius:13px;
+  background:rgba(249,253,252,.93);
+  box-shadow:0 7px 22px rgba(43,100,117,.09);
+  backdrop-filter:blur(16px);
 }
-.top-brand{display:flex;align-items:center;gap:11px;font-family:"STSong","SimSun",serif;font-size:20px;white-space:nowrap}
-.top-brand i{display:grid;place-items:center;width:36px;height:38px;border-radius:11px 11px 14px 5px;background:#377f98;color:#fff8dc;font-style:normal}
-.top-player{display:flex;align-items:center;gap:10px;color:#688690;font-size:11px;min-width:0}
-.top-player strong{color:#2f6679;font-size:12px}
-.player-avatar{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:#e6edd2;color:#607b4d}
-.top-actions{display:flex;gap:8px}
+.top-brand{display:flex;align-items:center;gap:8px;font-family:"STSong","SimSun",serif;font-size:16px;white-space:nowrap}
+.top-brand i{display:grid;place-items:center;width:30px;height:31px;border-radius:9px 9px 11px 4px;background:#377f98;color:#fff8dc;font-style:normal;font-size:15px}
+.top-player{display:flex;align-items:center;gap:7px;color:#688690;font-size:10px;min-width:0}
+.top-player strong{color:#2f6679;font-size:10px;white-space:nowrap}
+.player-avatar{display:grid;place-items:center;width:29px;height:29px;flex:none;border-radius:50%;background:#e6edd2;color:#607b4d;font-size:12px}
+.top-actions{display:flex;gap:6px}
 .ghost-button{
   border:1px solid #cde0e2;
   border-radius:8px;
   background:#fff;
   color:#5b7e88;
-  padding:9px 12px;
-  font-size:11px;
+  padding:7px 9px;
+  font-size:10px;
 }
 .ghost-button:hover{background:#f4faf9;border-color:#9fc4ca}
 
-.game-main{width:min(1200px,100%);margin:0 auto;padding:24px clamp(16px,3vw,34px) 50px}
+.game-main{width:min(1200px,100%);margin:0 auto;padding:14px clamp(16px,3vw,34px) 50px}
 .music-credit{width:min(1200px,100%);margin:0 auto;padding:0 clamp(16px,3vw,34px) 28px;color:#8ba0a4;font-size:9px;line-height:1.7;text-align:right}
 .countdown{
   position:relative;
@@ -504,7 +508,7 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .setup-panel{padding:20px}
   .preset-list{grid-template-columns:repeat(2,1fr)}
   .stage-select{grid-template-columns:1fr 1fr}
-  .topbar{padding:9px 12px}
+  .topbar{top:7px;width:calc(100% - 20px);margin:8px 10px 0;padding:7px 8px}
   .top-brand{font-size:17px}
   .top-brand i{width:31px;height:33px}
   .top-actions .ghost-button{padding:8px 9px;font-size:10px}
