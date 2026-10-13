@@ -1,5 +1,7 @@
 # Local configuration and credentials
 .env
+output/
+tmp/imagegen/
 .env.*
 !.env.example
 
