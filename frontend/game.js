@@ -147,17 +147,51 @@ const EVENT_MUSIC = {
   gaokao: "tense",
 };
 
-const WEEKEND_ACTIVITIES = [
-  {
-    title: "周末到了，时间交给你。",
-    text: "不用赶路，也不用比较。选一件今天最想做的事。",
-    choices: [
-      {label: "去图书馆自习", hint: "成绩提高，但会消耗一些精力。", effects: {energy: -8, stress: 5, subjects: {math: 3, chinese: 2, english: 2}}, result: "安静的午后，你把错题重新梳理了一遍。"},
-      {label: "和朋友去河边走走", hint: "放松心情，拉近关系。", effects: {energy: 5, stress: -14, mood: 14, charm: 1}, result: "风吹过河面，你们聊了很多没说出口的话。"},
-      {label: "去球场出一身汗", hint: "恢复体力，缓解压力。", effects: {energy: 8, stress: -10, mood: 9}, result: "跑动和呼吸让脑子重新变得清醒。"},
-      {label: "在家好好睡一觉", hint: "恢复大量体力。", effects: {energy: 28, stress: -18, mood: 5}, result: "没有闹钟的下午，疲惫慢慢散开。"},
-    ],
-  },
+const FRIENDS = [
+  {id: "liqiang", name: "李强", initial: "强", desc: "篮球场上的少年"},
+  {id: "su", name: "苏若云", initial: "云", desc: "认真温柔的班长"},
+  {id: "lin", name: "林婉儿", initial: "婉", desc: "喜欢音乐和画画的女孩"},
+];
+
+const DEFAULT_RELATIONSHIPS = {liqiang: 5, su: 2, lin: 0};
+
+const TUTORING_SUBJECTS = [
+  {id: "chinese", label: "语文"},
+  {id: "math", label: "数学"},
+  {id: "english", label: "英语"},
+  {id: "science", label: "理科"},
+  {id: "humanities", label: "文科"},
+];
+
+const OUTING_PLACES = [
+  {id: "river", name: "河边散步", cost: 0, effects: {energy: 4, stress: -9, mood: 11}, likedBy: ["lin"], result: "你们沿着河边慢慢走，风把一周的疲惫吹散了一些。"},
+  {id: "bookstore", name: "书店和文具店", cost: 20, effects: {stress: -5, mood: 8, subjects: {chinese: 2}}, likedBy: ["su"], result: "你们在书架间挑了很久，最后各自买了一本喜欢的书。"},
+  {id: "court", name: "去球场打球", cost: 0, effects: {energy: -8, stress: -12, mood: 13, stamina: 1}, likedBy: ["liqiang"], result: "跑动和汗水让心情重新亮了起来。"},
+  {id: "arcade", name: "逛电玩城", cost: 45, effects: {energy: -4, stress: -13, mood: 16}, likedBy: ["liqiang", "lin"], result: "你们在嘈杂的音乐里笑得很开心，暂时忘掉了作业。"},
+  {id: "gallery", name: "看展或画画", cost: 25, effects: {stress: -8, mood: 11, charm: 1}, likedBy: ["lin", "su"], result: "安静的展厅里，时间走得比平时慢了一些。"},
+];
+
+const WEEKEND_OPTIONS = [
+  {id: "outing", label: "和朋友出去玩", hint: "选择朋友和地点，关系越熟，相处越自然。"},
+  {id: "part_time", label: "做半天兼职", hint: "零花钱增加，但体力和压力会受影响。"},
+  {id: "family", label: "陪家人逛街做饭", hint: "心情恢复，压力下降，也能得到一点零花钱。"},
+  {id: "hobby", label: "发展兴趣爱好", hint: "提升魅力与心情，缓解学习压力。"},
+  {id: "exercise", label: "运动或打球", hint: "提升体质，释放压力。"},
+  {id: "sleep", label: "在家睡个懒觉", hint: "大量恢复体力，降低压力。"},
+  {id: "study", label: "自己安静自习", hint: "提升成绩，但会增加一点压力。"},
+];
+
+const ACHIEVEMENTS = [
+  {id: "balanced", name: "六边形少年", desc: "学力、体质、心态、魅力全部达到 65", test: g => Object.values(g.attrs).every(value => value >= 65), progress: g => Math.min(...Object.values(g.attrs)) / 65},
+  {id: "scholar", name: "题海航行", desc: "学力达到 75，且数学达到 100", test: g => g.attrs.insight >= 75 && g.subjects.math >= 100, progress: g => Math.min(g.attrs.insight / 75, g.subjects.math / 100)},
+  {id: "athlete", name: "奔跑的人", desc: "体质达到 75，且心情达到 70", test: g => g.attrs.stamina >= 75 && g.mood >= 70, progress: g => Math.min(g.attrs.stamina / 75, g.mood / 70)},
+  {id: "steady", name: "稳住能赢", desc: "心态达到 75，且压力不高于 35", test: g => g.attrs.mindset >= 75 && g.stress <= 35, progress: g => Math.min(g.attrs.mindset / 75, (100 - g.stress) / 65)},
+  {id: "social", name: "人群中心", desc: "魅力达到 70，且朋友关系总和达到 100", test: g => g.attrs.charm >= 70 && Object.values(g.relationships).reduce((a, b) => a + b, 0) >= 100, progress: g => Math.min(g.attrs.charm / 70, Object.values(g.relationships).reduce((a, b) => a + b, 0) / 100)},
+  {id: "close_friend", name: "真正的朋友", desc: "任意一位朋友关系达到 60", test: g => Object.values(g.relationships).some(value => value >= 60), progress: g => Math.max(...Object.values(g.relationships)) / 60},
+  {id: "weekend_planner", name: "周末规划家", desc: "完整度过 8 个周末", test: g => g.weekendCount >= 8, progress: g => g.weekendCount / 8},
+  {id: "tutor", name: "补课自律", desc: "完成 10 次周末补课", test: g => g.tutoringCount >= 10, progress: g => g.tutoringCount / 10},
+  {id: "balance", name: "劳逸结合", desc: "心情达到 80，压力不高于 30", test: g => g.mood >= 80 && g.stress <= 30 && g.weekendCount >= 2, progress: g => Math.min(g.mood / 80, (100 - g.stress) / 70, g.weekendCount / 2)},
+  {id: "exam_top", name: "年级第一", desc: "任意一次考试达到 650 分", test: g => g.examResults.some(result => result.score >= 650), progress: g => (g.examResults.length ? Math.max(...g.examResults.map(result => result.score)) : 0) / 650},
 ];
 
 const EVENTS = [
@@ -364,6 +398,7 @@ let currentMusicTrack = null;
 let currentMusicTheme = "calm";
 let musicRotation = {};
 let musicPlaybackToken = 0;
+let currentWeekendFriend = null;
 
 applyPreferences();
 musicAudio.forEach(audio=>{audio.loop=true;audio.preload="auto";audio.volume=0});
@@ -376,6 +411,14 @@ function loadGame(){
     const data=JSON.parse(localStorage.getItem(SAVE_KEY));
     if(!data||data.version!==2)return null;
     if(!Array.isArray(data.pendingEvents))data.pendingEvents=[];
+    if(!Array.isArray(data.achievements))data.achievements=[];
+    if(!data.relationships||typeof data.relationships!=="object")data.relationships={...DEFAULT_RELATIONSHIPS};
+    data.relationships={...DEFAULT_RELATIONSHIPS,...data.relationships};
+    if(!data.tutoring||typeof data.tutoring!=="object")data.tutoring={decided:false,subject:"none"};
+    data.tutoring={decided:false,subject:"none",...data.tutoring};
+    data.weekendCount=Number(data.weekendCount)||0;
+    data.tutoringCount=Number(data.tutoringCount)||0;
+    data.tutoringDoneThisWeek=!!data.tutoringDoneThisWeek;
     return data;
   }catch{return null}
 }
@@ -555,7 +598,10 @@ function trackById(trackId){
   return null;
 }
 function persist(){
-  if(game)localStorage.setItem(SAVE_KEY,JSON.stringify(game));
+  if(game){
+    checkAchievements();
+    localStorage.setItem(SAVE_KEY,JSON.stringify(game));
+  }
 }
 function gradeForDay(day){
   if(day>=1020)return "高三冲刺";
@@ -586,6 +632,39 @@ function markEventResolved(id){
   game.pendingEvents=game.pendingEvents.filter(eventId=>eventId!==id);
   if(!game.fired.includes(id))game.fired.push(id);
 }
+function achievementProgress(achievement){
+  try{return clamp(Number(achievement.progress(game))||0,0,1)}catch{return 0}
+}
+function checkAchievements(){
+  if(!game)return;
+  for(const achievement of ACHIEVEMENTS){
+    if(game.achievements.includes(achievement.id))continue;
+    let unlocked=false;
+    try{unlocked=achievement.test(game)}catch{}
+    if(!unlocked)continue;
+    game.achievements.push(achievement.id);
+    addLog(`解锁成就：${achievement.name}`);
+    toast(`成就解锁：${achievement.name}`);
+  }
+}
+function achievementPanelHtml(){
+  const ranked=ACHIEVEMENTS.map(achievement=>{
+    const unlocked=game.achievements.includes(achievement.id);
+    return {achievement,unlocked,progress:achievementProgress(achievement)};
+  }).sort((a,b)=>Number(b.unlocked)-Number(a.unlocked)||b.progress-a.progress);
+  return `
+    <section class="game-panel">
+      <div class="panel-heading"><h2>属性成就</h2><small>${game.achievements.length} / ${ACHIEVEMENTS.length} 已解锁</small></div>
+      <div class="achievement-list">
+        ${ranked.slice(0,5).map(({achievement,unlocked,progress})=>`
+          <div class="achievement-item ${unlocked?"unlocked":""}">
+            <div class="achievement-title"><span>${unlocked?"✦":"◇"}</span><b>${achievement.name}</b></div>
+            <p>${achievement.desc}</p>
+            ${unlocked?'<small>已解锁</small>':`<div class="mini-bar"><i style="width:${Math.round(progress*100)}%"></i></div>`}
+          </div>`).join("")}
+      </div>
+    </section>`;
+}
 function initialState(name,attrs){
   return {
     version:2,
@@ -594,12 +673,18 @@ function initialState(name,attrs){
     day:1,
     actionPoints:4,
     energy:100,
-    stress:0,
-    mood:70,
+    stress:20,
+    mood:65,
     money:300,
     subjects:{chinese:60,math:60,english:60,science:50,humanities:50},
     fired:[],
     pendingEvents:[],
+    achievements:[],
+    relationships:{...DEFAULT_RELATIONSHIPS},
+    tutoring:{decided:false,subject:"none"},
+    weekendCount:0,
+    tutoringCount:0,
+    tutoringDoneThisWeek:false,
     weekendResolved:false,
     log:[{day:1,text:`${name}走进了青禾高中，新的三年从今天开始。`}],
     completed:false,
@@ -739,6 +824,8 @@ function renderGame(){
               </div>
             </section>
 
+            ${achievementPanelHtml()}
+
             <section class="game-panel">
               <div class="panel-heading"><h2>下一件大事</h2><small>${next?`${next.day-game.day} 天后`:"等待高考"}</small></div>
               <div class="next-event">
@@ -786,7 +873,7 @@ function renderFinal(){
               <div class="final-fact"><span>学业最高能力</span><strong>${best}</strong></div>
               <div class="final-fact"><span>心态</span><strong>${game.attrs.mindset}</strong></div>
               <div class="final-fact"><span>魅力</span><strong>${game.attrs.charm}</strong></div>
-              <div class="final-fact"><span>经历事件</span><strong>${game.fired.length}</strong></div>
+              <div class="final-fact"><span>成长成就</span><strong>${game.achievements.length} / ${ACHIEVEMENTS.length}</strong></div>
             </div>
           </section>
           <section class="final-card">
@@ -879,26 +966,179 @@ function studySubject(id){
 function openWeekend(){
   if(game.weekendResolved||game.actionPoints>0)return;
   playTheme("bright",{force:true});
-  const weekend=WEEKEND_ACTIVITIES[0];
+  if(!game.tutoring.decided){
+    showTutoringDecision();
+    return;
+  }
+  if(game.tutoring.subject!=="none"&&!game.tutoringDoneThisWeek){
+    showMandatoryTutoring();
+    return;
+  }
+  showWeekendOptions();
+}
+
+function showTutoringDecision(){
   openModal(`
-    <div class="eyebrow">WEEKEND · 自动触发</div>
-    <h2>${weekend.title}</h2>
-    <p>${weekend.text}</p>
+    <div class="eyebrow">FAMILY MEETING · 家庭商量</div>
+    <h2>要不要安排周末补课？</h2>
+    <p>爸妈把几张辅导班宣传单放在桌上。选择一门课后，之后的每个周末都会先完成一次必选补课；也可以先不补。</p>
     <div class="choice-list">
-      ${weekend.choices.map((choice,index)=>`<button class="choice-button" data-weekend="${index}"><strong>${choice.label}</strong><small>${choice.hint}</small></button>`).join("")}
+      <button class="choice-button" data-tutoring="none"><strong>暂时不补课</strong><small>保留完整周末，但成绩提升更依赖自己学习。</small></button>
+      ${TUTORING_SUBJECTS.map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
     </div>
   `, false);
 }
 
-function resolveWeekend(index){
-  const choice=WEEKEND_ACTIVITIES[0].choices[index];
-  applyEffects(choice.effects);
+function resolveTutoringChoice(subjectId){
+  game.tutoring={decided:true,subject:subjectId};
+  if(subjectId==="none"){
+    addLog("和父母商量后，决定暂时不安排周末补课。");
+    persist();
+    closeModal(true);
+    showWeekendOptions();
+    return;
+  }
+  showMandatoryTutoring();
+}
+
+function showMandatoryTutoring(){
+  const subject=TUTORING_SUBJECTS.find(item=>item.id===game.tutoring.subject);
+  if(!subject){
+    game.tutoring.subject="none";
+    showWeekendOptions();
+    return;
+  }
+  if(game.tutoringDoneThisWeek){
+    showWeekendOptions();
+    return;
+  }
+  game.tutoringDoneThisWeek=true;
+  game.tutoringCount++;
+  const gain=Math.max(3,Math.round(4.5+game.attrs.insight*0.025));
+  game.subjects[subject.id]=Math.min(150,game.subjects[subject.id]+gain);
+  applyEffects({energy:-10,stress:9,mood:-3});
+  addLog(`周末参加${subject.label}补课，能力提升 ${gain} 点。`);
+  persist();
+  render();
+  openModal(`
+    <div class="eyebrow">TUTORING · 必选安排</div>
+    <h2>${subject.label}补课结束</h2>
+    <div class="result-copy">这周的${subject.label}补习完成了。你在笔记上又补上了几页重点，接下来可以自由安排周末。</div>
+    <div class="final-facts">
+      <div class="final-fact"><span>${subject.label}提升</span><strong>+${gain}</strong></div>
+      <div class="final-fact"><span>体力</span><strong>−10</strong></div>
+      <div class="final-fact"><span>压力</span><strong>+9</strong></div>
+      <div class="final-fact"><span>补课次数</span><strong>${game.tutoringCount}</strong></div>
+    </div>
+    <div class="dialog-footer"><button class="primary-button" data-action="continue-tutoring">继续安排周末 →</button></div>
+  `, false);
+}
+
+function showWeekendOptions(){
+  openModal(`
+    <div class="eyebrow">WEEKEND · 自由时间</div>
+    <h2>剩下的周末时间，想怎么过？</h2>
+    <p>${game.tutoring.subject!=="none"?`本周补课已经完成。`:"这个周末没有补课。"}选一项安排，会直接影响状态。</p>
+    <div class="choice-list">
+      ${WEEKEND_OPTIONS.map(option=>`<button class="choice-button" data-weekend-option="${option.id}"><strong>${option.label}</strong><small>${option.hint}</small></button>`).join("")}
+    </div>
+    <div class="dialog-footer"><button class="ghost-button" data-action="tutoring-plan">调整补课计划</button></div>
+  `, false);
+}
+
+function resolveWeekendOption(optionId){
+  if(optionId==="outing"){
+    showFriendSelect();
+    return;
+  }
+  const results={
+    part_time:{effects:{energy:-18,stress:8,money:180},text:"你做了半天兼职，第一次觉得赚钱比想象中更累。"},
+    family:{effects:{energy:-5,stress:-12,mood:13,money:30},text:"你和家人一起买菜做饭，普通的一天也变得温暖。"},
+    hobby:{effects:{energy:-4,stress:-12,mood:14,charm:1},text:"你把时间花在喜欢的事情上，找回了自己的节奏。"},
+    exercise:{effects:{energy:8,stress:-12,mood:11,stamina:1},text:"运动之后，身体和心情都轻了不少。"},
+    sleep:{effects:{energy:30,stress:-18,mood:6},text:"你睡到自然醒，积攒的疲惫慢慢散开。"},
+    study:{effects:{energy:-9,stress:6,subjects:{chinese:2,math:2,english:2}},text:"安静的周末自习让几门主科都向前推进了一点。"},
+  };
+  const result=results[optionId];
+  if(!result)return;
+  applyEffects(result.effects);
+  finishWeekend(result.text);
+}
+
+function relationshipLabel(value){
+  if(value>=60)return "好朋友";
+  if(value>=35)return "熟悉";
+  if(value>=15)return "普通同学";
+  return "还不太熟";
+}
+
+function showFriendSelect(){
+  openModal(`
+    <div class="eyebrow">OUTING · 选择同行的人</div>
+    <h2>想和谁一起出去？</h2>
+    <p>关系越熟，相处时越放松；跟不太熟的同学出去，可能会有一点压力。</p>
+    <div class="choice-list">
+      ${FRIENDS.map(friend=>{
+        const relationship=game.relationships[friend.id]||0;
+        return `<button class="choice-button" data-outing-friend="${friend.id}"><strong>${friend.name} · ${relationshipLabel(relationship)}</strong><small>${friend.desc} · 关系 ${relationship} / 100</small></button>`;
+      }).join("")}
+    </div>
+    <div class="dialog-footer"><button class="ghost-button" data-action="weekend-back">返回</button></div>
+  `, false);
+}
+
+function resolveFriendChoice(friendId){
+  currentWeekendFriend=FRIENDS.find(friend=>friend.id===friendId)||null;
+  if(!currentWeekendFriend)return;
+  showPlaceSelect();
+}
+
+function showPlaceSelect(){
+  const friend=currentWeekendFriend;
+  if(!friend)return showFriendSelect();
+  openModal(`
+    <div class="eyebrow">OUTING · 选择地点</div>
+    <h2>和${friend.name}去哪里？</h2>
+    <p>不同朋友喜欢的地方不同，去对地方时心情和关系提升会更明显。</p>
+    <div class="choice-list">
+      ${OUTING_PLACES.map(place=>`<button class="choice-button" data-outing-place="${place.id}"><strong>${place.name}</strong><small>${place.cost?`花费 ¥${place.cost} · `:""}${place.likedBy.includes(friend.id)?"对方会很喜欢这里":"普通选择"}</small></button>`).join("")}
+    </div>
+    <div class="dialog-footer"><button class="ghost-button" data-action="choose-friend-again">换个朋友</button></div>
+  `, false);
+}
+
+function resolvePlaceChoice(placeId){
+  const friend=currentWeekendFriend;
+  const place=OUTING_PLACES.find(item=>item.id===placeId);
+  if(!friend||!place)return;
+  if(game.money<place.cost)return toast("零花钱不够，换一个地方吧。");
+  const relationship=game.relationships[friend.id]||0;
+  const factor=relationship>=60?1.15:relationship>=35?1:relationship>=15?.8:.6;
+  const affinity=place.likedBy.includes(friend.id);
+  const effects={...place.effects};
+  effects.mood=Math.round((effects.mood||0)*factor+(affinity?5:0));
+  effects.stress=Math.round((effects.stress||0)*(affinity?1.15:factor));
+  if(affinity)effects.charm=(effects.charm||0)+1;
+  if(place.cost)game.money-=place.cost;
+  const relationGain=Math.round(3+relationship/18+(affinity?2:0));
+  game.relationships[friend.id]=clamp(relationship+relationGain,0,100);
+  applyEffects(effects);
+  const familiarity=relationshipLabel(relationship);
+  const result=affinity
+    ? `${friend.name}很喜欢${place.name}。你们相处得比平时更自然，关系提升 ${relationGain}。`
+    : `你和${friend.name}去了${place.name}。你们现在是「${familiarity}」，这次相处${relationship>=35?"很轻松":"还需要一点时间熟悉"}，关系提升 ${relationGain}。`;
+  finishWeekend(result);
+}
+
+function finishWeekend(result){
+  currentWeekendFriend=null;
   game.weekendResolved=true;
-  addLog(choice.result);
+  game.weekendCount++;
+  addLog(result);
   persist();
   render();
   closeModal(true);
-  toast(choice.result);
+  toast(result);
 }
 
 function endWeek(){
@@ -925,6 +1165,7 @@ function advanceWeek(){
   game.energy=clamp(game.energy+15,0,100);
   game.stress=clamp(game.stress-8,0,100);
   game.weekendResolved=false;
+  game.tutoringDoneThisWeek=false;
   addLog(`进入第 ${weekForDay(game.day)} 周，距离高考还有 ${daysLeft(game.day)} 天。`);
   const due=EVENTS.filter(event=>!game.fired.includes(event.id)&&event.day>previous&&event.day<=game.day);
   game.pendingEvents.push(...due.map(event=>event.id));
@@ -1335,7 +1576,10 @@ document.addEventListener("click",event=>{
   if(button.dataset.preset)return applyPreset(button.dataset.preset);
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
   if(button.dataset.study)return studySubject(button.dataset.study);
-  if(button.dataset.weekend!==undefined)return resolveWeekend(Number(button.dataset.weekend));
+  if(button.dataset.tutoring)return resolveTutoringChoice(button.dataset.tutoring);
+  if(button.dataset.weekendOption)return resolveWeekendOption(button.dataset.weekendOption);
+  if(button.dataset.outingFriend)return resolveFriendChoice(button.dataset.outingFriend);
+  if(button.dataset.outingPlace)return resolvePlaceChoice(button.dataset.outingPlace);
   if(button.dataset.eventChoice!==undefined)return resolveEventChoice(Number(button.dataset.eventChoice));
   if(button.dataset.exam)return calculateExam(currentModal.event,button.dataset.exam);
   if(button.hasAttribute("data-modal-close"))return closeModal();
@@ -1351,6 +1595,10 @@ document.addEventListener("click",event=>{
   if(button.dataset.action==="save-name")return saveCharacterName();
   if(button.dataset.action==="export-save")return exportSave();
   if(button.dataset.action==="show-pending")return showNextEvent();
+  if(button.dataset.action==="continue-tutoring"){closeModal(true);return showWeekendOptions()}
+  if(button.dataset.action==="tutoring-plan")return showTutoringDecision();
+  if(button.dataset.action==="weekend-back")return showWeekendOptions();
+  if(button.dataset.action==="choose-friend-again")return showFriendSelect();
   if(button.dataset.action==="resume"){
     game=loadGame();
     if(game)render();

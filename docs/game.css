@@ -333,6 +333,15 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .log-item:last-child{border-bottom:0;padding-bottom:0}
 .log-item time{color:#9aabad}
 .empty-copy{font-size:11px;color:#899da1;text-align:center;padding:18px 5px}
+.achievement-list{display:grid;gap:10px}
+.achievement-item{border:1px solid #e0ebe9;border-radius:9px;background:#fbfdfb;padding:11px 12px}
+.achievement-item.unlocked{background:#eef7e9;border-color:#cfe2c4}
+.achievement-title{display:flex;align-items:center;gap:8px}
+.achievement-title span{color:#a8b5aa;font-size:13px}.achievement-item.unlocked .achievement-title span{color:#6f9b5e}
+.achievement-title b{font-size:11px;color:#52727b}.achievement-item.unlocked .achievement-title b{color:#4f7b4f}
+.achievement-item p{font-size:9px;line-height:1.6;color:#8a9b9e;margin:6px 0 0}
+.achievement-item small{display:block;margin-top:7px;color:#5d8b63;font-size:9px}
+.achievement-item .mini-bar{margin-top:8px}
 .week-actions{display:flex;align-items:center;gap:9px}
 .pending-event-button{border-color:#e1c28e;color:#956d31;background:#fffaf0}
 
