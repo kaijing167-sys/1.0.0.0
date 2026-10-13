@@ -1,6 +1,7 @@
 const SAVE_KEY = "qinghe-game-v2";
 const SETTINGS_KEY = "qinghe-game-settings-v1";
 const MUSIC_OFF_MIGRATION_KEY = "qinghe-music-force-off-v1";
+const MUSIC_FORCE_OFF = true;
 const TOTAL_DAYS = 1092;
 const DAYS_PER_WEEK = 7;
 const BASE_ATTR = 50;
@@ -383,12 +384,9 @@ function loadSettings(){
   try{
     saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");
   }catch{saved={}}
-  const merged={...DEFAULT_SETTINGS,...saved};
-  if(!localStorage.getItem(MUSIC_OFF_MIGRATION_KEY)){
-    merged.musicEnabled=false;
-    localStorage.setItem(MUSIC_OFF_MIGRATION_KEY,"1");
-    localStorage.setItem(SETTINGS_KEY,JSON.stringify(merged));
-  }
+  const merged={...DEFAULT_SETTINGS,...saved,musicEnabled:false};
+  localStorage.setItem(MUSIC_OFF_MIGRATION_KEY,"1");
+  localStorage.setItem(SETTINGS_KEY,JSON.stringify(merged));
   return merged;
 }
 function persistSettings(){
@@ -461,7 +459,7 @@ function availableMusic(themeId){
   return theme.tracks.filter(([id])=>musicCache.has(id));
 }
 function unlockMusic(){
-  if(!settings.musicEnabled)return;
+  if(MUSIC_FORCE_OFF||!settings.musicEnabled)return;
   const audio=musicAudio[activeAudioIndex];
   if(audio?.src)audio.play().catch(()=>{});
 }
@@ -478,7 +476,7 @@ async function pauseMusic(){
   currentMusicTrack=null;
 }
 async function playTheme(themeId,{force=false}={}){
-  if(!settings.musicEnabled)return;
+  if(MUSIC_FORCE_OFF||!settings.musicEnabled)return;
   if(!force&&themeId===currentMusicTheme&&currentMusicTrack)return;
   currentMusicTheme=themeId;
   const available=availableMusic(themeId);
@@ -679,7 +677,7 @@ function renderGame(){
           <strong>${gradeForDay(game.day)}</strong>
         </div>
         <div class="top-actions">
-          <button class="ghost-button music-button" data-action="toggle-music">${settings.musicEnabled?"♫ 音乐开":"♫ 音乐关"}</button>
+          <button class="ghost-button music-button" disabled>♫ 已关闭</button>
           <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
         </div>
       </header>
@@ -1114,18 +1112,25 @@ function openSettings(){
         ${toggle("autoEvents","自动触发事件","考试、周末和主线事件到期后自动弹出。")}
         ${toggle("confirmEarlyWeek","提前结束确认","还有行动时，结束本周前先确认。")}
       </section>
-      <section class="settings-section">
-        <h3>音乐</h3>
-        ${toggle("musicEnabled","开启背景音乐","关闭后所有场景音乐都会暂停。")}
-        ${toggle("eventMusic","启用事件专属音乐","考试、低谷、毕业和结局会切换到对应主题。")}
-        <label class="setting-row music-volume-row">
-          <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicCache.size} / ${musicTrackCount()} 首已导入</small></span>
-          <input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量">
-        </label>
-        <div class="settings-buttons">
-          <button class="ghost-button" data-action="music-library">管理本地音乐库</button>
-        </div>
-      </section>
+      ${MUSIC_FORCE_OFF?`
+        <section class="settings-section">
+          <h3>音乐</h3>
+          <p class="settings-note">当前版本已强制关闭背景音乐，播放入口和事件音乐均已停用。</p>
+        </section>
+      `:`
+        <section class="settings-section">
+          <h3>音乐</h3>
+          ${toggle("musicEnabled","开启背景音乐","关闭后所有场景音乐都会暂停。")}
+          ${toggle("eventMusic","启用事件专属音乐","考试、低谷、毕业和结局会切换到对应主题。")}
+          <label class="setting-row music-volume-row">
+            <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicCache.size} / ${musicTrackCount()} 首已导入</small></span>
+            <input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量">
+          </label>
+          <div class="settings-buttons">
+            <button class="ghost-button" data-action="music-library">管理本地音乐库</button>
+          </div>
+        </section>
+      `}
       <section class="settings-section">
         <h3>存档</h3>
         <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
@@ -1170,6 +1175,10 @@ function updateSetting(name,value){
 }
 
 function toggleMusic(){
+  if(MUSIC_FORCE_OFF){
+    pauseMusic();
+    return toast("当前版本已强制关闭背景音乐");
+  }
   settings.musicEnabled=!settings.musicEnabled;
   persistSettings();
   if(settings.musicEnabled){
@@ -1295,6 +1304,7 @@ async function removeMusicTrack(trackId){
 }
 
 function previewMusicTrack(trackId){
+  if(MUSIC_FORCE_OFF)return toast("当前版本已强制关闭背景音乐");
   const url=musicUrlCache.get(trackId);
   if(!url)return toast("请先导入这个音频文件");
   currentMusicTheme="preview";
@@ -1376,5 +1386,6 @@ document.addEventListener("keydown",event=>{
 
 render();
 initializeMusicLibrary().then(()=>{
-  if(game&&!game.completed)playTheme("calm",{force:true});
+  pauseMusic();
+  if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});
 });
