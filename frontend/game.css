@@ -308,6 +308,13 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
   transition:transform .15s,border-color .15s,box-shadow .15s;
 }
 .action-card:hover:not(:disabled){transform:translateY(-2px);border-color:#93bdc4;box-shadow:0 10px 24px rgba(49,110,126,.09)}
+.action-card.has-image{position:relative;overflow:hidden;min-height:176px;background-image:var(--action-photo);background-size:cover;background-position:center;border-color:rgba(63,119,132,.28);color:#fff}
+.action-card.has-image:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,57,70,.06) 0%,rgba(18,57,70,.30) 45%,rgba(18,57,70,.82) 100%);z-index:0}
+.action-card.has-image>*{position:relative;z-index:1}
+.action-card.has-image i{background:rgba(255,255,255,.9);color:#3f8093;box-shadow:0 4px 14px rgba(21,60,71,.16)}
+.action-card.has-image h3{color:#fff;text-shadow:0 2px 10px rgba(13,45,55,.55)}
+.action-card.has-image p{color:#eef8f6;text-shadow:0 1px 8px rgba(13,45,55,.72)}
+.action-card.has-image:hover:not(:disabled){border-color:rgba(255,255,255,.8);box-shadow:0 14px 30px rgba(30,83,99,.2)}
 .action-card i{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e8f3f3;color:#4d8899;font-style:normal;font-size:18px}
 .action-card:nth-child(2) i{background:#edf3df;color:#6e8f58}
 .action-card:nth-child(3) i{background:#fff0dc;color:#af8146}
@@ -521,6 +528,7 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .progress-markers{font-size:8px}
   .action-grid{grid-template-columns:1fr}
   .action-card{min-height:110px}
+  .action-card.has-image{min-height:168px}
   .week-footer{display:block}
   .week-actions{display:grid;width:100%;margin-top:12px}
   .week-actions button{width:100%}

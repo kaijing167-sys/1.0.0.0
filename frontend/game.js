@@ -96,6 +96,13 @@ const SUBJECTS = [
   ["humanities", "文科"],
 ];
 
+const ACTION_IMAGES = {
+  study: "assets/action-study.jpg",
+  rest: "assets/action-rest.jpg",
+  exercise: "assets/action-exercise.jpg",
+  social: "assets/action-social.jpg",
+};
+
 const MUSIC_THEMES = {
   bright: {
     label: "美好 · 欢快",
@@ -1038,7 +1045,8 @@ function renderGame(){
 }
 
 function actionCard(action,icon,title,text){
-  return `<button class="action-card" data-action="${action}" ${game.actionPoints<=0?"disabled":""}><i>${icon}</i><h3>${title}</h3><p>${text}</p></button>`;
+  const image=ACTION_IMAGES[action];
+  return `<button class="action-card ${image?"has-image":""}" data-action="${action}" ${game.actionPoints<=0?"disabled":""} ${image?`style="--action-photo:url('${image}')"`:""}><i>${icon}</i><h3>${title}</h3><p>${text}</p></button>`;
 }
 function statBox(label,value,max,unit=""){
   const shown=label==="零花钱"?value:`${value}`;
