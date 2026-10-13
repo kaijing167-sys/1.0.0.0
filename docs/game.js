@@ -578,6 +578,11 @@ function applyPreferences(){
 function musicTrackCount(){
   return Object.values(MUSIC_THEMES).reduce((total,theme)=>total+theme.tracks.length,0);
 }
+function musicButtonLabel(){
+  if(!settings.musicEnabled)return "♫ 音乐关";
+  if(!musicCache.size)return "♫ 待导入";
+  return "♫ 音乐开";
+}
 function openMusicDB(){
   return new Promise((resolve,reject)=>{
     const request=indexedDB.open("qinghe-music-v2",1);
@@ -922,7 +927,7 @@ function renderGame(){
           <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
         </div>
         <div class="top-actions">
-          <button class="ghost-button music-button" data-action="toggle-music">${settings.musicEnabled?"♫ 音乐开":"♫ 音乐关"}</button>
+          <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
           <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
         </div>
       </header>
@@ -1599,14 +1604,25 @@ function toggleMusic(){
     pauseMusic();
     return toast("当前版本已强制关闭背景音乐");
   }
-  settings.musicEnabled=!settings.musicEnabled;
-  persistSettings();
+  if(settings.musicEnabled&&!musicCache.size){
+    openMusicLibrary();
+    return toast("请先导入本地音乐文件");
+  }
   if(settings.musicEnabled){
-    playTheme(currentMusicTheme,{force:true});
-    toast("背景音乐已开启");
-  }else{
+    settings.musicEnabled=false;
+    persistSettings();
     pauseMusic();
     toast("背景音乐已关闭");
+  }else{
+    settings.musicEnabled=true;
+    persistSettings();
+    if(!musicCache.size){
+      openMusicLibrary();
+      toast("请先导入本地音乐文件");
+    }else{
+      playTheme(currentMusicTheme,{force:true});
+      toast("背景音乐已开启");
+    }
   }
   if(game)render();
 }
@@ -1687,6 +1703,7 @@ async function saveMusicTrack(trackId,file){
   if(!file)return;
   await putMusicFile(trackId,file);
   openMusicLibrary();
+  if(game)render();
   toast(`${trackById(trackId)?.[1]||"音乐"} 已导入`);
   playTheme(currentMusicTheme,{force:true});
 }
@@ -1707,6 +1724,7 @@ async function importMusicFolder(fileList){
     }
   }
   openMusicLibrary();
+  if(game)render();
   toast(`扫描 ${files.length} 首，匹配并导入 ${matched} 首`);
   playTheme(currentMusicTheme,{force:true});
 }
@@ -1817,4 +1835,5 @@ render();
 initializeMusicLibrary().then(()=>{
   pauseMusic();
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});
+  if(game)render();
 });
