@@ -1,5 +1,6 @@
 const SAVE_KEY = "qinghe-game-v2";
 const SETTINGS_KEY = "qinghe-game-settings-v1";
+const MUSIC_OFF_MIGRATION_KEY = "qinghe-music-force-off-v1";
 const TOTAL_DAYS = 1092;
 const DAYS_PER_WEEK = 7;
 const BASE_ATTR = 50;
@@ -11,7 +12,7 @@ const DEFAULT_SETTINGS = {
   actionsPerWeek: 4,
   autoEvents: true,
   confirmEarlyWeek: true,
-  musicEnabled: true,
+  musicEnabled: false,
   eventMusic: true,
   musicVolume: 25,
 };
@@ -361,6 +362,7 @@ let activeAudioIndex = 0;
 let currentMusicTrack = null;
 let currentMusicTheme = "calm";
 let musicRotation = {};
+let musicPlaybackToken = 0;
 
 applyPreferences();
 musicAudio.forEach(audio=>{audio.loop=true;audio.preload="auto";audio.volume=0});
@@ -377,9 +379,17 @@ function loadGame(){
   }catch{return null}
 }
 function loadSettings(){
+  let saved={};
   try{
-    return {...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")};
-  }catch{return {...DEFAULT_SETTINGS}}
+    saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");
+  }catch{saved={}}
+  const merged={...DEFAULT_SETTINGS,...saved};
+  if(!localStorage.getItem(MUSIC_OFF_MIGRATION_KEY)){
+    merged.musicEnabled=false;
+    localStorage.setItem(MUSIC_OFF_MIGRATION_KEY,"1");
+    localStorage.setItem(SETTINGS_KEY,JSON.stringify(merged));
+  }
+  return merged;
 }
 function persistSettings(){
   localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));
@@ -451,13 +461,21 @@ function availableMusic(themeId){
   return theme.tracks.filter(([id])=>musicCache.has(id));
 }
 function unlockMusic(){
+  if(!settings.musicEnabled)return;
   const audio=musicAudio[activeAudioIndex];
   if(audio?.src)audio.play().catch(()=>{});
 }
 async function pauseMusic(){
+  musicPlaybackToken++;
   for(const audio of musicAudio){
-    try{audio.pause()}catch{}
+    try{
+      audio.pause();
+      audio.currentTime=0;
+      audio.removeAttribute("src");
+      audio.load();
+    }catch{}
   }
+  currentMusicTrack=null;
 }
 async function playTheme(themeId,{force=false}={}){
   if(!settings.musicEnabled)return;
@@ -476,6 +494,7 @@ async function playTheme(themeId,{force=false}={}){
   await crossfadeTo(musicUrlCache.get(trackId),label);
 }
 async function crossfadeTo(url,label){
+  const token=++musicPlaybackToken;
   const nextIndex=1-activeAudioIndex;
   const oldAudio=musicAudio[activeAudioIndex];
   const nextAudio=musicAudio[nextIndex];
@@ -489,6 +508,10 @@ async function crossfadeTo(url,label){
   }catch{
     return;
   }
+  if(token!==musicPlaybackToken){
+    nextAudio.pause();
+    return;
+  }
   const target=settings.musicVolume/100;
   const oldVolume=oldAudio.volume;
   const start=performance.now();
@@ -500,7 +523,11 @@ async function crossfadeTo(url,label){
     return;
   }
   const fade=now=>{
-    const progress=Math.min(1,(now-start)/duration);
+    if(token!==musicPlaybackToken){
+      nextAudio.pause();
+      return;
+    }
+    const progress=Math.max(0,Math.min(1,(now-start)/duration));
     nextAudio.volume=target*progress;
     oldAudio.volume=oldVolume*(1-progress);
     if(progress<1)requestAnimationFrame(fade);
@@ -605,7 +632,7 @@ function renderLanding(){
         <div class="landing-mark">QINGHE HIGH SCHOOL · 1092 DAYS</div>
         <h1>青禾纪事</h1>
         <h2>用三年时间，成为你想成为的人。</h2>
-        <p>没有固定路线，也没有唯一答案。你会学习、遇见朋友、经历考试，也会在一次次选择里慢慢长大。</p>
+        <p>成长</p>
         <div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
       </section>
       <form class="setup-panel" id="setup-form">
@@ -1142,6 +1169,19 @@ function updateSetting(name,value){
   }
 }
 
+function toggleMusic(){
+  settings.musicEnabled=!settings.musicEnabled;
+  persistSettings();
+  if(settings.musicEnabled){
+    playTheme(currentMusicTheme,{force:true});
+    toast("背景音乐已开启");
+  }else{
+    pauseMusic();
+    toast("背景音乐已关闭");
+  }
+  if(game)render();
+}
+
 function saveCharacterName(){
   const input=$("#settings-name");
   const name=input?.value.trim();
@@ -1280,8 +1320,8 @@ function resetGame(){
 
 document.addEventListener("click",event=>{
   const button=event.target.closest("button");
-  unlockMusic();
   if(!button||button.disabled)return;
+  if(button.dataset.action!=="toggle-music")unlockMusic();
   if(button.dataset.preset)return applyPreset(button.dataset.preset);
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
   if(button.dataset.study)return studySubject(button.dataset.study);
@@ -1292,7 +1332,7 @@ document.addEventListener("click",event=>{
   if(button.hasAttribute("data-continue-event"))return continueAfterEvent();
   if(button.hasAttribute("data-confirm-week")){closeModal();return advanceWeek()}
   if(button.hasAttribute("data-confirm-new"))return resetGame();
-  if(button.dataset.action==="toggle-music")return updateSetting("musicEnabled",!settings.musicEnabled);
+  if(button.dataset.action==="toggle-music")return toggleMusic();
   if(button.dataset.action==="settings")return openSettings();
   if(button.dataset.action==="music-library")return openMusicLibrary();
   if(button.dataset.action==="back-settings")return openSettings();
