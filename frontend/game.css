@@ -132,6 +132,14 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
   padding:13px 14px;
   color:var(--ink);
 }
+.stage-select{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.stage-select button{border:1px solid #d6e7e8;background:#f7fbf9;border-radius:9px;padding:11px;text-align:left;color:#64818b}
+.stage-select button:hover,.stage-select button.selected{border-color:#75aebd;background:#eaf6f6;color:#37788d}
+.stage-select b{display:block;font-size:11px}.stage-select small{display:block;font-size:9px;margin-top:5px;color:#91a3a6}
+.stage-description{font-size:10px;line-height:1.7;color:#83999d;margin:0 0 16px}
+.track-select{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;align-items:center;margin-bottom:17px}
+.track-select span{font-size:10px;color:#688690}.track-select button{border:1px solid #d6e7e8;background:#f7fbf9;border-radius:8px;padding:8px;font-size:10px;color:#64818b}
+.track-select button.selected{border-color:#75aebd;background:#eaf6f6;color:#37788d}
 .preset-list{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
 .preset-list button{
   border:1px solid #d6e7e8;
@@ -494,6 +502,7 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .landing-copy p{line-height:1.9}
   .setup-panel{padding:20px}
   .preset-list{grid-template-columns:repeat(2,1fr)}
+  .stage-select{grid-template-columns:1fr 1fr}
   .topbar{padding:9px 12px}
   .top-brand{font-size:17px}
   .top-brand i{width:31px;height:33px}

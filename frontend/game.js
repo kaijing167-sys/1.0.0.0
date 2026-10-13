@@ -1,7 +1,8 @@
 const SAVE_KEY = "qinghe-game-v2";
 const SETTINGS_KEY = "qinghe-game-settings-v1";
 const MUSIC_OFF_MIGRATION_KEY = "qinghe-music-force-off-v1";
-const MUSIC_FORCE_OFF = true;
+const MUSIC_REENABLE_KEY = "qinghe-music-reenabled-v1";
+const MUSIC_FORCE_OFF = false;
 const TOTAL_DAYS = 1092;
 const DAYS_PER_WEEK = 7;
 const BASE_ATTR = 50;
@@ -30,6 +31,61 @@ const PRESETS = {
   scholar: {insight: 75, stamina: 50, mindset: 65, charm: 50},
   athlete: {insight: 50, stamina: 75, mindset: 65, charm: 50},
   social: {insight: 55, stamina: 55, mindset: 60, charm: 70},
+};
+
+const START_STAGES = {
+  high1: {
+    label: "高一开学",
+    day: 1,
+    desc: "从零开始，距离高考 1092 天，时间最充足。",
+    stress: 20,
+    mood: 65,
+    energy: 100,
+    money: 300,
+    subjects: {chinese: 60, math: 60, english: 60, science: 50, humanities: 50},
+    relationshipBonus: {liqiang: 5, su: 2, lin: 0},
+    difficulty: "标准",
+    track: "undecided",
+  },
+  high2: {
+    label: "高二开学",
+    day: 366,
+    desc: "已经适应高中节奏，但分科和排名压力开始出现。",
+    stress: 30,
+    mood: 63,
+    energy: 95,
+    money: 320,
+    subjects: {chinese: 76, math: 78, english: 75, science: 68, humanities: 66},
+    relationshipBonus: {liqiang: 18, su: 15, lin: 9},
+    difficulty: "进阶",
+    track: "choose",
+  },
+  high3: {
+    label: "高三开学",
+    day: 731,
+    desc: "距离高考约一年，模拟考和冲刺安排会更密集。",
+    stress: 45,
+    mood: 58,
+    energy: 88,
+    money: 360,
+    subjects: {chinese: 96, math: 100, english: 94, science: 90, humanities: 86},
+    relationshipBonus: {liqiang: 32, su: 28, lin: 18},
+    difficulty: "困难",
+    track: "choose",
+  },
+  sprint100: {
+    label: "百日冲刺",
+    day: 993,
+    desc: "距离高考只剩 100 天，压力更高，但能力也更接近考试状态。",
+    stress: 60,
+    mood: 52,
+    energy: 72,
+    money: 260,
+    subjects: {chinese: 122, math: 126, english: 116, science: 120, humanities: 114},
+    relationshipBonus: {liqiang: 48, su: 42, lin: 28},
+    difficulty: "极难",
+    track: "choose",
+  },
 };
 
 const SUBJECTS = [
@@ -143,7 +199,10 @@ const EVENT_MUSIC = {
   mock_1: "tense",
   pledge: "tense",
   mock_2: "tense",
+  spring_final_mock: "tense",
   graduation: "regret",
+  last_study_week: "calm",
+  before_exam: "calm",
   gaokao: "tense",
 };
 
@@ -273,9 +332,9 @@ const EVENTS = [
     eyebrow: "主线 · 分岔路口",
     text: "分科表发到了手里。每个选择都会改变之后的学习重点。",
     choices: [
-      {label: "选择理科", hint: "理科能力提升，文科略降。", effects: {subjects: {science: 10, humanities: -4, math: 4}}, result: "你选择了数字与公式，也选择了一条更漫长的路。"},
-      {label: "选择文科", hint: "文科能力提升，理科略降。", effects: {subjects: {humanities: 10, science: -4, chinese: 4}}, result: "你决定沿着文字与历史继续追问世界。"},
-      {label: "暂时保持均衡", hint: "压力略增，但保留更多可能。", effects: {stress: 8, mindset: 1}, result: "你没有急着定义自己，先把眼前的路走稳。"},
+      {label: "选择理科", hint: "物理、化学、生物成为重点，理科能力提升。", track: "science", effects: {subjects: {science: 12, humanities: -4, math: 5}}, result: "你选择了物理、化学和生物，也选择了一条更漫长的路。"},
+      {label: "选择文科", hint: "历史、政治、地理成为重点，文科能力提升。", track: "humanities", effects: {subjects: {humanities: 12, science: -4, chinese: 5}}, result: "你决定沿着历史、政治和地理继续追问世界。"},
+      {label: "暂时保持均衡", hint: "压力略增，但保留更多可能。", track: "undecided", effects: {stress: 8, mindset: 1}, result: "你没有急着定义自己，先把眼前的路走稳。"},
     ],
   },
   {
@@ -360,6 +419,15 @@ const EVENTS = [
     difficulty: 5,
   },
   {
+    id: "spring_final_mock",
+    day: 930,
+    type: "exam",
+    title: "高考前最后一次月考",
+    eyebrow: "自动触发 · 考试",
+    text: "距离高考越来越近。这次考试不会决定一切，却能暴露最后需要补救的地方。",
+    difficulty: 5,
+  },
+  {
     id: "graduation",
     day: 1015,
     title: "毕业典礼",
@@ -368,6 +436,28 @@ const EVENTS = [
     choices: [
       {label: "和每个人认真告别", hint: "心情和魅力提升。", effects: {stress: -10, mood: 25, charm: 2}, result: "你记住了很多张脸，也认真说了再见。"},
       {label: "再看一遍错题本", hint: "成绩提升，留下一点遗憾。", effects: {energy: -8, stress: 8, subjects: {math: 3, chinese: 2, english: 2}}, result: "你把最后几页翻完，才慢慢合上笔记本。"},
+    ],
+  },
+  {
+    id: "last_study_week",
+    day: 1060,
+    title: "最后冲刺周",
+    eyebrow: "主线 · 最后调整",
+    text: "教室比平时安静。有人继续刷题，也有人开始调整作息。你知道剩下的时间必须用在最重要的地方。",
+    choices: [
+      {label: "查漏补缺", hint: "成绩小幅提升，压力增加。", effects: {energy: -12, stress: 14, subjects: {math: 4, chinese: 3, english: 3}}, result: "你放弃难题，把最容易丢分的地方重新整理了一遍。"},
+      {label: "调整作息和心态", hint: "状态更稳定，成绩提升较少。", effects: {energy: 10, stress: -20, mood: 15, mindset: 2}, result: "你决定让大脑在考试时保持清醒，而不是提前耗尽。"},
+    ],
+  },
+  {
+    id: "before_exam",
+    day: 1085,
+    title: "走进考场之前",
+    eyebrow: "主线 · 高考前夜",
+    text: "明天就是高考。你最后一次检查准考证和文具，窗外很安静。",
+    choices: [
+      {label: "再看一遍错题", hint: "获得一点安心，但压力略增。", effects: {stress: 6, subjects: {math: 2, chinese: 2, english: 2}}, result: "你把熟悉的题型再扫了一遍，心里踏实了一些。"},
+      {label: "早点休息", hint: "体力与心情恢复。", effects: {energy: 20, stress: -18, mood: 12}, result: "你关掉台灯，告诉自己已经做了能做的一切。"},
     ],
   },
   {
@@ -381,12 +471,50 @@ const EVENTS = [
   },
 ];
 
+const STAGE_OPENINGS = {
+  high2: {
+    id: "high2_opening",
+    day: 366,
+    title: "高二开学",
+    eyebrow: "学期起点 · 新的节奏",
+    text: "高一已经成为过去式。课程更深，排名更具体，你也需要决定接下来把精力放在哪里。",
+    choices: [
+      {label: "把薄弱科目补起来", hint: "基础能力提升，压力略增。", effects: {stress: 6, subjects: {chinese: 4, math: 5, english: 4}}, result: "你重新整理了错题本，决定先补齐短板。"},
+      {label: "继续发挥优势科目", hint: "优势更突出，但弱项压力仍在。", effects: {mood: 8, subjects: {math: 6, science: 5}}, result: "你决定把长板拉得更长，让优势成为真正的底气。"},
+    ],
+  },
+  high3: {
+    id: "high3_opening",
+    day: 731,
+    title: "高三开学",
+    eyebrow: "冲刺起点 · 时间开始加速",
+    text: "走廊里的倒计时牌被重新挂起。从现在开始，每一次模拟考都会更接近真正的高考。",
+    choices: [
+      {label: "制定严格冲刺计划", hint: "成绩明显提升，压力大幅增加。", effects: {stress: 15, energy: -8, subjects: {chinese: 5, math: 6, english: 5, science: 4}}, result: "你把每天的时间切成小块，几乎没有浪费。"},
+      {label: "先稳住身体和心态", hint: "压力下降，长期状态更稳。", effects: {stress: -10, mood: 12, mindset: 2}, result: "你决定不在一开始就把自己逼到极限。"},
+    ],
+  },
+  sprint100: {
+    id: "sprint100_opening",
+    day: 993,
+    title: "百日冲刺",
+    eyebrow: "最后一百天 · 全力一战",
+    text: "黑板角落写下了“距高考 100 天”。你站在人群里，忽然觉得时间变得很具体。",
+    choices: [
+      {label: "全力冲刺弱项", hint: "分数潜力提高，压力很高。", effects: {stress: 18, energy: -12, subjects: {chinese: 5, math: 6, english: 5, science: 5, humanities: 4}}, result: "你把最不愿意碰的题型重新摊开，一题一题啃过去。"},
+      {label: "保持节奏，稳住发挥", hint: "压力下降，考试状态更稳定。", effects: {stress: -12, mood: 10, mindset: 3}, result: "你决定把最后一百天当成一段长跑，而不是一次赌博。"},
+    ],
+  },
+};
+
 let settings = loadSettings();
 let game = loadGame();
 let draft = {
   name: "",
   attrs: {...PRESETS.balanced},
   preset: "balanced",
+  stage: "high1",
+  track: "science",
 };
 let currentModal = null;
 let modalLocked = false;
@@ -419,6 +547,8 @@ function loadGame(){
     data.weekendCount=Number(data.weekendCount)||0;
     data.tutoringCount=Number(data.tutoringCount)||0;
     data.tutoringDoneThisWeek=!!data.tutoringDoneThisWeek;
+    if(!data.track)data.track="undecided";
+    if(!data.stage)data.stage="high1";
     return data;
   }catch{return null}
 }
@@ -427,7 +557,11 @@ function loadSettings(){
   try{
     saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");
   }catch{saved={}}
-  const merged={...DEFAULT_SETTINGS,...saved,musicEnabled:false};
+  const merged={...DEFAULT_SETTINGS,...saved};
+  if(!localStorage.getItem(MUSIC_REENABLE_KEY)){
+    merged.musicEnabled=true;
+    localStorage.setItem(MUSIC_REENABLE_KEY,"1");
+  }
   localStorage.setItem(MUSIC_OFF_MIGRATION_KEY,"1");
   localStorage.setItem(SETTINGS_KEY,JSON.stringify(merged));
   return merged;
@@ -609,6 +743,17 @@ function gradeForDay(day){
   if(day>=365)return "高二";
   return "高一";
 }
+function trackLabel(){
+  if(game.track==="science")return "理科方向";
+  if(game.track==="humanities")return "文科方向";
+  return "尚未分科";
+}
+function stageModifiers(){
+  if(game.stage==="sprint100")return {studyBonus:2,stressGain:4,weeklyRecovery:0.62};
+  if(game.stage==="high3")return {studyBonus:1,stressGain:2,weeklyRecovery:0.78};
+  if(game.stage==="high2")return {studyBonus:0,stressGain:1,weeklyRecovery:0.9};
+  return {studyBonus:0,stressGain:0,weeklyRecovery:1};
+}
 function weekForDay(day){return Math.floor((day-1)/DAYS_PER_WEEK)+1}
 function daysLeft(day){return Math.max(0,TOTAL_DAYS-day+1)}
 function progressForDay(day){return clamp((day-1)/(TOTAL_DAYS-1)*100,0,100)}
@@ -665,28 +810,32 @@ function achievementPanelHtml(){
       </div>
     </section>`;
 }
-function initialState(name,attrs){
+function initialState(name,attrs,stageId="high1",track="science"){
+  const stage=START_STAGES[stageId]||START_STAGES.high1;
+  const relationships={...DEFAULT_RELATIONSHIPS,...stage.relationshipBonus};
   return {
     version:2,
     name,
     attrs:{...attrs},
-    day:1,
-    actionPoints:4,
-    energy:100,
-    stress:20,
-    mood:65,
-    money:300,
-    subjects:{chinese:60,math:60,english:60,science:50,humanities:50},
-    fired:[],
+    stage:stageId,
+    track:stageId==="high1"?"undecided":track,
+    day:stage.day,
+    actionPoints:settings.actionsPerWeek,
+    energy:stage.energy,
+    stress:stage.stress,
+    mood:stage.mood,
+    money:stage.money,
+    subjects:{...stage.subjects},
+    fired:EVENTS.filter(event=>event.day<stage.day).map(event=>event.id),
     pendingEvents:[],
     achievements:[],
-    relationships:{...DEFAULT_RELATIONSHIPS},
+    relationships,
     tutoring:{decided:false,subject:"none"},
     weekendCount:0,
     tutoringCount:0,
     tutoringDoneThisWeek:false,
     weekendResolved:false,
-    log:[{day:1,text:`${name}走进了青禾高中，新的三年从今天开始。`}],
+    log:[{day:stage.day,text:`${name}从${stage.label}开始新的高中阶段。`}],
     completed:false,
     finalScore:null,
     ending:"",
@@ -720,9 +869,20 @@ function renderLanding(){
       </section>
       <form class="setup-panel" id="setup-form">
         <div class="setup-heading">
-          <div><h2>创建你的角色</h2><p>先写下名字，再分配初始属性。</p></div>
+          <div><h2>创建你的角色</h2><p>选择开局阶段，再写下名字并分配属性。</p></div>
           <span class="point-pill">剩余 ${remainingPoints()} 点</span>
         </div>
+        <div class="stage-select">
+          ${Object.entries(START_STAGES).map(([id,stage])=>`<button type="button" data-stage="${id}" class="${draft.stage===id?"selected":""}"><b>${stage.label}</b><small>${stage.difficulty} · 剩余 ${TOTAL_DAYS-stage.day+1} 天</small></button>`).join("")}
+        </div>
+        <p class="stage-description">${START_STAGES[draft.stage].desc}</p>
+        ${draft.stage!=="high1"?`
+          <div class="track-select">
+            <span>选择方向</span>
+            <button type="button" data-track="science" class="${draft.track==="science"?"selected":""}">理科</button>
+            <button type="button" data-track="humanities" class="${draft.track==="humanities"?"selected":""}">文科</button>
+          </div>
+        `:`<p class="stage-description">高一开局将在后续剧情中触发文理分科选择。</p>`}
         <label class="field">
           <span>你的名字</span>
           <input id="player-name" maxlength="12" autocomplete="off" placeholder="请输入名字" value="${escapeHtml(draft.name)}">
@@ -759,10 +919,10 @@ function renderGame(){
         <div class="top-player">
           <span class="player-avatar">${escapeHtml(game.name.slice(0,1)||"我")}</span>
           <span>${escapeHtml(game.name)}</span>
-          <strong>${gradeForDay(game.day)}</strong>
+          <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
         </div>
         <div class="top-actions">
-          <button class="ghost-button music-button" disabled>♫ 已关闭</button>
+          <button class="ghost-button music-button" data-action="toggle-music">${settings.musicEnabled?"♫ 音乐开":"♫ 音乐关"}</button>
           <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
         </div>
       </header>
@@ -808,7 +968,7 @@ function renderGame(){
             </section>
 
             <section class="game-panel">
-              <div class="panel-heading"><h2>学业状态</h2><small>能力值并非最终成绩</small></div>
+              <div class="panel-heading"><h2>学业状态</h2><small>${trackLabel()}</small></div>
               ${SUBJECTS.map(([id,label])=>subjectRow(id,label)).join("")}
             </section>
           </div>
@@ -856,6 +1016,11 @@ function subjectRow(id,label){
   const value=game.subjects[id];
   return `<div class="subject-row"><span>${label}</span><div class="mini-bar"><i style="width:${clamp(value/150*100,0,100)}%"></i></div><b>${value}</b></div>`;
 }
+function studyOptions(){
+  if(game.track==="science")return SUBJECTS.filter(([id])=>["chinese","math","english","science"].includes(id));
+  if(game.track==="humanities")return SUBJECTS.filter(([id])=>["chinese","math","english","humanities"].includes(id));
+  return SUBJECTS;
+}
 
 function renderFinal(){
   const best=Math.max(game.subjects.chinese,game.subjects.math,game.subjects.english,game.subjects.science,game.subjects.humanities);
@@ -901,16 +1066,28 @@ function applyPreset(id){
   renderLanding();
 }
 
+function applyStage(id){
+  if(!START_STAGES[id])return;
+  draft.stage=id;
+  renderLanding();
+}
+
+function applyTrack(id){
+  draft.track=id==="humanities"?"humanities":"science";
+  renderLanding();
+}
+
 function startGame(){
   const name=$("#player-name")?.value.trim();
   if(!name)return toast("先给自己取一个名字");
   if(remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
   draft.name=name;
-  game=initialState(name,draft.attrs);
+  game=initialState(name,draft.attrs,draft.stage,draft.track);
   persist();
   render();
   playTheme("bright",{force:true});
-  setTimeout(()=>openEvent(EVENTS[0]),260);
+  const opening=draft.stage==="high1"?EVENTS[0]:STAGE_OPENINGS[draft.stage];
+  setTimeout(()=>openEvent(opening),260);
 }
 
 function performAction(type){
@@ -921,7 +1098,7 @@ function performAction(type){
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
       <p>学习效率会受到学力和当前压力影响。每次行动消耗 1 点行动机会。</p>
-      <div class="choice-list">${SUBJECTS.map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / 150</small></button>`).join("")}</div>
+      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / 150</small></button>`).join("")}</div>
       <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
     `);
     return;
@@ -948,12 +1125,13 @@ function studySubject(id){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   const label=SUBJECTS.find(item=>item[0]===id)[1];
   const stressPenalty=Math.max(0,game.stress-60)*0.04;
-  const gain=Math.max(1,Math.round(3.6+game.attrs.insight*0.035-stressPenalty));
+  const modifiers=stageModifiers();
+  const gain=Math.max(1,Math.round(3.6+game.attrs.insight*0.035-stressPenalty+modifiers.studyBonus));
   const before=game.subjects[id];
   game.subjects[id]=Math.min(150,game.subjects[id]+gain);
   game.actionPoints--;
   game.energy=clamp(game.energy-8,0,100);
-  game.stress=clamp(game.stress+7,0,100);
+  game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
   game.mood=clamp(game.mood-2,0,100);
   addLog(`专注学习${label}，能力提升 ${game.subjects[id]-before} 点。`);
   persist();
@@ -1163,7 +1341,7 @@ function advanceWeek(){
   game.day=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
   game.actionPoints=settings.actionsPerWeek;
   game.energy=clamp(game.energy+15,0,100);
-  game.stress=clamp(game.stress-8,0,100);
+  game.stress=clamp(game.stress-Math.round(8*stageModifiers().weeklyRecovery),0,100);
   game.weekendResolved=false;
   game.tutoringDoneThisWeek=false;
   addLog(`进入第 ${weekForDay(game.day)} 周，距离高考还有 ${daysLeft(game.day)} 天。`);
@@ -1204,6 +1382,7 @@ function resolveEventChoice(index){
   if(!currentModal?.event)return;
   const event=currentModal.event;
   const choice=event.choices[index];
+  if(choice.track)game.track=choice.track;
   applyEffects(choice.effects);
   markEventResolved(event.id);
   addLog(`${event.title}：${choice.result}`);
@@ -1574,6 +1753,8 @@ document.addEventListener("click",event=>{
   if(!button||button.disabled)return;
   if(button.dataset.action!=="toggle-music")unlockMusic();
   if(button.dataset.preset)return applyPreset(button.dataset.preset);
+  if(button.dataset.stage)return applyStage(button.dataset.stage);
+  if(button.dataset.track)return applyTrack(button.dataset.track);
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
   if(button.dataset.study)return studySubject(button.dataset.study);
   if(button.dataset.tutoring)return resolveTutoringChoice(button.dataset.tutoring);
