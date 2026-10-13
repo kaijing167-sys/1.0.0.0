@@ -107,6 +107,7 @@ const MUSIC_THEMES = {
       ["bright-childhood", "童年"],
       ["bright-beautiful-wind", "最美的风"],
       ["bright-beauty-beat", "Beauty and Beat"],
+      ["builtin-bright-morning", "Morning · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Morning.mp3"],
     ],
   },
   love: {
@@ -119,6 +120,7 @@ const MUSIC_THEMES = {
       ["love-nothing-wrong", "有何不可"],
       ["love-love-song", "情歌"],
       ["love-like-you", "喜欢你"],
+      ["builtin-love-heartwarming", "Heartwarming · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heartwarming.mp3"],
     ],
   },
   breakup: {
@@ -130,6 +132,7 @@ const MUSIC_THEMES = {
       ["breakup-preference", "偏爱（痛）"],
       ["breakup-step-back", "退后"],
       ["breakup-serious-snow", "认真的雪"],
+      ["builtin-breakup-bittersweet", "Bittersweet · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bittersweet.mp3"],
     ],
   },
   sad: {
@@ -137,6 +140,7 @@ const MUSIC_THEMES = {
     tracks: [
       ["sad-ten-years", "十年"],
       ["sad-see-you-again", "See You Again"],
+      ["builtin-sad-heavy-heart", "Heavy Heart · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heavy%20Heart.mp3"],
     ],
   },
   calm: {
@@ -145,15 +149,22 @@ const MUSIC_THEMES = {
       ["calm-mitsuha", "三葉のテーマ"],
       ["calm-sacred-place", "Sacred Play Secret Place"],
       ["calm-magnolia", "Magnolia"],
+      ["builtin-calm-dreamer", "Dreamer · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dreamer.mp3"],
     ],
   },
   tense: {
     label: "紧张 · 轻快",
-    tracks: [["tense-life-line", "Life Line"]],
+    tracks: [
+      ["tense-life-line", "Life Line"],
+      ["builtin-tense-highlight-reel", "Highlight Reel · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Highlight%20Reel.mp3"],
+    ],
   },
   focus: {
     label: "学习 · 专注",
-    tracks: [["focus-life-line", "Life Line"]],
+    tracks: [
+      ["focus-life-line", "Life Line"],
+      ["builtin-focus-fresh-air", "Fresh Air · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fresh%20Air.mp3"],
+    ],
   },
   sadEn: {
     label: "忧伤 · 英文",
@@ -161,6 +172,7 @@ const MUSIC_THEMES = {
       ["saden-memories", "Memories"],
       ["saden-free-lucky", "Free lucky"],
       ["saden-merry-christmas", "Merry Christmas…"],
+      ["builtin-saden-promises", "Promises to Keep · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Promises%20to%20Keep.mp3"],
     ],
   },
   pain: {
@@ -169,6 +181,7 @@ const MUSIC_THEMES = {
       ["pain-call-of-silence", "Call of Silence"],
       ["pain-born-a-stranger", "Born a Stranger"],
       ["pain-south-city-flowers", "城南花已开"],
+      ["builtin-pain-disquiet", "Disquiet · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Disquiet.mp3"],
     ],
   },
   regret: {
@@ -178,6 +191,7 @@ const MUSIC_THEMES = {
       ["regret-truth", "The truth that you leave"],
       ["regret-farewell", "诀别书"],
       ["regret-dont-talk", "We don't Talk Anymore"],
+      ["builtin-regret-sincerely", "Sincerely · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Sincerely.mp3"],
     ],
   },
 };
@@ -578,10 +592,22 @@ function applyPreferences(){
 function musicTrackCount(){
   return Object.values(MUSIC_THEMES).reduce((total,theme)=>total+theme.tracks.length,0);
 }
+function musicAvailableCount(){
+  const ids=new Set(musicCache.keys());
+  for(const theme of Object.values(MUSIC_THEMES)){
+    for(const [id,,src] of theme.tracks)if(src)ids.add(id);
+  }
+  return ids.size;
+}
 function musicButtonLabel(){
   if(!settings.musicEnabled)return "♫ 音乐关";
-  if(!musicCache.size)return "♫ 待导入";
+  if(!musicAvailableCount())return "♫ 待导入";
   return "♫ 音乐开";
+}
+function trackSource(trackId){
+  if(musicUrlCache.has(trackId))return musicUrlCache.get(trackId);
+  const track=trackById(trackId);
+  return track?.[2]||null;
 }
 function openMusicDB(){
   return new Promise((resolve,reject)=>{
@@ -638,7 +664,7 @@ async function initializeMusicLibrary(){
 function availableMusic(themeId){
   const theme=MUSIC_THEMES[themeId];
   if(!theme)return [];
-  return theme.tracks.filter(([id])=>musicCache.has(id));
+  return theme.tracks.filter(([id,,src])=>musicCache.has(id)||!!src);
 }
 function unlockMusic(){
   if(MUSIC_FORCE_OFF||!settings.musicEnabled)return;
@@ -671,7 +697,7 @@ async function playTheme(themeId,{force=false}={}){
   musicRotation[themeId]=(rotation+1)%available.length;
   if(!force&&trackId===currentMusicTrack&&musicAudio[activeAudioIndex]?.src)return;
   currentMusicTrack=trackId;
-  await crossfadeTo(musicUrlCache.get(trackId),label);
+  await crossfadeTo(trackSource(trackId),label);
 }
 async function crossfadeTo(url,label){
   const token=++musicPlaybackToken;
@@ -1007,6 +1033,7 @@ function renderGame(){
           </aside>
         </div>
       </main>
+      <footer class="music-credit">Music: Kevin MacLeod (incompetech.com) · Creative Commons BY 4.0 · 部分曲目为游戏内嵌授权替代音乐</footer>
     </div>`;
 }
 
@@ -1548,7 +1575,7 @@ function openSettings(){
           ${toggle("musicEnabled","开启背景音乐","关闭后所有场景音乐都会暂停。")}
           ${toggle("eventMusic","启用事件专属音乐","考试、低谷、毕业和结局会切换到对应主题。")}
           <label class="setting-row music-volume-row">
-            <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicCache.size} / ${musicTrackCount()} 首已导入</small></span>
+            <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicAvailableCount()} / ${musicTrackCount()} 首可播放</small></span>
             <input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量">
           </label>
           <div class="settings-buttons">
@@ -1604,7 +1631,7 @@ function toggleMusic(){
     pauseMusic();
     return toast("当前版本已强制关闭背景音乐");
   }
-  if(settings.musicEnabled&&!musicCache.size){
+  if(settings.musicEnabled&&!musicAvailableCount()){
     openMusicLibrary();
     return toast("请先导入本地音乐文件");
   }
@@ -1616,7 +1643,7 @@ function toggleMusic(){
   }else{
     settings.musicEnabled=true;
     persistSettings();
-    if(!musicCache.size){
+    if(!musicAvailableCount()){
       openMusicLibrary();
       toast("请先导入本地音乐文件");
     }else{
@@ -1671,14 +1698,14 @@ function openMusicLibrary(){
     <details class="music-theme" open>
       <summary><b>${theme.label}</b><span>${theme.tracks.filter(([id])=>musicCache.has(id)).length} / ${theme.tracks.length}</span></summary>
       <div class="music-track-list">
-        ${theme.tracks.map(([trackId,title])=>{
-          const loaded=musicCache.has(trackId);
-          return `<div class="music-track ${loaded?"loaded":""}">
-            <div><b>${escapeHtml(title)}</b><small>${loaded?"已导入，可在对应场景播放":"尚未导入音频文件"}</small></div>
+        ${theme.tracks.map(([trackId,title,src])=>{
+          const local=musicCache.has(trackId),builtIn=!!src,available=local||builtIn;
+          return `<div class="music-track ${available?"loaded":""}">
+            <div><b>${escapeHtml(title)}</b><small>${local?"已导入本地文件":builtIn?"内置授权音乐，可直接播放":"尚未导入音频文件"}</small></div>
             <div class="music-track-actions">
-              <button class="ghost-button" data-preview-track="${trackId}" ${loaded?"":"disabled"}>试听</button>
-              <label class="ghost-button file-button">${loaded?"替换":"选择文件"}<input type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" data-music-file="${trackId}" hidden></label>
-              ${loaded?`<button class="ghost-button danger-button" data-clear-track="${trackId}">移除</button>`:""}
+              <button class="ghost-button" data-preview-track="${trackId}" ${available?"":"disabled"}>试听</button>
+              <label class="ghost-button file-button">${available?"替换":"选择文件"}<input type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" data-music-file="${trackId}" hidden></label>
+              ${local?`<button class="ghost-button danger-button" data-clear-track="${trackId}">移除本地文件</button>`:""}
             </div>
           </div>`;
         }).join("")}
@@ -1691,7 +1718,7 @@ function openMusicLibrary(){
     <div class="music-library">
       <div class="music-library-tools">
         <label class="primary-button file-button">批量导入音乐文件夹<input id="music-folder-import" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" webkitdirectory multiple hidden></label>
-        <span>${musicCache.size} / ${musicTrackCount()} 首已导入</span>
+        <span>${musicAvailableCount()} / ${musicTrackCount()} 首可播放</span>
       </div>
       ${sections}
     </div>
@@ -1743,7 +1770,7 @@ async function removeMusicTrack(trackId){
 
 function previewMusicTrack(trackId){
   if(MUSIC_FORCE_OFF)return toast("当前版本已强制关闭背景音乐");
-  const url=musicUrlCache.get(trackId);
+  const url=trackSource(trackId);
   if(!url)return toast("请先导入这个音频文件");
   currentMusicTheme="preview";
   currentMusicTrack=trackId;

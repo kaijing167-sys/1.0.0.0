@@ -226,6 +226,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .ghost-button:hover{background:#f4faf9;border-color:#9fc4ca}
 
 .game-main{width:min(1200px,100%);margin:0 auto;padding:24px clamp(16px,3vw,34px) 50px}
+.music-credit{width:min(1200px,100%);margin:0 auto;padding:0 clamp(16px,3vw,34px) 28px;color:#8ba0a4;font-size:9px;line-height:1.7;text-align:right}
 .countdown{
   position:relative;
   overflow:hidden;
