@@ -953,36 +953,35 @@ function renderGame(){
   $("#game-root").innerHTML=`
     <div class="game-shell">
       <header class="topbar">
-        <div class="top-brand"><i>青</i><span>青禾纪事</span></div>
-        <div class="top-player">
-          <span class="player-avatar">${escapeHtml(game.name.slice(0,1)||"我")}</span>
-          <span>${escapeHtml(game.name)}</span>
-          <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
+        <div class="hud-brand-row">
+          <div class="top-brand"><i>青</i><span>青禾纪事</span></div>
+          <div class="top-player">
+            <span class="player-avatar">${escapeHtml(game.name.slice(0,1)||"我")}</span>
+            <span>${escapeHtml(game.name)}</span>
+            <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
+          </div>
+          <div class="top-actions">
+            <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
+            <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
+          </div>
         </div>
-        <div class="top-actions">
-          <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
-          <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
+        <div class="hud-progress-row">
+          <div class="hud-days">
+            <small>距离高考</small>
+            <strong>${daysLeft(game.day)}</strong>
+            <span>天</span>
+          </div>
+          <div class="hud-progress-main">
+            <div class="hud-stage">${gradeForDay(game.day)} · 第 ${weekForDay(game.day)} 周 <span>当前第 ${game.day} 天 / 共 ${TOTAL_DAYS} 天</span></div>
+            <div class="progress-track">
+              <i style="width:${progressForDay(game.day)}%"></i>
+              <b class="progress-now" style="left:${progressForDay(game.day)}%"></b>
+            </div>
+            <div class="progress-markers"><span>高一开学</span><span>高二</span><span>高三</span><span>高考</span></div>
+          </div>
         </div>
       </header>
       <main id="main" class="game-main">
-        <section class="countdown">
-          <div class="countdown-top">
-            <div>
-              <div class="countdown-label">DISTANCE TO GAOKAO</div>
-              <div><strong>${daysLeft(game.day)}</strong><span class="countdown-unit">天</span></div>
-            </div>
-            <div class="countdown-stage">
-              <b>${gradeForDay(game.day)} · 第 ${weekForDay(game.day)} 周</b>
-              当前第 ${game.day} 天 / 共 ${TOTAL_DAYS} 天
-            </div>
-          </div>
-          <div class="progress-track">
-            <i style="width:${progressForDay(game.day)}%"></i>
-            <b class="progress-now" style="left:${progressForDay(game.day)}%"></b>
-          </div>
-          <div class="progress-markers"><span>高一开学</span><span>高二</span><span>高三</span><span>高考</span></div>
-        </section>
-
         <div class="dashboard">
           <div class="dashboard-column">
             <section class="game-panel">
