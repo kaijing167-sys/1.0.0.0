@@ -99,6 +99,15 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
   color:#547f8d;
   font-size:11px;
 }
+.landing-brief{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:650px;margin-top:22px}
+.landing-brief div{
+  border:1px solid rgba(161,199,207,.55);
+  border-radius:11px;
+  background:rgba(255,255,255,.52);
+  padding:12px;
+}
+.landing-brief strong{display:block;font-family:Georgia,serif;font-size:22px;font-weight:400;color:#34778a}
+.landing-brief span{display:block;margin-top:4px;color:#76929a;font-size:9px;line-height:1.5}
 
 .setup-panel{
   width:100%;
@@ -302,6 +311,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
 .panel-heading h2{margin:0;font-size:16px;font-weight:700}
 .panel-heading small{color:#849ca1;font-size:11px}
+.text-button{border:0;background:none;color:#4f8290;padding:4px 0;font-size:10px}
+.text-button:hover{color:#286b82}
 .action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
 .action-card{
   min-height:128px;
@@ -367,6 +378,31 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
 .achievement-item p{font-size:9px;line-height:1.6;color:#8a9b9e;margin:6px 0 0}
 .achievement-item small{display:block;margin-top:7px;color:#5d8b63;font-size:9px}
 .achievement-item .mini-bar{margin-top:8px}
+.relationship-list{display:grid;gap:10px}
+.relationship-item{border:1px solid #e0ebe9;border-radius:9px;background:#fbfdfb;padding:11px 12px}
+.relationship-top{display:flex;align-items:center;gap:10px}
+.relationship-avatar{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:#e7f1ee;color:#4f8190;font-size:12px}
+.relationship-copy{min-width:0;flex:1}
+.relationship-copy strong{display:block;color:#52727b;font-size:11px}
+.relationship-copy small{display:block;margin-top:4px;color:#8a9b9e;font-size:9px;line-height:1.5}
+.relationship-chat{border:1px solid #c9dfe3;border-radius:7px;background:#fff;color:#397a8f;padding:6px 9px;font-size:9px}
+.relationship-chat:hover:not(:disabled){background:#edf7f6;border-color:#8dbac4}
+.relationship-value{display:block;margin-top:7px;color:#83a078;font-size:8px}
+.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:18px;padding-top:15px;border-top:1px dashed #dce8e8}
+.roadmap-step{display:grid;justify-items:center;gap:4px;color:#8aa0a4;text-align:center}
+.roadmap-step i{width:10px;height:10px;border-radius:50%;background:#dbe8e6;box-shadow:0 0 0 4px #f2f7f5}
+.roadmap-step.done i{background:#79a76d;box-shadow:0 0 0 4px #edf6ea}
+.roadmap-step.active i{background:#efbd62;box-shadow:0 0 0 4px #fff4dd}
+.roadmap-step b{font-size:8px;font-weight:600}
+.roadmap-step small{font-size:7px}
+.achievement-book{display:grid;gap:9px;max-height:56vh;margin-top:18px;overflow:auto;padding-right:4px}
+.achievement-book-item{display:grid;grid-template-columns:28px minmax(0,1fr) 42px;gap:10px;align-items:center;border:1px solid #dce9e8;border-radius:10px;background:#fbfdfb;padding:11px}
+.achievement-book-item.unlocked{border-color:#cfe2c4;background:#f0f8ec}
+.achievement-seal{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e9f0ee;color:#8ca39b;font-size:12px}
+.achievement-book-item.unlocked .achievement-seal{background:#dbedd4;color:#56804f}
+.achievement-book-item strong{display:block;color:#52727b;font-size:11px}
+.achievement-book-item small{display:block;margin:4px 0 7px;color:#8a9b9e;font-size:9px;line-height:1.5}
+.achievement-book-item>b{color:#6e8f58;font-family:Georgia,serif;font-size:14px;font-weight:400;text-align:right}
 .week-actions{display:flex;align-items:center;gap:9px}
 .pending-event-button{border-color:#e1c28e;color:#956d31;background:#fffaf0}
 
@@ -517,6 +553,8 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .landing-copy h1{font-size:54px;letter-spacing:3px}
   .landing-copy h2{font-size:23px}
   .landing-copy p{line-height:1.9}
+  .landing-brief{grid-template-columns:1fr 1fr}
+  .landing-brief div{padding:10px}
   .setup-panel{padding:20px}
   .preset-list{grid-template-columns:repeat(2,1fr)}
   .stage-select{grid-template-columns:1fr 1fr}
@@ -543,6 +581,11 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .week-footer{display:block}
   .week-actions{display:grid;width:100%;margin-top:12px}
   .week-actions button{width:100%}
+  .relationship-top{flex-wrap:wrap}
+  .relationship-chat{margin-left:44px}
+  .roadmap{gap:2px}
+  .roadmap-step b{font-size:7px}
+  .achievement-book-item{grid-template-columns:24px minmax(0,1fr) 38px;gap:8px;padding:10px}
   .settings-inline{grid-template-columns:1fr}
   .music-volume-row{display:grid}
   .music-volume-row>input[type="range"]{width:100%;margin-top:10px}

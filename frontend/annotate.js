@@ -1,4 +1,5 @@
 (function(){
+  if(!new URLSearchParams(location.search).has("review"))return;
   const key='qinghe-ui-reviews-v1';
   let reviews=load(),active=false,target=null,editingId=null;
   const $=s=>document.querySelector(s);
