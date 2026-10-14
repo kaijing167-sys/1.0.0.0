@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#87c8ed"><title>青禾纪事 · 高中模拟器</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="sky-theme.css"></head>
+<body>
+<aside class="sidebar">
+ <a class="brand" href="#home"><span class="brand-icon">青</span><span>青禾纪事<small>HIGH SCHOOL DAYS</small></span></a>
+ <div class="semester">我的高中 · 第一周目<span>把平凡的日子，写成自己的故事。</span></div>
+ <nav aria-label="主导航" id="nav"></nav>
+ <div class="sidebar-bottom"><div class="quote">“云慢慢走，<br>小河替青春轻轻唱。”</div><section class="music-player" aria-label="背景音乐"><div class="music-top"><button class="music-play" id="music-toggle" aria-label="选择并播放背景音乐" aria-pressed="false">▶</button><div class="music-meta"><b>Carefree</b><small id="music-status" role="status">青春晴天 · 正在加载</small></div></div><div class="music-progress"><input id="music-seek" type="range" min="0" max="1000" value="0" disabled aria-label="歌曲播放进度"><span id="music-time">0:00 / 0:00</span></div><div class="music-volume-row"><button id="music-mute" aria-label="切换静音" aria-pressed="false">音量</button><span id="music-volume-value">35%</span></div><div class="music-bottom"><button class="music-file" id="music-select">本地音频备份</button><input id="music-volume" type="range" min="0" max="100" value="35" aria-label="背景音乐音量"></div><div class="music-official">音乐：<a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037" target="_blank" rel="noopener noreferrer">Carefree — Kevin MacLeod</a><br><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> · 原曲未修改</div><input id="music-input" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav" hidden><audio id="bgm" loop preload="metadata"></audio></section><button class="save-button" id="save">◷ &nbsp; 保存这段时光 <span>↗</span></button><p id="save-status">浏览器本地存档 · 自动保存</p></div>
+</aside>
+<div class="shell"><header><div class="breadcrumb">我的校园 <span>/</span> <b id="crumb">校园日常</b></div><div class="header-right"><span class="demo-dot"></span> 本地体验版 <span class="divider"></span><button id="help" aria-label="查看玩法说明">?</button><span class="avatar small">我</span><span>青禾同学</span></div></header>
+<main id="main"></main><footer>青禾纪事 <span>·</span> 每一种青春，都有自己的答案。<span class="footer-right">HIGH SCHOOL SIMULATOR / 01</span></footer></div>
+<dialog id="dialog"><div id="dialog-content"></div><button class="dialog-close" id="close-dialog" aria-label="关闭弹窗">×</button></dialog><div id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+<script src="music-config.js"></script>
+<script src="music.js"></script>
+</body></html>
