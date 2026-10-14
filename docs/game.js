@@ -837,7 +837,7 @@ function achievementPanelHtml(){
   }).sort((a,b)=>Number(b.unlocked)-Number(a.unlocked)||b.progress-a.progress);
   return `
     <section class="game-panel">
-      <div class="panel-heading"><h2>属性成就</h2><small>${game.achievements.length} / ${ACHIEVEMENTS.length} 已解锁</small></div>
+      <div class="panel-heading"><h2>属性成就</h2><button class="text-button" data-action="all-achievements">${game.achievements.length} / ${ACHIEVEMENTS.length} 查看全部</button></div>
       <div class="achievement-list">
         ${ranked.slice(0,5).map(({achievement,unlocked,progress})=>`
           <div class="achievement-item ${unlocked?"unlocked":""}">
@@ -847,6 +847,68 @@ function achievementPanelHtml(){
           </div>`).join("")}
       </div>
     </section>`;
+}
+function favoritePlace(friendId){
+  return OUTING_PLACES.find(place=>place.likedBy.includes(friendId));
+}
+function relationshipPanelHtml(){
+  const values=Object.values(game.relationships||{});
+  const average=values.length?Math.round(values.reduce((sum,value)=>sum+value,0)/values.length):0;
+  return `
+    <section class="game-panel">
+      <div class="panel-heading"><h2>校园关系</h2><small>平均 ${average} / 100</small></div>
+      <div class="relationship-list">
+        ${FRIENDS.map(friend=>{
+          const relationship=game.relationships[friend.id]||0;
+          const place=favoritePlace(friend.id);
+          const placeName=place&&place.name.startsWith("去")?place.name.slice(1):place?.name;
+          return `
+            <div class="relationship-item">
+              <div class="relationship-top">
+                <span class="relationship-avatar">${friend.initial}</span>
+                <span class="relationship-copy">
+                  <strong>${friend.name} · ${relationshipLabel(relationship)}</strong>
+                  <small>${friend.desc}${placeName?` · 喜欢去${placeName}`:""}</small>
+                </span>
+                <button class="relationship-chat" data-social-friend="${friend.id}" ${game.actionPoints<=0?"disabled":""}>聊聊</button>
+              </div>
+              <div class="mini-bar"><i style="width:${clamp(relationship,0,100)}%"></i></div>
+              <span class="relationship-value">羁绊 ${relationship} / 100</span>
+            </div>`;
+        }).join("")}
+      </div>
+    </section>`;
+}
+function roadmapPanelHtml(){
+  const steps=[
+    {label:"高一开学",day:1},
+    {label:"文理分科",day:215},
+    {label:"高三冲刺",day:731},
+    {label:"高考",day:TOTAL_DAYS},
+  ];
+  return `<div class="roadmap">${steps.map(step=>{
+    const stepState=game.day>=step.day?"done":game.day>=step.day-90?"active":"";
+    return `<span class="roadmap-step ${stepState}"><i></i><b>${step.label}</b><small>第 ${step.day} 天</small></span>`;
+  }).join("")}</div>`;
+}
+function allAchievementsHtml(){
+  return `
+    <div class="eyebrow">GROWTH ARCHIVE · ${game.achievements.length} / ${ACHIEVEMENTS.length}</div>
+    <h2>青春纪念册</h2>
+    <p>每一次行动、每一次遇见和每一次考试，都会慢慢改变这三年。</p>
+    <div class="achievement-book">
+      ${ACHIEVEMENTS.map(achievement=>{
+        const unlocked=game.achievements.includes(achievement.id);
+        const progress=achievementProgress(achievement);
+        return `<article class="achievement-book-item ${unlocked?"unlocked":""}">
+          <span class="achievement-seal">${unlocked?"✓":"◇"}</span>
+          <div><strong>${achievement.name}</strong><small>${achievement.desc}</small><div class="mini-bar"><i style="width:${Math.round(progress*100)}%"></i></div></div>
+          <b>${Math.round(progress*100)}%</b>
+        </article>`;
+      }).join("")}
+    </div>
+    <div class="dialog-footer"><button class="primary-button" data-modal-close>合上纪念册</button></div>
+  `;
 }
 function initialState(name,attrs,stageId="high1",track="science"){
   const stage=START_STAGES[stageId]||START_STAGES.high1;
@@ -902,8 +964,14 @@ function renderLanding(){
         <div class="landing-mark">QINGHE HIGH SCHOOL · 1092 DAYS</div>
         <h1>青禾纪事</h1>
         <h2>用三年时间，成为你想成为的人。</h2>
-        <p>成长</p>
+        <p>从高一开学到高考结束，每一次学习、休息、相遇和选择，都会把你带到不同的未来。</p>
         <div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
+        <div class="landing-brief">
+          <div><strong>1092</strong><span>天高中旅程</span></div>
+          <div><strong>4</strong><span>次每周行动</span></div>
+          <div><strong>10</strong><span>项成长成就</span></div>
+          <div><strong>多结局</strong><span>由三年选择决定</span></div>
+        </div>
       </section>
       <form class="setup-panel" id="setup-form">
         <div class="setup-heading">
@@ -1022,6 +1090,7 @@ function renderGame(){
             </section>
 
             ${achievementPanelHtml()}
+            ${relationshipPanelHtml()}
 
             <section class="game-panel">
               <div class="panel-heading"><h2>下一件大事</h2><small>${next?`${next.day-game.day} 天后`:"等待高考"}</small></div>
@@ -1030,6 +1099,7 @@ function renderGame(){
                 <h3>${next?escapeHtml(next.title):"高考已经临近"}</h3>
                 <p>${next?escapeHtml(next.text.slice(0,52))+"……":"全力以赴，完成最后的答卷。"}</p>
               </div>
+              ${roadmapPanelHtml()}
             </section>
 
             <section class="game-panel">
@@ -1063,6 +1133,7 @@ function studyOptions(){
 
 function renderFinal(){
   const best=Math.max(game.subjects.chinese,game.subjects.math,game.subjects.english,game.subjects.science,game.subjects.humanities);
+  const bestRelationship=Math.max(...Object.values(game.relationships||{}));
   $("#game-root").innerHTML=`
     <main id="main" class="final-screen">
       <div class="final-wrap">
@@ -1077,6 +1148,7 @@ function renderFinal(){
               <div class="final-fact"><span>学业最高能力</span><strong>${best}</strong></div>
               <div class="final-fact"><span>心态</span><strong>${game.attrs.mindset}</strong></div>
               <div class="final-fact"><span>魅力</span><strong>${game.attrs.charm}</strong></div>
+              <div class="final-fact"><span>最高羁绊</span><strong>${bestRelationship}</strong></div>
               <div class="final-fact"><span>成长成就</span><strong>${game.achievements.length} / ${ACHIEVEMENTS.length}</strong></div>
             </div>
           </section>
@@ -1124,7 +1196,6 @@ function startGame(){
   game=initialState(name,draft.attrs,draft.stage,draft.track);
   persist();
   render();
-  playTheme("bright",{force:true});
   const opening=draft.stage==="high1"?EVENTS[0]:STAGE_OPENINGS[draft.stage];
   setTimeout(()=>openEvent(opening),260);
 }
@@ -1142,10 +1213,13 @@ function performAction(type){
     `);
     return;
   }
+  if(type==="social"){
+    showSocialOptions();
+    return;
+  }
   const effects={
     rest:{energy:24,stress:-18,mood:8,text:"你放下书本，好好休息了一会儿。"},
     exercise:{energy:7,stress:-10,mood:12,text:"运动之后，身体和心情都轻松了一点。"},
-    social:{energy:-4,stress:-7,mood:16,charm:1,text:"你主动和大家聊了聊，关系近了一点。"},
   }[type];
   if(!effects)return;
   game.actionPoints--;
@@ -1157,6 +1231,45 @@ function performAction(type){
   persist();
   render();
   toast(effects.text);
+  if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
+}
+
+function showSocialOptions(){
+  if(game.actionPoints<=0)return toast("本周行动已经用完");
+  openModal(`
+    <div class="eyebrow">CAMPUS CONNECTION · 同窗羁绊</div>
+    <h2>今天想和谁聊聊？</h2>
+    <p>主动交流可以拉近关系、缓解压力，也会消耗 1 次行动。关系越熟，之后的周末相处越自然。</p>
+    <div class="choice-list">
+      ${FRIENDS.map(friend=>{
+        const relationship=game.relationships[friend.id]||0;
+        const place=favoritePlace(friend.id);
+        const placeName=place&&place.name.startsWith("去")?place.name.slice(1):place?.name;
+        return `<button class="choice-button" data-social-friend="${friend.id}">
+          <strong>${friend.name} · ${relationshipLabel(relationship)}</strong>
+          <small>${friend.desc} · 羁绊 ${relationship} / 100${placeName?` · 喜欢去${placeName}`:""}</small>
+        </button>`;
+      }).join("")}
+    </div>
+    <div class="dialog-footer"><button class="ghost-button" data-modal-close>先不去了</button></div>
+  `);
+}
+
+function resolveSocialChoice(friendId){
+  const friend=FRIENDS.find(item=>item.id===friendId);
+  if(!friend||game.actionPoints<=0)return;
+  const before=game.relationships[friend.id]||0;
+  const moodBonus=game.mood>=70?1:0;
+  const gain=Math.max(2,Math.round(2+game.attrs.charm*0.035+game.weekendCount*0.18+moodBonus));
+  game.relationships[friend.id]=clamp(before+gain,0,100);
+  game.actionPoints--;
+  applyEffects({energy:-3,stress:-5,mood:7,charm:1});
+  const text=`你和${friend.name}聊了很久，彼此又熟悉了一点。羁绊 +${game.relationships[friend.id]-before}。`;
+  addLog(text);
+  persist();
+  closeModal(true);
+  render();
+  toast(text);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
@@ -1404,7 +1517,8 @@ function showNextEvent(){
 
 function openEvent(event){
   currentModal={type:"event",event};
-  if(settings.eventMusic)playTheme(EVENT_MUSIC[event.id]||"calm",{force:true});
+  const theme=EVENT_MUSIC[event.id]||"calm";
+  if(settings.eventMusic&&theme!==currentMusicTheme)playTheme(theme,{force:true});
   if(event.type==="exam"||event.type==="gaokao"){
     openExam(event);
     return;
@@ -1809,6 +1923,7 @@ document.addEventListener("click",event=>{
   if(button.dataset.track)return applyTrack(button.dataset.track);
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
   if(button.dataset.study)return studySubject(button.dataset.study);
+  if(button.dataset.socialFriend)return resolveSocialChoice(button.dataset.socialFriend);
   if(button.dataset.tutoring)return resolveTutoringChoice(button.dataset.tutoring);
   if(button.dataset.weekendOption)return resolveWeekendOption(button.dataset.weekendOption);
   if(button.dataset.outingFriend)return resolveFriendChoice(button.dataset.outingFriend);
@@ -1821,6 +1936,7 @@ document.addEventListener("click",event=>{
   if(button.hasAttribute("data-confirm-new"))return resetGame();
   if(button.dataset.action==="toggle-music")return toggleMusic();
   if(button.dataset.action==="settings")return openSettings();
+  if(button.dataset.action==="all-achievements")return openModal(allAchievementsHtml());
   if(button.dataset.action==="music-library")return openMusicLibrary();
   if(button.dataset.action==="back-settings")return openSettings();
   if(button.dataset.previewTrack)return previewMusicTrack(button.dataset.previewTrack);
