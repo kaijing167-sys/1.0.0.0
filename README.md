@@ -110,7 +110,7 @@ uvicorn main:app --reload
 
 - 修改当前前端时，同步 `frontend/` 与 `docs/` 中的对应文件；`docs/upstream/` 作为对照快照单独维护。
 - 前端改动应检查角色创建、日常行动、周末、考试、存档及桌面和手机布局。
-- 后端核心逻辑可使用 `python -m unittest discover -s tests` 运行测试。
+- 后端核心逻辑测试使用 pytest；先执行 `pip install pytest`，再运行 `python -m pytest tests/test_core.py`（pytest 未包含在运行依赖中）。
 - 提交代码或素材前，请确认不包含个人存档、凭据或未获授权的资源。
 
 ## 当前边界与后续方向
