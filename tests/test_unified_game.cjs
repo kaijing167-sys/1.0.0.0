@@ -26,7 +26,7 @@ test('four people start in original day engine and keep exact subject conversion
  }
 });
 test('study, event gains, class transfers and reload use same journey',()=>{
- const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.physics=99;studySubject('physics')");
+ const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.physics=99.8;studySubject('physics')");
  assert.equal(h.run('game.subjects.physics'),100);assert.equal(h.run('game.actionPoints'),3);
  const before=h.run('JSON.stringify(game.subjects)');h.run('campusTransfer(14)');
  assert.equal(h.run('JSON.stringify(game.subjects)'),before);assert.equal(h.run('game.day'),993);
@@ -47,6 +47,19 @@ test('changing opening class counts against the character original class and kee
  assert.match(h.el('#game-dialog').innerHTML,/49人（默认50人）/);
  assert.equal(h.run('game.subjects.math'),characterMath());
  function characterMath(){return h.run("characterCatalog.find(c=>c.id==='hu-zx').initial_state.attrs.math")}
+});
+test('study, tutoring and events grow slowly and preserve decimals in saves',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.chinese=120;studySubject('chinese')");
+ assert.equal(h.run('game.subjects.chinese'),120.5);
+ h.run("game.tutoring={decided:true,subject:'chinese'};showMandatoryTutoring()");
+ assert.equal(h.run('game.subjects.chinese'),121);
+ h.run('applyEffects({subjects:{chinese:12,science:12},charm:8,mindset:10});persist();game=loadGame()');
+ assert.equal(h.run('game.subjects.chinese'),121.5);
+ assert.equal(h.run("game.attrs.charm"),70.5);
+ h.run("game.subjects.chinese=149.8;game.tutoringDoneThisWeek=false;showMandatoryTutoring()");
+ assert.equal(h.run('game.subjects.chinese'),150);
+ assert.match(h.el('#game-dialog').innerHTML,/\+0\.2/);
+ h.run('applyEffects({subjects:{chinese:-4}})');assert.equal(h.run('game.subjects.chinese'),146);
 });
 test('custom original gameplay remains usable and class-based exams depend on current six subjects',()=>{
  const h=harness();h.run('startGame()');assert.equal(h.run('game.stage'),'high1');assert.equal(h.run('game.day'),1);

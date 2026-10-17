@@ -1232,7 +1232,7 @@ function performAction(type){
   game.energy=clamp(game.energy+(effects.energy||0),0,100);
   game.stress=clamp(game.stress+(effects.stress||0),0,100);
   game.mood=clamp(game.mood+(effects.mood||0),0,100);
-  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+effects.charm,0,100);
+  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+campusGrowth(effects.charm),0,100);
   addLog(effects.text);
   persist();
   render();
@@ -1283,20 +1283,19 @@ function studySubject(id){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   const option=studyOptions().find(item=>item[0]===id);if(!option)return;
   const label=option[1];
-  const stressPenalty=Math.max(0,game.stress-60)*0.04;
   const modifiers=stageModifiers();
-  const gain=Math.max(1,Math.round(3.6+game.attrs.insight*0.035-stressPenalty+modifiers.studyBonus));
+  const gain=0.5;
   const before=game.subjects[id];
-  game.subjects[id]=Math.min(campusMax(id),game.subjects[id]+gain);
+  campusEffect(id,gain);
   game.actionPoints--;
   game.energy=clamp(game.energy-8,0,100);
   game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
   game.mood=clamp(game.mood-2,0,100);
-  addLog(`专注学习${label}，能力提升 ${game.subjects[id]-before} 点。`);
+  addLog(`专注学习${label}，能力提升 ${Math.round((game.subjects[id]-before)*100)/100} 点。`);
   persist();
   closeModal();
   render();
-  toast(`${label} +${game.subjects[id]-before}`);
+  toast(`${label} +${Math.round((game.subjects[id]-before)*100)/100}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
@@ -1351,8 +1350,7 @@ function showMandatoryTutoring(){
   }
   game.tutoringDoneThisWeek=true;
   game.tutoringCount++;
-  const gain=Math.max(3,Math.round(4.5+game.attrs.insight*0.025));
-  campusEffect(subject.id,gain);
+  const gain=campusEffect(subject.id,0.5);
   applyEffects({energy:-10,stress:9,mood:-3});
   addLog(`周末参加${subject.label}补课，能力提升 ${gain} 点。`);
   persist();
@@ -1630,9 +1628,9 @@ function applyEffects(effects={}){
   if(effects.stress)game.stress=clamp(game.stress+effects.stress,0,100);
   if(effects.mood)game.mood=clamp(game.mood+effects.mood,0,100);
   if(effects.money)game.money=Math.max(0,game.money+effects.money);
-  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+effects.charm,0,100);
-  if(effects.stamina)game.attrs.stamina=clamp(game.attrs.stamina+effects.stamina,0,100);
-  if(effects.mindset)game.attrs.mindset=clamp(game.attrs.mindset+effects.mindset,0,100);
+  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+campusGrowth(effects.charm),0,100);
+  if(effects.stamina)game.attrs.stamina=clamp(game.attrs.stamina+campusGrowth(effects.stamina),0,100);
+  if(effects.mindset)game.attrs.mindset=clamp(game.attrs.mindset+campusGrowth(effects.mindset),0,100);
   if(effects.subjects){
     for(const [id,value] of Object.entries(effects.subjects)){
       campusEffect(id,value);

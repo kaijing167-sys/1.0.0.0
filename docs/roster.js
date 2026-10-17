@@ -49,8 +49,16 @@ function campusTransfer(id){
 }
 function campusEffect(id,value){
   const targets=game.class_id&&['science','humanities'].includes(id)?(id==='science'?['physics','chemistry','biology']:['history','politics','geography']):[id];
-  for(const key of targets)game.subjects[key]=Math.round(clamp((game.subjects[key]||0)+value*(key!==id?2/3:1),0,campusMax(key))*100)/100;
+  let total=0;
+  for(const key of targets){
+    const before=game.subjects[key]||0;
+    const delta=campusGrowth(value*(key!==id?2/3:1));
+    game.subjects[key]=Math.round(clamp(before+delta,0,campusMax(key))*100)/100;
+    total+=game.subjects[key]-before;
+  }
+  return Math.round(total/targets.length*100)/100;
 }
+function campusGrowth(value){return value>0?Math.min(value,0.5):value}
 function campusValidate(g){
   if(!g||g.version!==2||!g.subjects||!g.attrs||!Number.isInteger(g.day)||g.day<1||g.day>1093)throw Error('不是当前玩法的进度');
   if(g.class_id&&!campusClass(g.class_id))throw Error('无效班级');
