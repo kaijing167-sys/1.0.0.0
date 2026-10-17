@@ -4,6 +4,8 @@ from character_catalog import CHARACTERS, CHARACTER_BY_ID
 from save_router import Snapshot
 from school_catalog import CLASSES, CLASS_BY_ID
 from pydantic import BaseModel, Field
+import json
+from pathlib import Path
 
 
 class StartOptions(BaseModel):
@@ -20,6 +22,13 @@ async def list_characters():
 @character_router.get("/classes")
 async def list_classes():
     return {"classes": CLASSES}
+
+
+@character_router.get("/classmates")
+async def list_classmates():
+    """Initial school roster; the browser applies the current player's class exchange."""
+    data = json.loads((Path(__file__).parent / 'frontend' / 'school-roster.json').read_text(encoding='utf-8'))
+    return {**data, "given_characters": CHARACTERS, "total": len(data['students']) + len(CHARACTERS)}
 
 
 @character_router.post("/{character_id}/start")

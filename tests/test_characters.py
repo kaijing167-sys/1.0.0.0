@@ -73,7 +73,7 @@ def test_subject_caps_and_countdown():
 def test_classes_and_all_transfers_round_trip(client):
     classes=client.get("/api/characters/classes").json()["classes"]
     assert [c["id"] for c in classes]==[2,4,7,8,11,13,14]
-    assert sum(c["size"] for c in classes)==330
+    assert sum(c["size"] for c in classes)==210
     assert classes[-1]["size"]==30
     revision=0
     for school in classes:

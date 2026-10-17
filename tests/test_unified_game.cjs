@@ -7,7 +7,7 @@ function harness(){
  const elements=new Map(),storage=new Map();
  const el=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'测试',hidden:true,classList:{add(){},remove(){},toggle(){}},addEventListener(){}});return elements.get(id)};
  const context=vm.createContext({document:{querySelector:el,addEventListener(){},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob});
- for(const name of ['characters/characters-data.js','roster.js','game.js','journey-saves.js']){
+ for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','game.js','journey-saves.js']){
    let source=fs.readFileSync(path.join(__dirname,'../frontend',name),'utf8');
    if(name==='game.js')source=source.slice(0,source.lastIndexOf('initializeMusicLibrary().then'));
    vm.runInContext(source,context,{filename:name});
@@ -43,8 +43,8 @@ test('local slots round trip unified identity, class, actions and pending events
 test('changing opening class counts against the character original class and keeps all subjects',()=>{
  const h=harness();h.run("campusDraft('hu-zx');draft.class_id=14;startGame();campusShowClasses()");
  assert.equal(h.run('game.origin_class_id'),2);
- assert.match(h.el('#game-dialog').innerHTML,/31人（默认30人）/);
- assert.match(h.el('#game-dialog').innerHTML,/49人（默认50人）/);
+ assert.match(h.el('#game-dialog').innerHTML,/30人（含已录入人物）/);
+ assert.match(h.el('#game-dialog').innerHTML,/30人（含已录入人物）/);
  assert.equal(h.run('game.subjects.math'),characterMath());
  function characterMath(){return h.run("characterCatalog.find(c=>c.id==='hu-zx').initial_state.attrs.math")}
 });
@@ -60,6 +60,21 @@ test('study, tutoring and events grow slowly and preserve decimals in saves',()=
  assert.equal(h.run('game.subjects.chinese'),150);
  assert.match(h.el('#game-dialog').innerHTML,/\+0\.2/);
  h.run('applyEffects({subjects:{chinese:-4}})');assert.equal(h.run('game.subjects.chinese'),146);
+});
+test('all classes contain exactly 30 unique people across transfers and reloads',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame()");
+ const baseline=h.run('JSON.stringify(campusPopulation)');
+ for(const id of [14,8,11,2,7,4,13]){
+   h.run(`campusAssign(game,${id});persist();game=loadGame()`);
+   assert.equal(h.run('campusMembers(game).length'),210);
+   assert.equal(h.run('new Set(campusMembers(game).map(p=>p.id)).size'),210);
+   assert.ok(h.run('CAMPUS_CLASSES.every(c=>campusMembers(game).filter(p=>p.class_id===c.id).length===30)'));
+   assert.equal(h.run("campusMembers(game).find(p=>p.id==='hu-zx').class_id"),id);
+ }
+ assert.equal(h.run('JSON.stringify(campusPopulation)'),baseline);
+ h.run("game=initialState('自定义',PRESETS.balanced);campusAssign(game,14);campusAssign(game,2)");
+ assert.ok(h.run('CAMPUS_CLASSES.every(c=>campusMembers(game).filter(p=>p.class_id===c.id).length===30)'));
+ assert.equal(h.run('campusMembers(game).filter(p=>characterCatalog.some(c=>c.id===p.id)).length'),4);
 });
 test('custom original gameplay remains usable and class-based exams depend on current six subjects',()=>{
  const h=harness();h.run('startGame()');assert.equal(h.run('game.stage'),'high1');assert.equal(h.run('game.day'),1);

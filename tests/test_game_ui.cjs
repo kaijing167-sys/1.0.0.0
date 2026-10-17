@@ -81,13 +81,13 @@ test('class selection, transfers, headcounts, reload and new rounds preserve cho
   await g.run("selectCharacter('hu-zx')");
   assert.equal(g.run('state.class_id'),14);
   assert.equal(g.run('state.track'),'arts');
-  assert.equal(g.run('SchoolRules.size(2,state)'),49);
-  assert.equal(g.run('SchoolRules.size(14,state)'),31);
+  assert.equal(g.run('SchoolRules.size(2,state)'),30);
+  assert.equal(g.run('SchoolRules.size(14,state)'),30);
   const attrs=g.run('JSON.stringify(state.attrs)');
   g.run('transferClass(11)');
   assert.equal(g.run('state.class_id'),11);
   assert.equal(g.run('JSON.stringify(state.attrs)'),attrs);
-  assert.equal(g.run('schoolClasses.reduce((n,c)=>n+SchoolRules.size(c.id,state),0)'),330);
+  assert.equal(g.run('schoolClasses.reduce((n,c)=>n+SchoolRules.size(c.id,state),0)'),210);
   assert.equal(g.run('SchoolRules.size(14,state)'),30);
   assert.equal(JSON.parse(g.storage.get('qinghe-school-v1')).class_id,11);
   g.run("state=JSON.parse(localStorage.getItem(key));SchoolRules.normalize(state);location.hash='#classes';render()");
@@ -96,8 +96,8 @@ test('class selection, transfers, headcounts, reload and new rounds preserve cho
   g.run('state.days_remaining=0;state.week=156;calculateExam({});startNewGame()');
   assert.equal(g.run('state.class_id'),11);
   g.run('transferClass(2)');
-  assert.equal(g.run('SchoolRules.size(2,state)'),50);
-  assert.equal(g.run('SchoolRules.size(11,state)'),50);
+  assert.equal(g.run('SchoolRules.size(2,state)'),30);
+  assert.equal(g.run('SchoolRules.size(11,state)'),30);
 });
 
 test('old character snapshots receive corrected default placement without resetting attributes', () => {

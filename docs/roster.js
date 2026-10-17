@@ -1,11 +1,11 @@
 // Shared character and class data; all play uses game.js and qinghe-game-v2.
 const CAMPUS_CLASSES = [
-  {id:2,combo:'物化生',level:'尖子班',subjects:['physics','chemistry','biology'],size:50},
-  {id:4,combo:'物化生',level:'普通班',subjects:['physics','chemistry','biology'],size:50},
-  {id:7,combo:'物化政',level:'普通班',subjects:['physics','chemistry','politics'],size:50},
-  {id:8,combo:'物化地',level:'普通班',subjects:['physics','chemistry','geography'],size:50},
-  {id:11,combo:'政史地',level:'尖子班',subjects:['politics','history','geography'],size:50},
-  {id:13,combo:'政史地',level:'普通班',subjects:['politics','history','geography'],size:50},
+  {id:2,combo:'物化生',level:'尖子班',subjects:['physics','chemistry','biology'],size:30},
+  {id:4,combo:'物化生',level:'普通班',subjects:['physics','chemistry','biology'],size:30},
+  {id:7,combo:'物化政',level:'普通班',subjects:['physics','chemistry','politics'],size:30},
+  {id:8,combo:'物化地',level:'普通班',subjects:['physics','chemistry','geography'],size:30},
+  {id:11,combo:'政史地',level:'尖子班',subjects:['politics','history','geography'],size:30},
+  {id:13,combo:'政史地',level:'普通班',subjects:['politics','history','geography'],size:30},
   {id:14,combo:'史政生',level:'普通班',subjects:['history','politics','biology'],size:30}
 ];
 const CAMPUS_SUBJECTS = [['chinese','语文'],['math','数学'],['english','英语'],['physics','物理'],['chemistry','化学'],['biology','生物'],['history','历史'],['politics','政治'],['geography','地理']];
@@ -35,16 +35,42 @@ function campusStart(g,d){
 function campusCards(){return `<section class="roster"><h2>选择人物</h2><p>选择后沿用当前游戏的行动、周末、剧情和考试流程；默认百日冲刺，也可调整开局阶段。</p><div class="roster-grid">${characterCatalog.map(c=>`<button type="button" data-roster="${c.id}" class="roster-card ${draft.character_id===c.id?'selected':''}"><img src="${campusPortrait(c.id)}" alt="${escapeHtml(c.name)}"><b>${escapeHtml(c.name)}</b><small>${c.initial_state.class_id}班 · ${c.fields['选科组合']}</small></button>`).join('')}</div><button type="button" data-custom-role>自定义人物</button><label>开局班级 <select id="campus-start-class"><option value="">随剧情分科</option>${CAMPUS_CLASSES.map(c=>`<option value="${c.id}" ${draft.class_id===c.id?'selected':''}>${c.id}班 · ${c.combo}${c.level}</option>`).join('')}</select></label></section>`}
 function campusShowClasses(){
   if(!game)return toast('先选择人物并开始游戏');
-  openModal(`<h2>我的班级</h2><p>换班保留进度和所有科目能力，后续学习和考试使用新班级选科。</p>${CAMPUS_CLASSES.map(c=>{
-    const origin=game.origin_class_id||characterCatalog.find(p=>p.id===game.character_id)?.initial_state.class_id;
-    const size=c.size-(origin===c.id?1:0)+(game.class_id===c.id?1:0);
-    const names=characterCatalog.filter(p=>(p.id===game.character_id?game.class_id:p.initial_state.class_id)===c.id).map(p=>p.name);
-    return `<section class="class-row"><b>${c.id}班 · ${c.combo}${c.level}</b><p>${size}人（默认${c.size}人） · ${names.map(escapeHtml).join('、')||'人物待补充'}</p><button data-campus-transfer="${c.id}" ${game.completed||game.class_id===c.id?'disabled':''}>${game.class_id===c.id?'当前班级':'转入此班'}</button></section>`;
+  const population=campusMembers(game);
+  openModal(`<h2>我的班级</h2><p>全校210人，每班30人，包含给定人物。其余同学使用固定生成的正态分布属性；换班与一名生成同学交换名额，保留进度和科目能力。</p>${CAMPUS_CLASSES.map(c=>{
+    const members=population.filter(p=>p.class_id===c.id);
+    return `<section class="class-row"><b>${c.id}班 · ${c.combo}${c.level}</b><p>${members.length}人（含已录入人物）</p><button data-campus-transfer="${c.id}" ${game.completed||game.class_id===c.id?'disabled':''}>${game.class_id===c.id?'当前班级':'转入此班'}</button><details><summary>查看30名同学及属性</summary>${members.map(p=>campusMemberCard(p,c)).join('')}</details></section>`;
   }).join('')}`);
+}
+function campusMembers(g){
+  const members=campusPopulation.students.map(p=>({...p,subjects:{...p.subjects},attrs:{...p.attrs}}));
+  for(const p of characterCatalog){
+    members.push({id:p.id,name:p.name,class_id:p.initial_state.class_id,generated:false,
+      subjects:Object.fromEntries(CAMPUS_SUBJECTS.map(([id])=>[id,p.initial_state.attrs[id]])),
+      attrs:{insight:Number(p.fields['学习能力'])||60,stamina:p.initial_state.attrs.stamina,mindset:Number(p.fields['考场抗压'])||60,charm:Number(p.fields['魅力'])||60}});
+  }
+  if(!g?.class_id)return members;
+  let player=members.find(p=>p.id===g.character_id);
+  if(!player){
+    const origin=campusClass(g.origin_class_id)?.id||g.class_id;
+    player=members.find(p=>p.generated&&p.class_id===origin);
+    player.id='custom-player';player.generated=false;
+  }
+  const origin=player.class_id;
+  if(origin!==g.class_id){
+    const exchange=members.find(p=>p.generated&&p.class_id===g.class_id);
+    if(!exchange)throw Error('目标班没有可交换名额');
+    exchange.class_id=origin;player.class_id=g.class_id;
+  }
+  player.name=g.name;player.subjects={...g.subjects};player.attrs={...g.attrs};player.active=true;
+  return members;
+}
+function campusMemberCard(p,c){
+  const total=['chinese','math','english',...c.subjects].reduce((n,id)=>n+(p.subjects[id]||0),0);
+  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.generated?'（生成）':'（已给定）'} · 六科 ${Math.round(total*100)/100}/750</summary><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
 }
 function campusTransfer(id){
   if(!game||game.completed||modalLocked)return;
-  if(!confirm('确认换班？进度和科目能力会保留。'))return;
+  if(!confirm('确认与目标班一名生成同学交换班级？每班保持30人，你的进度和科目能力保留。'))return;
   campusAssign(game,id);addLog('转入'+id+'班');persist();closeModal();render();campusShowClasses();
 }
 function campusEffect(id,value){
