@@ -570,6 +570,7 @@ function loadGame(){
     data.tutoringDoneThisWeek=!!data.tutoringDoneThisWeek;
     if(!data.track)data.track="undecided";
     if(!data.stage)data.stage="high1";
+    if(data.class_id)campusValidate(data);
     return data;
   }catch{return null}
 }
@@ -782,6 +783,7 @@ function gradeForDay(day){
   return "高一";
 }
 function trackLabel(){
+  if(game.class_id){const c=campusClass(game.class_id);return c.id+"班 · "+c.combo+c.level;}
   if(game.track==="science")return "理科方向";
   if(game.track==="humanities")return "文科方向";
   return "尚未分科";
@@ -965,7 +967,7 @@ function renderLanding(){
         <h1>青禾纪事</h1>
         <h2>用三年时间，成为你想成为的人。</h2>
         <p>从高一开学到高考结束，每一次学习、休息、相遇和选择，都会把你带到不同的未来。</p>
-        <p><a class="primary-button" href="characters/index.html#characters">选择已录入人物 →</a> <a href="characters/index.html#classes">我的班级</a></p><div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
+        <div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
         <div class="landing-brief">
           <div><strong>1092</strong><span>天高中旅程</span></div>
           <div><strong>4</strong><span>次每周行动</span></div>
@@ -973,10 +975,10 @@ function renderLanding(){
           <div><strong>多结局</strong><span>由三年选择决定</span></div>
         </div>
       </section>
-      <form class="setup-panel" id="setup-form">
+      <form class="setup-panel" id="setup-form">${campusCards()}
         <div class="setup-heading">
           <div><h2>创建你的角色</h2><p>选择开局阶段，再写下名字并分配属性。</p></div>
-          <span class="point-pill">剩余 ${remainingPoints()} 点</span>
+          <span class="point-pill">${draft.character_id?"人物原始属性":"剩余 "+remainingPoints()+" 点"}</span>
         </div>
         <div class="stage-select">
           ${Object.entries(START_STAGES).map(([id,stage])=>`<button type="button" data-stage="${id}" class="${draft.stage===id?"selected":""}"><b>${stage.label}</b><small>${stage.difficulty} · 剩余 ${TOTAL_DAYS-stage.day+1} 天</small></button>`).join("")}
@@ -1024,11 +1026,11 @@ function renderGame(){
         <div class="hud-brand-row">
           <div class="top-brand"><i>青</i><span>青禾纪事</span></div>
           <div class="top-player">
-            <span class="player-avatar">${escapeHtml(game.name.slice(0,1)||"我")}</span>
+            <span class="player-avatar">${game.character_id?`<img src="${campusPortrait(game.character_id)}" alt="${escapeHtml(game.name)}">`:escapeHtml(game.name.slice(0,1)||"我")}</span>
             <span>${escapeHtml(game.name)}</span>
             <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
           </div>
-          <div class="top-actions"><a class="ghost-button" href="characters/index.html#characters">角色选择</a><a class="ghost-button" href="characters/index.html#classes">我的班级</a>
+          <div class="top-actions"><button class="ghost-button" data-campus-classes>我的班级</button>
             <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
             <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
           </div>
@@ -1074,7 +1076,7 @@ function renderGame(){
 
             <section class="game-panel">
               <div class="panel-heading"><h2>学业状态</h2><small>${trackLabel()}</small></div>
-              ${SUBJECTS.map(([id,label])=>subjectRow(id,label)).join("")}
+              ${(campusOptions(game)||SUBJECTS).map(([id,label])=>subjectRow(id,label)).join("")}
             </section>
           </div>
 
@@ -1123,9 +1125,10 @@ function statBox(label,value,max,unit=""){
 }
 function subjectRow(id,label){
   const value=game.subjects[id];
-  return `<div class="subject-row"><span>${label}</span><div class="mini-bar"><i style="width:${clamp(value/150*100,0,100)}%"></i></div><b>${value}</b></div>`;
+  return `<div class="subject-row"><span>${label}</span><div class="mini-bar"><i style="width:${clamp(value/campusMax(id)*100,0,100)}%"></i></div><b>${value}</b></div>`;
 }
 function studyOptions(){
+  if(game.class_id)return campusOptions(game);
   if(game.track==="science")return SUBJECTS.filter(([id])=>["chinese","math","english","science"].includes(id));
   if(game.track==="humanities")return SUBJECTS.filter(([id])=>["chinese","math","english","humanities"].includes(id));
   return SUBJECTS;
@@ -1155,6 +1158,7 @@ function renderFinal(){
           <section class="final-card">
             <h2>接下来</h2>
             <p>这一周目已经完成。你可以重新创建角色，尝试另一种高中生活。</p>
+            <button class="ghost-button" data-journey-slots>进度存档槽</button>
             <button class="primary-button" data-action="new-game">重新开始新周目 →</button>
           </section>
         </div>
@@ -1163,6 +1167,7 @@ function renderFinal(){
 }
 
 function changeAttribute(id,delta){
+  if(draft.character_id)return toast("此人物使用填写表属性；可切换自定义人物分配属性");
   const current=draft.attrs[id];
   if(delta>0&&(remainingPoints()<=0||current>=80))return toast(current>=80?"单项属性最高 80":"没有剩余点数了");
   if(delta<0&&current<=BASE_ATTR)return;
@@ -1172,6 +1177,7 @@ function changeAttribute(id,delta){
 }
 
 function applyPreset(id){
+  if(draft.character_id)return toast("此人物使用填写表属性");
   draft.preset=id;
   draft.attrs={...PRESETS[id]};
   renderLanding();
@@ -1191,9 +1197,9 @@ function applyTrack(id){
 function startGame(){
   const name=$("#player-name")?.value.trim();
   if(!name)return toast("先给自己取一个名字");
-  if(remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
+  if(!draft.character_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
   draft.name=name;
-  game=initialState(name,draft.attrs,draft.stage,draft.track);
+  game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
   persist();
   render();
   const opening=draft.stage==="high1"?EVENTS[0]:STAGE_OPENINGS[draft.stage];
@@ -1208,7 +1214,7 @@ function performAction(type){
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
       <p>学习效率会受到学力和当前压力影响。每次行动消耗 1 点行动机会。</p>
-      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / 150</small></button>`).join("")}</div>
+      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)}</small></button>`).join("")}</div>
       <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
     `);
     return;
@@ -1275,12 +1281,13 @@ function resolveSocialChoice(friendId){
 
 function studySubject(id){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
-  const label=SUBJECTS.find(item=>item[0]===id)[1];
+  const option=studyOptions().find(item=>item[0]===id);if(!option)return;
+  const label=option[1];
   const stressPenalty=Math.max(0,game.stress-60)*0.04;
   const modifiers=stageModifiers();
   const gain=Math.max(1,Math.round(3.6+game.attrs.insight*0.035-stressPenalty+modifiers.studyBonus));
   const before=game.subjects[id];
-  game.subjects[id]=Math.min(150,game.subjects[id]+gain);
+  game.subjects[id]=Math.min(campusMax(id),game.subjects[id]+gain);
   game.actionPoints--;
   game.energy=clamp(game.energy-8,0,100);
   game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
@@ -1314,7 +1321,7 @@ function showTutoringDecision(){
     <p>爸妈把几张辅导班宣传单放在桌上。选择一门课后，之后的每个周末都会先完成一次必选补课；也可以先不补。</p>
     <div class="choice-list">
       <button class="choice-button" data-tutoring="none"><strong>暂时不补课</strong><small>保留完整周末，但成绩提升更依赖自己学习。</small></button>
-      ${TUTORING_SUBJECTS.map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
+      ${(game.class_id?campusOptions(game).map(([id,label])=>({id,label})):TUTORING_SUBJECTS).map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
     </div>
   `, false);
 }
@@ -1332,7 +1339,7 @@ function resolveTutoringChoice(subjectId){
 }
 
 function showMandatoryTutoring(){
-  const subject=TUTORING_SUBJECTS.find(item=>item.id===game.tutoring.subject);
+  const subject=[...TUTORING_SUBJECTS,...CAMPUS_SUBJECTS.map(([id,label])=>({id,label}))].find(item=>item.id===game.tutoring.subject);
   if(!subject){
     game.tutoring.subject="none";
     showWeekendOptions();
@@ -1345,7 +1352,7 @@ function showMandatoryTutoring(){
   game.tutoringDoneThisWeek=true;
   game.tutoringCount++;
   const gain=Math.max(3,Math.round(4.5+game.attrs.insight*0.025));
-  game.subjects[subject.id]=Math.min(150,game.subjects[subject.id]+gain);
+  campusEffect(subject.id,gain);
   applyEffects({energy:-10,stress:9,mood:-3});
   addLog(`周末参加${subject.label}补课，能力提升 ${gain} 点。`);
   persist();
@@ -1535,7 +1542,7 @@ function resolveEventChoice(index){
   if(!currentModal?.event)return;
   const event=currentModal.event;
   const choice=event.choices[index];
-  if(choice.track)game.track=choice.track;
+  if(choice.track){if(game.class_id)campusAssign(game,choice.track==="science"?4:13);else game.track=choice.track;}
   applyEffects(choice.effects);
   markEventResolved(event.id);
   addLog(`${event.title}：${choice.result}`);
@@ -1570,7 +1577,7 @@ function calculateExam(event,style){
   const styleMod=style==="sprint"?28:style==="check"?10:0;
   const pressureMod=style==="sprint"?-Math.max(0,game.stress-45)*0.75:0;
   const random=Math.round((Math.random()-.5)*70);
-  const raw=ability*1.95+80-difficulty+styleMod+pressureMod+random;
+  const raw=game.class_id?campusOptions(game).reduce((sum,[id])=>sum+game.subjects[id],0)+(game.attrs.insight-60)*0.3+(game.attrs.mindset-60)*0.2-difficulty+styleMod+pressureMod+random:ability*1.95+80-difficulty+styleMod+pressureMod+random;
   const score=clamp(Math.round(raw),120,750);
   game.examResults.push({day:game.day,title:event.title,score});
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
@@ -1628,7 +1635,7 @@ function applyEffects(effects={}){
   if(effects.mindset)game.attrs.mindset=clamp(game.attrs.mindset+effects.mindset,0,100);
   if(effects.subjects){
     for(const [id,value] of Object.entries(effects.subjects)){
-      game.subjects[id]=clamp(game.subjects[id]+value,0,150);
+      campusEffect(id,value);
     }
   }
 }
@@ -1705,7 +1712,7 @@ function openSettings(){
         </section>
       `}
       <section class="settings-section">
-        <h3>存档</h3><p class="settings-note">已录入人物的百日冲刺进度在“角色选择”中继续，两种玩法分别保存。</p>
+        <h3>存档</h3><p class="settings-note">人物、班级与当前旅程共用此进度。</p><button class="ghost-button" data-journey-slots>进度存档槽</button>
         <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
         <div class="settings-buttons">
           <button class="ghost-button" data-action="export-save">导出存档</button>
@@ -1802,7 +1809,7 @@ async function importSave(file){
     const imported=parsed.game||parsed;
     if(!imported||imported.version!==2||!imported.attrs||!imported.subjects)throw new Error("invalid");
     if(!Array.isArray(imported.pendingEvents))imported.pendingEvents=[];
-    game=imported;
+    game=campusValidate(imported);
     if(parsed.settings)settings={...DEFAULT_SETTINGS,...parsed.settings};
     persist();
     persistSettings();
@@ -1910,7 +1917,7 @@ function resetGame(){
   localStorage.removeItem(SAVE_KEY);
   game=null;
   closeModal(true);
-  draft={name:"",attrs:{...PRESETS.balanced},preset:"balanced"};
+  draft={name:"",attrs:{...PRESETS.balanced},preset:"balanced",stage:"high1",track:"science"};
   render();
 }
 
@@ -1982,6 +1989,7 @@ document.addEventListener("keydown",event=>{
 });
 
 render();
+if(location.hash==="#classes"&&game)campusShowClasses();
 initializeMusicLibrary().then(()=>{
   pauseMusic();
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});

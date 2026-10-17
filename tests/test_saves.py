@@ -129,11 +129,11 @@ def test_persists_after_engine_restart(tmp_path):
 
 def test_game_page_and_scripts(client):
     assert client.get("/play/").status_code == 200
-    assert 'src="game.js?v=15"' in client.get("/play/").text
-    assert 'characters/index.html#characters' in client.get("/play/game.js").text
-    assert 'characters/index.html#classes' in client.get("/play/game.js").text
-    assert 'src="saves.js"' in client.get("/play/characters/").text
-    assert client.get("/play/characters/saves.js").status_code == 200
+    assert 'src="game.js?v=16"' in client.get("/play/").text
+    assert 'src="roster.js?v=16"' in client.get("/play/").text
+    assert 'data-campus-classes' in client.get("/play/game.js").text
+    assert 'location.replace' in client.get("/play/characters/").text
+    assert client.get("/play/journey-saves.js").status_code == 200
     for portrait in ('hao-kj-v1', 'hu-yy-v1', 'hu-zx-v2', 'zhang-z-v2'):
         response = client.get('/play/characters/portraits/' + portrait + '.png')
         assert response.status_code == 200

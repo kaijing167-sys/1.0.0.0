@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Path, Query, Response
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator, TypeAdapter
+from journey_model import JourneySnapshot
 from sqlalchemy import JSON, Column, Integer, String, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -122,7 +123,7 @@ class Snapshot(StrictModel):
 class WriteSave(StrictModel):
     name: Annotated[str, Field(min_length=1, max_length=60)]
     expected_revision: Annotated[int, Field(ge=0)]
-    state: Snapshot
+    state: Snapshot | JourneySnapshot
 
 
 def owner_key(x_save_token: Annotated[str | None, Header()] = None):
@@ -141,8 +142,8 @@ def summary(row):
     return {
         "slot": row.slot, "name": row.name, "revision": row.revision,
         "updated_at": row.updated_at, "empty": row.state is None,
-        "week": row.state["week"] if row.state else None,
-        "round": row.state["round"] if row.state else None,
+        "week": row.state.get("week", (row.state.get("day", 1)-1)//7+1) if row.state else None,
+        "round": row.state.get("round", 1) if row.state else None,
         "character_name": CHARACTER_BY_ID.get((row.state or {}).get("character_id"), {}).get("name"),
         "days_remaining": (row.state or {}).get("days_remaining"),
     }
@@ -161,7 +162,7 @@ async def read_save(slot: Slot, owner: Owner, db: DB, response: Response):
     row = await db.get(SaveSlot, (owner, slot))
     if row is None or row.state is None:
         raise HTTPException(404, "该存档槽为空")
-    saved = Snapshot.model_validate(row.state).model_dump(exclude_unset=True)
+    saved = TypeAdapter(Snapshot | JourneySnapshot).validate_python(row.state).model_dump(exclude_unset=True)
     return {**summary(row), "state": saved}
 
 

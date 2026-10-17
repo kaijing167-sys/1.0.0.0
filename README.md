@@ -115,22 +115,22 @@ uvicorn main:app --reload
 
 ## 当前边界与后续方向
 
-当前没有账号、排行榜或真实院校录取数据库。已录入人物玩法支持匿名服务器存档；高中旅程仍使用原有本地存档。高考成绩与事件效果属于游戏模拟，不能用于真实成绩预测。毕业信目前为确定性文本，尚未接入大模型；NPC 阶段契约任务与李强救赎线也有待继续完善。
+当前没有账号、排行榜或真实院校录取数据库。统一旅程支持本地进度槽，在 FastAPI /play/ 下还支持匿名数据库存档。高考成绩与事件效果属于游戏模拟，不能用于真实成绩预测。毕业信目前为确定性文本，尚未接入大模型；NPC 阶段契约任务与李强救赎线也有待继续完善。
 
 可继续推进前后端接入、完整剧情、生产部署与院校志愿数据。音乐默认曲目引用 Kevin MacLeod 的 CC BY 4.0 授权资源；实际使用时请保留对应署名与许可信息。
 
 
 
-## 已录入人物、班级与进度槽
+## 统一人物、班级与进度
 
-首页的“选择已录入人物 / 角色选择”和“我的班级”进入四人物百日冲刺玩法，保留新版高中旅程。两种玩法的数据结构和本地存档分别保存，不互相导入覆盖。
+四个人物直接加入原版 `game.js` 创建页面，使用同一套日常行动、周末、补课、剧情事件、考试与结局流程。默认百日冲刺，也可选择原有开局阶段；保留自定义人物。
 
-- 胡yy、张z默认8班；虎zx、郝kj默认2班。张z使用半框眼镜头像，虎zx使用黑色全框眼镜头像。
-- 共7个班：2、4、7、8、11、13、14班；支持开局选班和中途换班。默认各50人，14班30人。
-- 语数外按150分比例换算，其余科目满分100；按当前班级六科计分。
-- 启动 `uvicorn main:app --reload`，访问 `/play/characters/#characters`。点击“保存这段时光”使用5个数据库存档槽。
-- GitHub Pages入口为 `characters/index.html#characters`，支持本地自动保存和JSON导出；数据库存档需要运行FastAPI服务。
-- 角色资料：`frontend/characters/characters.json`；前端与静态发布资源同步在 `frontend/characters/` 和 `docs/characters/`。
-- 接口：`GET /api/characters`、`GET /api/characters/classes`、`POST /api/characters/{id}/start`；`/api/saves` 提供进度槽读写。
-- 详细说明见 [CHARACTERS.md](CHARACTERS.md)、[SCHOOL.md](SCHOOL.md)、[SAVES.md](SAVES.md)。
-- 验证：`python -m pytest tests`；`node --test tests/test_game_rules.cjs tests/test_game_ui.cjs`。
+- 胡yy、张z默认8班；虎zx、郝kj默认2班。四人头像和原始资料保留。
+- 2、4、7、8、11、13、14班可选，14班默认30人，其余50人。开局选班和中途换班均按原班调整人数，保留进度和九科能力。
+- 语数外满分150，其余100；选班后按当前六科计分，保留原版考试策略、压力、随机发挥和难度修正。学习与补课使用相应上限。
+- 原版四维属性对应填写表的学习能力、体质（stamina）、考场抗压和魅力；完整原始数据仍在 `frontend/characters/characters.json`。
+- 首页 `index.html` 为唯一玩法入口；旧 `characters/index.html` 链接自动回到首页。
+- 当前进度仍使用 `qinghe-game-v2`，原版进度保留。旧独立人物试验版的数据不删除，但因规则不同不自动转换为新旅程。
+- 设置中的“进度存档槽”保存和恢复同一个游戏对象。GitHub Pages提供5个浏览器本地槽和JSON导入导出；启动 `uvicorn main:app --reload` 后访问 `/play/` 使用数据库槽。
+- 新旅程与旧快照均可由 `/api/saves` 保存，但各自按对应格式校验。`/api/characters/{id}/start` 保留为旧客户端兼容接口，统一首页开局使用 `game.js`。
+- 前后端验证：`python -m pytest tests`；`node --test tests/test_game_rules.cjs tests/test_game_ui.cjs tests/test_unified_game.cjs`。
