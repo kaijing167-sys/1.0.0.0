@@ -115,6 +115,22 @@ uvicorn main:app --reload
 
 ## 当前边界与后续方向
 
-当前没有账号、服务器存档、排行榜或真实院校录取数据库。高考成绩与事件效果属于游戏模拟，不能用于真实成绩预测。毕业信目前为确定性文本，尚未接入大模型；NPC 阶段契约任务与李强救赎线也有待继续完善。
+当前没有账号、排行榜或真实院校录取数据库。已录入人物玩法支持匿名服务器存档；高中旅程仍使用原有本地存档。高考成绩与事件效果属于游戏模拟，不能用于真实成绩预测。毕业信目前为确定性文本，尚未接入大模型；NPC 阶段契约任务与李强救赎线也有待继续完善。
 
 可继续推进前后端接入、完整剧情、生产部署与院校志愿数据。音乐默认曲目引用 Kevin MacLeod 的 CC BY 4.0 授权资源；实际使用时请保留对应署名与许可信息。
+
+
+
+## 已录入人物、班级与进度槽
+
+首页的“选择已录入人物 / 角色选择”和“我的班级”进入四人物百日冲刺玩法，保留新版高中旅程。两种玩法的数据结构和本地存档分别保存，不互相导入覆盖。
+
+- 胡yy、张z默认8班；虎zx、郝kj默认2班。张z使用半框眼镜头像，虎zx使用黑色全框眼镜头像。
+- 共7个班：2、4、7、8、11、13、14班；支持开局选班和中途换班。默认各50人，14班30人。
+- 语数外按150分比例换算，其余科目满分100；按当前班级六科计分。
+- 启动 `uvicorn main:app --reload`，访问 `/play/characters/#characters`。点击“保存这段时光”使用5个数据库存档槽。
+- GitHub Pages入口为 `characters/index.html#characters`，支持本地自动保存和JSON导出；数据库存档需要运行FastAPI服务。
+- 角色资料：`frontend/characters/characters.json`；前端与静态发布资源同步在 `frontend/characters/` 和 `docs/characters/`。
+- 接口：`GET /api/characters`、`GET /api/characters/classes`、`POST /api/characters/{id}/start`；`/api/saves` 提供进度槽读写。
+- 详细说明见 [CHARACTERS.md](CHARACTERS.md)、[SCHOOL.md](SCHOOL.md)、[SAVES.md](SAVES.md)。
+- 验证：`python -m pytest tests`；`node --test tests/test_game_rules.cjs tests/test_game_ui.cjs`。

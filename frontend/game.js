@@ -965,7 +965,7 @@ function renderLanding(){
         <h1>青禾纪事</h1>
         <h2>用三年时间，成为你想成为的人。</h2>
         <p>从高一开学到高考结束，每一次学习、休息、相遇和选择，都会把你带到不同的未来。</p>
-        <div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
+        <p><a class="primary-button" href="characters/index.html#characters">选择已录入人物 →</a> <a href="characters/index.html#classes">我的班级</a></p><div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
         <div class="landing-brief">
           <div><strong>1092</strong><span>天高中旅程</span></div>
           <div><strong>4</strong><span>次每周行动</span></div>
@@ -1028,7 +1028,7 @@ function renderGame(){
             <span>${escapeHtml(game.name)}</span>
             <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
           </div>
-          <div class="top-actions">
+          <div class="top-actions"><a class="ghost-button" href="characters/index.html#characters">角色选择</a><a class="ghost-button" href="characters/index.html#classes">我的班级</a>
             <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
             <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
           </div>
@@ -1705,7 +1705,7 @@ function openSettings(){
         </section>
       `}
       <section class="settings-section">
-        <h3>存档</h3>
+        <h3>存档</h3><p class="settings-note">已录入人物的百日冲刺进度在“角色选择”中继续，两种玩法分别保存。</p>
         <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
         <div class="settings-buttons">
           <button class="ghost-button" data-action="export-save">导出存档</button>
@@ -1987,3 +1987,4 @@ initializeMusicLibrary().then(()=>{
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});
   if(game)render();
 });
+
