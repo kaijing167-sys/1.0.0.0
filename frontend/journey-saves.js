@@ -26,14 +26,14 @@ async function journeySlotAction(action,slot){
     if(action==='load'){
       const saved=journeyServer()?await journeyRequest('/'+slot):row;
       const next=campusValidate(JSON.parse(JSON.stringify(saved.state)));
-      localStorage.setItem(SAVE_KEY,JSON.stringify(next));game=next;closeModal(true);render();toast('已恢复人物、班级和旅程进度');
+      localStorage.setItem(SAVE_KEY,JSON.stringify(next));game=next;menuScreen="play";closeModal(true);render();toast('已恢复人物、班级和旅程进度');
     }else{
       const revision=row?.revision||0;
       const name=game.name+' · 第'+game.day+'天';
       if(journeyServer())await journeyRequest('/'+slot+(action==='delete'?'?expected_revision='+revision:''),{method:action==='save'?'PUT':'DELETE',...(action==='save'?{body:JSON.stringify({name,expected_revision:revision,state:campusValidate(JSON.parse(JSON.stringify(game)))})}:{})});
       else{
         const rows=journeySlotRows.filter(r=>r.slot!==slot);
-        rows.push({slot,name,revision:revision+1,empty:action==='delete',state:action==='save'?campusValidate(JSON.parse(JSON.stringify(game))):null});
+        rows.push({slot,name,createdAt:action==='save'?(game.createdAt||row?.createdAt||null):null,savedAt:new Date().toISOString(),revision:revision+1,empty:action==='delete',state:action==='save'?campusValidate(JSON.parse(JSON.stringify(game))):null});
         localStorage.setItem(JOURNEY_SLOTS_KEY,JSON.stringify(rows));
       }
       await journeySlots();toast(action==='save'?'进度已保存':'存档已删除');
@@ -45,3 +45,4 @@ document.addEventListener('click',e=>{
   if(b.hasAttribute('data-journey-slots'))journeySlots();
   for(const action of ['save','load','delete']){const value=b.getAttribute('data-journey-'+action);if(value)journeySlotAction(action,Number(value));}
 });
+
