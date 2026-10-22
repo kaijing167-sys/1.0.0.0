@@ -6,8 +6,8 @@ const path=require('node:path');
 function harness(){
  const elements=new Map(),storage=new Map(),listeners={};
  const el=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'测试',hidden:true,classList:{add(){},remove(){},toggle(){}},addEventListener(){}});return elements.get(id)};
- const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob});
- for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','game.js','journey-saves.js']){
+ const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController});
+ for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
    let source=fs.readFileSync(path.join(__dirname,'../frontend',name),'utf8');
    if(name==='game.js')source=source.slice(0,source.lastIndexOf('initializeMusicLibrary().then'));
    vm.runInContext(source,context,{filename:name});
@@ -108,3 +108,44 @@ test('per-character saves keep creation date and independent progress on restore
  h.run("delete game.createdAt;persist();openCharacterSaves('hu-zx')");assert.match(h.el('#game-dialog').innerHTML,/旧存档未记录建档日期/);
 });
 
+test('social opens full-screen phone; missing AI keeps message and does not consume an action',async()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();resolveSocialChoice('su')");
+ assert.match(h.el('#game-dialog').innerHTML,/phone-screen/);assert.equal(h.run('game.actionPoints'),4);
+ h.run("settings.chatMode='ai';fetch=async()=>({ok:false,json:async()=>({error:'尚未配置 AI'})})");
+ h.el('#phone-message-input').value='数学考试没考好，怎么办？';await h.run('sendPhoneMessage()');
+ assert.equal(h.run('game.actionPoints'),4);assert.equal(h.run('game.chatHistory.su.length'),1);
+ assert.match(h.el('#game-dialog').innerHTML,/尚未配置 AI/);assert.match(h.el('#game-dialog').innerHTML,/重试回复/);
+});
+test('AI receives exact messages and game context; retry charges once, then history survives save',async()=>{
+ const h=harness();h.run("settings.chatMode='ai';campusDraft('hu-zx');startGame();openPhoneChat('su');fetch=async(url,opts)=>{globalThis.sent=JSON.parse(opts.body);return {ok:true,json:async()=>({reply:'哪类题扣分最多？我们一起看看。'})}}");
+ h.el('#phone-message-input').value='今天数学错了三道函数题。';await h.run('sendPhoneMessage()');
+ assert.equal(h.run('sent.npcId'),'su');assert.equal(h.run('sent.messages[0].content'),'今天数学错了三道函数题。');assert.equal(h.run('sent.context.playerName'),'虎zx');
+ assert.equal(h.run('game.actionPoints'),3);assert.equal(h.run('game.chatHistory.su.length'),2);
+ h.el('#phone-message-input').value='主要是导数。';await h.run('sendPhoneMessage()');
+ assert.equal(h.run('game.actionPoints'),3);assert.equal(h.run('sent.messages.length'),3);
+ h.run('leavePhoneChat();game=loadGame();openPhoneChat("su")');assert.equal(h.run('game.chatHistory.su.length'),4);
+ h.run('leavePhoneChat();openPhoneChat("lin")');assert.equal(h.run('phoneHistory().length'),0);
+});
+test('late AI responses cannot change another scene or save; message markup is escaped',async()=>{
+ const h=harness();h.run("settings.chatMode='ai';campusDraft('hu-zx');startGame();openPhoneChat('su');fetch=()=>new Promise(r=>globalThis.respond=r)");
+ h.el('#phone-message-input').value='<img onerror=alert(1)>';
+ const pending=h.run('sendPhoneMessage()');h.run('leavePhoneChat();campusDraft("hu-yy");startGame();respond({ok:true,json:async()=>({reply:"迟到的回复"})})');await pending;
+ assert.equal(h.run('game.character_id'),'hu-yy');assert.equal(h.run('game.actionPoints'),4);assert.equal(h.run('game.chatHistory'),undefined);
+ h.run('game=readCharacterSaves()["hu-zx"];openPhoneChat("su")');assert.match(h.el('#game-dialog').innerHTML,/&lt;img onerror=alert\(1\)&gt;/);
+});
+
+test('keyword mode chats offline by default and keeps distinct NPC voices and followups',async()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();fetch=()=>{throw Error('must not call network')};openPhoneChat('liqiang')");
+ h.el('#phone-message-input').value='你好李强';await h.run('sendPhoneMessage()');
+ assert.equal(h.run('game.chatHistory.liqiang.length'),2);assert.equal(h.run('game.actionPoints'),3);
+ assert.match(h.el('#game-dialog').innerHTML,/本地关键词回复/);assert.doesNotMatch(h.el('#game-dialog').innerHTML,/AI 待连接/);
+ h.el('#phone-message-input').value='今天考砸了';await h.run('sendPhoneMessage()');assert.match(h.run('phoneHistory().at(-1).content'),/哪一科|吐槽/);assert.equal(h.run('game.actionPoints'),3);
+ h.el('#phone-message-input').value='嗯';await h.run('sendPhoneMessage()');assert.match(h.run('phoneHistory().at(-1).content'),/展开|然后/);
+ assert.notEqual(h.run("keywordReply('su',[{role:'user',content:'考砸了'}])"),h.run("keywordReply('liqiang',[{role:'user',content:'考砸了'}])"));
+ assert.match(h.run("keywordReply('lin',[{role:'user',content:'听音乐'}])"),/歌|旋律/);
+});
+test('an old unanswered AI message can be retried locally without duplicate user messages',async()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();game.chatHistory={su:[{role:'user',content:'你好',time:Date.now()}]};openPhoneChat('su')");
+ assert.match(h.el('#game-dialog').innerHTML,/重试/);await h.run('sendPhoneMessage(true)');
+ assert.equal(h.run('phoneHistory().length'),2);assert.equal(h.run('phoneHistory()[1].role'),'assistant');
+});
