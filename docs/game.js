@@ -530,6 +530,9 @@ const STAGE_OPENINGS = {
 
 let settings = loadSettings();
 let game = loadGame();
+let menuScreen = "home";
+let selectedCharacter = null;
+const CHARACTER_SAVES_KEY = "qinghe-character-journeys-v1";
 let draft = {
   name: "",
   attrs: {...PRESETS.balanced},
@@ -774,6 +777,7 @@ function persist(){
   if(game){
     checkAchievements();
     localStorage.setItem(SAVE_KEY,JSON.stringify(game));
+    if(game.character_id){const rows=readCharacterSaves();rows[game.character_id]=JSON.parse(JSON.stringify(game));localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
   }
 }
 function gradeForDay(day){
@@ -948,6 +952,7 @@ function usedPoints(){return Object.values(draft.attrs).reduce((sum,value)=>sum+
 function remainingPoints(){return EXTRA_POINTS-usedPoints()}
 
 function render(){
+  if(menuScreen!=="play"){renderLanding();return;}
   if(game?.completed){
     renderFinal();
     return;
@@ -959,64 +964,35 @@ function render(){
   renderLanding();
 }
 
-function renderLanding(){
-  $("#game-root").innerHTML=`
-    <main id="main" class="game-landing">
-      <section class="landing-copy">
-        <div class="landing-mark">QINGHE HIGH SCHOOL · 1092 DAYS</div>
-        <h1>青禾纪事</h1>
-        <h2>用三年时间，成为你想成为的人。</h2>
-        <p>从高一开学到高考结束，每一次学习、休息、相遇和选择，都会把你带到不同的未来。</p>
-        <div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
-        <div class="landing-brief">
-          <div><strong>1092</strong><span>天高中旅程</span></div>
-          <div><strong>4</strong><span>次每周行动</span></div>
-          <div><strong>10</strong><span>项成长成就</span></div>
-          <div><strong>多结局</strong><span>由三年选择决定</span></div>
-        </div>
-      </section>
-      <form class="setup-panel" id="setup-form">${campusCards()}
-        <div class="setup-heading">
-          <div><h2>创建你的角色</h2><p>选择开局阶段，再写下名字并分配属性。</p></div>
-          <span class="point-pill">${draft.character_id?"人物原始属性":"剩余 "+remainingPoints()+" 点"}</span>
-        </div>
-        <div class="stage-select">
-          ${Object.entries(START_STAGES).map(([id,stage])=>`<button type="button" data-stage="${id}" class="${draft.stage===id?"selected":""}"><b>${stage.label}</b><small>${stage.difficulty} · 剩余 ${TOTAL_DAYS-stage.day+1} 天</small></button>`).join("")}
-        </div>
-        <p class="stage-description">${START_STAGES[draft.stage].desc}</p>
-        ${draft.stage!=="high1"?`
-          <div class="track-select">
-            <span>选择方向</span>
-            <button type="button" data-track="science" class="${draft.track==="science"?"selected":""}">理科</button>
-            <button type="button" data-track="humanities" class="${draft.track==="humanities"?"selected":""}">文科</button>
-          </div>
-        `:`<p class="stage-description">高一开局将在后续剧情中触发文理分科选择。</p>`}
-        <label class="field">
-          <span>你的名字</span>
-          <input id="player-name" maxlength="12" autocomplete="off" placeholder="请输入名字" value="${escapeHtml(draft.name)}">
-        </label>
-        <div class="preset-list">
-          ${[
-            ["balanced","均衡"],
-            ["scholar","学霸"],
-            ["athlete","体育"],
-            ["social","社团"],
-          ].map(([id,label])=>`<button type="button" data-preset="${id}" class="${draft.preset===id?"selected":""}">${label}</button>`).join("")}
-        </div>
-        <div class="attribute-list">
-          ${ATTRIBUTES.map(([id,label,hint])=>`
-            <div class="attribute-row" title="${hint}">
-              <span>${label}</span>
-              <strong>${draft.attrs[id]}</strong>
-              <button type="button" data-attr="${id}" data-delta="-1" aria-label="${label}减少">−</button>
-              <button type="button" data-attr="${id}" data-delta="1" aria-label="${label}增加">+</button>
-            </div>`).join("")}
-        </div>
-        <button class="start-game" type="submit">开始游戏 →</button>
-        ${game?`<div class="resume-row"><button type="button" data-action="resume">继续上次进度</button></div>`:""}
-      </form>
-    </main>`;
+function readCharacterSaves(){
+  try{const rows=JSON.parse(localStorage.getItem(CHARACTER_SAVES_KEY)||'{}');return rows&&typeof rows==='object'&&!Array.isArray(rows)?rows:{};}catch{return {};}
 }
+function characterSave(id){
+  if(game?.character_id===id)return game;
+  return readCharacterSaves()[id]||null;
+}
+function saveDate(value){
+  if(!value||!Number.isFinite(new Date(value).getTime()))return '旧存档未记录建档日期';
+  return new Date(value).toLocaleString('zh-CN',{hour12:false});
+}
+function renderLanding(){
+  const settingsButton='<button class="menu-settings" data-action="settings" aria-label="设置">⚙ <span>设置</span></button>';
+  let content='';
+  if(menuScreen==='stages'){
+    content=`<section class="menu-stage"><button class="menu-back" data-menu="home">← 返回首页</button><p class="menu-kicker">第二页 · 选择起点</p><h1>从哪一天开始？</h1><p class="menu-subtitle">${escapeHtml(draft.name)}，把接下来的日子交给自己。</p><div class="menu-stages">${Object.entries(START_STAGES).map(([id,s])=>`<button data-menu-stage="${id}"><span>${id==='sprint100'?'100':s.label.slice(0,2)}</span><b>${id==='sprint100'?'天冲刺':'开学'}</b><small>距离高考 ${daysLeft(s.day)} 天</small></button>`).join('')}</div><p class="menu-footnote">选择起点后，进入第三页，正式开始高中生活。</p></section>`;
+  }else{
+    content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
+  }
+  $('#game-root').innerHTML=`<main class="quiet-menu ${menuScreen==='home'?'home-cover':''}">${settingsButton}${content}</main>`;
+}
+function openCharacterSaves(id=selectedCharacter||draft.character_id||characterCatalog[0].id){
+  selectedCharacter=id;
+  const c=characterCatalog.find(c=>c.id===id)||characterCatalog[0],saved=characterSave(c.id);
+  let slots=[];try{slots=JSON.parse(localStorage.getItem('qinghe-journey-slots-v1')||'[]');}catch{}
+  if(!Array.isArray(slots))slots=[];
+  openModal(`<p class="menu-kicker">青春存档</p><h2>选择你的故事</h2><div class="save-characters">${characterCatalog.map(p=>`<button class="save-character ${p.id===c.id?'selected':''}" data-save-character="${p.id}" aria-pressed="${p.id===c.id}"><img src="${campusPortrait(p.id)}" alt=""><b>${escapeHtml(p.name)}</b><small>${characterSave(p.id)?'已有进度':'尚未建档'}</small></button>`).join('')}</div><section class="save-profile"><h3>${escapeHtml(c.name)} <small>${escapeHtml(c.nickname||'')}</small></h3><p>${escapeHtml(c.fields['班级'])} · ${escapeHtml(c.fields['选科组合'])} · 目标 ${escapeHtml(c.fields['目标大学'])}</p><div class="save-date"><span>建档日期</span><b>${saved?saveDate(saved.createdAt):'尚未建立存档'}</b></div>${saved?`<p>当前进度：${gradeForDay(saved.day)} · 距离高考 ${daysLeft(saved.day)} 天</p><div class="profile-stats">${ATTRIBUTES.map(([key,label])=>`<div><span>${label}</span><b>${escapeHtml(saved.attrs[key])}</b></div>`).join('')}</div>`:''}<details class="profile-details"><summary>查看人物完整属性面板</summary><dl>${Object.entries(c.fields).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl></details>${saved?`<details class="profile-details"><summary>查看当前存档学科属性</summary><dl>${CAMPUS_SUBJECTS.filter(([key])=>Number.isFinite(saved.subjects[key])).map(([key,label])=>`<div><dt>${label}</dt><dd>${saved.subjects[key]}</dd></div>`).join('')}</dl></details>`:''}<div class="dialog-footer">${saved?`<button class="primary-button" data-character-load="${c.id}">继续此存档 →</button>`:''}<button class="${saved?'ghost-button':'primary-button'}" data-character-start="${c.id}">以此人物开始</button></div></section>${game&&!game.character_id?'<button class="ghost-button" data-action="resume" data-menu-close>继续原有自定义人物存档</button>':''}${slots.some(r=>!r.empty&&r.state)?`<details class="profile-details"><summary>其他进度存档槽</summary>${slots.filter(r=>!r.empty&&r.state).map(r=>`<p>${escapeHtml(r.name)} · ${saveDate(r.state.createdAt||r.createdAt)} <button class="ghost-button" data-menu-slot="${Number(r.slot)}">读取</button></p>`).join('')}</details>`:''}`);
+}
+
 
 function renderGame(){
   const next=nextEvent();
@@ -1030,7 +1006,7 @@ function renderGame(){
             <span>${escapeHtml(game.name)}</span>
             <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
           </div>
-          <div class="top-actions"><button class="ghost-button" data-campus-classes>我的班级</button>
+          <div class="top-actions"><button class="ghost-button" data-menu="home">首页</button><button class="ghost-button" data-campus-classes>我的班级</button>
             <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
             <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
           </div>
@@ -1195,11 +1171,14 @@ function applyTrack(id){
 }
 
 function startGame(){
-  const name=$("#player-name")?.value.trim();
+  const name=$("#player-name")?.value.trim()||draft.name;
   if(!name)return toast("先给自己取一个名字");
   if(!draft.character_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
   draft.name=name;
+  if(game)persist();
   game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
+  game.createdAt=new Date().toISOString();
+  menuScreen="play";
   persist();
   render();
   const opening=draft.stage==="high1"?EVENTS[0]:STAGE_OPENINGS[draft.stage];
@@ -1653,73 +1632,15 @@ function closeModal(force=false){
   document.body.classList.remove("modal-open");
   currentModal=null;
   modalLocked=false;
-  playTheme("calm");
+  playTheme(settings.menuMusicTheme||"calm");
 }
 function openSettings(){
-  const toggle=(name,title,text)=>`
-    <label class="setting-row">
-      <span><b>${title}</b><small>${text}</small></span>
-      <input class="setting-toggle" type="checkbox" data-setting="${name}" ${settings[name]?"checked":""}>
-    </label>`;
-  openModal(`
-    <div class="eyebrow">SETTINGS</div>
-    <h2>设置</h2>
-    <p>把显示、游戏节奏和存档操作集中在这里。所有设置会自动保存在当前浏览器。</p>
-    <div class="settings-content">
-      <section class="settings-section">
-        <h3>角色</h3>
-        <div class="settings-inline">
-          <input id="settings-name" maxlength="12" value="${escapeHtml(game.name)}" aria-label="角色名称">
-          <button class="ghost-button" data-action="save-name">保存名称</button>
-        </div>
-      </section>
-      <section class="settings-section">
-        <h3>显示</h3>
-        ${toggle("largeText","大字体模式","放大正文与按钮文字，方便阅读。")}
-        ${toggle("compact","紧凑布局","减少面板间距，在同一屏里显示更多内容。")}
-        ${toggle("reducedMotion","减少动态效果","关闭过渡动画和移动效果。")}
-      </section>
-      <section class="settings-section">
-        <h3>游戏节奏</h3>
-        <label class="setting-row">
-          <span><b>每周行动次数</b><small>调整每星期可以安排的行动数量。</small></span>
-          <select id="settings-actions" aria-label="每周行动次数">
-            ${[3,4,5].map(value=>`<option value="${value}" ${settings.actionsPerWeek===value?"selected":""}>${value} 次</option>`).join("")}
-          </select>
-        </label>
-        ${toggle("autoEvents","自动触发事件","考试、周末和主线事件到期后自动弹出。")}
-        ${toggle("confirmEarlyWeek","提前结束确认","还有行动时，结束本周前先确认。")}
-      </section>
-      ${MUSIC_FORCE_OFF?`
-        <section class="settings-section">
-          <h3>音乐</h3>
-          <p class="settings-note">当前版本已强制关闭背景音乐，播放入口和事件音乐均已停用。</p>
-        </section>
-      `:`
-        <section class="settings-section">
-          <h3>音乐</h3>
-          ${toggle("musicEnabled","开启背景音乐","关闭后所有场景音乐都会暂停。")}
-          ${toggle("eventMusic","启用事件专属音乐","考试、低谷、毕业和结局会切换到对应主题。")}
-          <label class="setting-row music-volume-row">
-            <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicAvailableCount()} / ${musicTrackCount()} 首可播放</small></span>
-            <input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量">
-          </label>
-          <div class="settings-buttons">
-            <button class="ghost-button" data-action="music-library">管理本地音乐库</button>
-          </div>
-        </section>
-      `}
-      <section class="settings-section">
-        <h3>存档</h3><p class="settings-note">人物、班级与当前旅程共用此进度。</p><button class="ghost-button" data-journey-slots>进度存档槽</button>
-        <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
-        <div class="settings-buttons">
-          <button class="ghost-button" data-action="export-save">导出存档</button>
-          <label class="ghost-button file-button">导入存档<input id="import-save" type="file" accept="application/json,.json" hidden></label>
-          <button class="ghost-button danger-button" data-action="new-game">重新开始</button>
-        </div>
-      </section>
-    </div>
-  `);
+  openModal(`<div class="eyebrow">声音设置</div><h2>留一点安静给青春</h2>
+    <label class="setting-row"><span><b>背景音乐</b><small>随时开启或暂停</small></span><input class="setting-toggle" type="checkbox" data-setting="musicEnabled" ${settings.musicEnabled?'checked':''}></label>
+    <label class="setting-row"><span><b>音量</b><small id="volume-value">${settings.musicVolume}%</small></span><input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量"></label>
+    <label class="setting-row"><span><b>背景音乐主题</b></span><select id="simple-music-theme" aria-label="背景音乐主题">${Object.entries(MUSIC_THEMES).map(([id,t])=>`<option value="${id}" ${(settings.menuMusicTheme||'calm')===id?'selected':''}>${t.label}</option>`).join('')}</select></label>
+    <label class="setting-row"><span><b>剧情自动切换音乐</b></span><input class="setting-toggle" type="checkbox" data-setting="eventMusic" ${settings.eventMusic?'checked':''}></label>
+    <div class="dialog-footer"><button class="ghost-button" data-action="music-library">选择本地音乐</button><button class="primary-button" data-modal-close>完成</button></div>`);
 }
 
 function updateSetting(name,value){
@@ -1739,12 +1660,13 @@ function updateSetting(name,value){
   }
   persistSettings();
   if(name==="musicEnabled"){
-    if(value)playTheme(currentMusicTheme,{force:true});
+    if(value)playTheme(settings.menuMusicTheme||"calm",{force:true});
     else pauseMusic();
   }
   if(name==="eventMusic"){
     playTheme(value&&currentModal?.event?(EVENT_MUSIC[currentModal.event.id]||"calm"):"calm",{force:true});
   }
+  if(name==="musicVolume"&&$("#volume-value"))$("#volume-value").textContent=settings.musicVolume+"%";
   if(game)render();
   if(name==="autoEvents"&&value&&game?.pendingEvents.length){
     closeModal(true);
@@ -1914,6 +1836,7 @@ function confirmNewGame(){
 function resetGame(){
   localStorage.removeItem(SAVE_KEY);
   game=null;
+  menuScreen="home";
   closeModal(true);
   draft={name:"",attrs:{...PRESETS.balanced},preset:"balanced",stage:"high1",track:"science"};
   render();
@@ -1955,6 +1878,7 @@ document.addEventListener("click",event=>{
   if(button.dataset.action==="choose-friend-again")return showFriendSelect();
   if(button.dataset.action==="resume"){
     game=loadGame();
+    menuScreen="play";
     if(game)render();
     return;
   }
@@ -1986,6 +1910,36 @@ document.addEventListener("keydown",event=>{
   if(event.key==="Escape"&&!$("#game-dialog").hidden)closeModal();
 });
 
+function prepareMenuStart(id){
+  const characterId=id||draft.character_id||game?.character_id||characterCatalog[0].id;
+  if(characterSave(characterId)&&!confirm('此人物已有存档。开始新故事将替换此人物的自动存档，继续吗？'))return;
+  const stage=draft.stage||'high1';
+  campusDraft(characterId);
+  draft.stage=stage;
+  menuScreen='stages';closeModal(true);render();
+}
+document.addEventListener('click',event=>{
+  const b=event.target.closest('button');if(!b||b.disabled)return;
+  if(b.dataset.menu==='home'){if(game)persist();menuScreen='home';closeModal(true);render();}
+  if(b.dataset.menu==='start')prepareMenuStart();
+  if(b.dataset.menu==='saves')openCharacterSaves();
+  if(b.dataset.saveCharacter)openCharacterSaves(b.dataset.saveCharacter);
+  if(b.dataset.characterStart){
+    prepareMenuStart(b.dataset.characterStart);
+  }
+  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;startGame();}
+  if(b.dataset.characterLoad){
+    try{game=campusValidate(JSON.parse(JSON.stringify(characterSave(b.dataset.characterLoad))));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取，请检查存档数据');}
+  }
+  if(b.hasAttribute('data-menu-close'))closeModal(true);
+  if(b.dataset.menuSlot){
+    try{const row=JSON.parse(localStorage.getItem('qinghe-journey-slots-v1')||'[]').find(r=>r.slot===Number(b.dataset.menuSlot));game=campusValidate(JSON.parse(JSON.stringify(row.state)));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取');}
+  }
+});
+document.addEventListener('change',event=>{
+  if(event.target.id==='simple-music-theme'){settings.menuMusicTheme=event.target.value;persistSettings();if(settings.musicEnabled)playTheme(settings.menuMusicTheme,{force:true});}
+});
+
 render();
 if(location.hash==="#classes"&&game)campusShowClasses();
 initializeMusicLibrary().then(()=>{
@@ -1993,4 +1947,3 @@ initializeMusicLibrary().then(()=>{
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});
   if(game)render();
 });
-
