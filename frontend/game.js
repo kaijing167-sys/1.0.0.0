@@ -106,7 +106,8 @@ const ACTION_IMAGES = {
 
 function localMusicSource(category,filename){
   if(!filename)return null;
-  return new URL(`music-local/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`,location.href).href;
+  const path=`music-local/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`;
+  try{return new URL(path,location.href).href;}catch{return path;}
 }
 function musicTrack(id,label,category,filename){
   return [id,label,localMusicSource(category,filename)];
@@ -881,6 +882,97 @@ function allAchievementsHtml(){
     <div class="dialog-footer"><button class="primary-button" data-modal-close>合上纪念册</button></div>
   `;
 }
+
+function campusArchiveHtml(tab="relations"){
+  const tabs=[
+    ["relations","♥","校园关系"],
+    ["schedule","▣","下一件大事"],
+    ["log","▤","最近记录"],
+    ["growth","✦","成长成就"],
+  ];
+  const active=tabs.some(([id])=>id===tab)?tab:"relations";
+  const average=Math.round(Object.values(game.relationships||{}).reduce((sum,value)=>sum+value,0)/Math.max(1,Object.keys(game.relationships||{}).length));
+  const next=nextEvent();
+  let content="";
+  if(active==="relations"){
+    content=`
+      <div class="archive-section-head"><div><h3>校园关系</h3><p>关系越熟，周末一起相处时越自然。</p></div><b>平均 ${average} / 100</b></div>
+      <div class="relationship-list archive-relationship-list">
+        ${FRIENDS.map(friend=>{
+          const relationship=game.relationships[friend.id]||0;
+          const place=favoritePlace(friend.id);
+          const placeName=place&&place.name.startsWith("去")?place.name.slice(1):place?.name;
+          return `<article class="relationship-item">
+            <div class="relationship-top">
+              <span class="relationship-avatar">${friend.initial}</span>
+              <span class="relationship-copy"><strong>${friend.name} · ${relationshipLabel(relationship)}</strong><small>${friend.desc}${placeName?` · 喜欢去${placeName}`:""}</small></span>
+              <button class="relationship-chat" data-social-friend="${friend.id}" ${game.actionPoints<=0?"disabled":""}>聊聊</button>
+            </div>
+            <div class="mini-bar"><i style="width:${clamp(relationship,0,100)}%"></i></div>
+            <span class="relationship-value">羁绊 ${relationship} / 100</span>
+          </article>`;
+        }).join("")}
+      </div>`;
+  }else if(active==="schedule"){
+    content=`
+      <div class="archive-section-head"><div><h3>下一件大事</h3><p>${next?`${next.day-game.day} 天后自动进入`:"高考已经临近"}</p></div><b>${gradeForDay(game.day)}</b></div>
+      <div class="next-event archive-next-event">
+        <span>MAIN EVENT</span>
+        <h3>${next?escapeHtml(next.title):"高考已经临近"}</h3>
+        <p>${next?escapeHtml(next.text):"全力以赴，完成最后的答卷。"}</p>
+      </div>
+      ${roadmapPanelHtml()}
+      <div class="archive-mini-grid">
+        <div><span>当前进度</span><b>${game.day} / ${TOTAL_DAYS} 天</b></div>
+        <div><span>距离高考</span><b>${daysLeft(game.day)} 天</b></div>
+        <div><span>待处理事件</span><b>${game.pendingEvents.length} 个</b></div>
+        <div><span>本周行动</span><b>${game.actionPoints} 次</b></div>
+      </div>`;
+  }else if(active==="log"){
+    content=`
+      <div class="archive-section-head"><div><h3>最近记录</h3><p>最近发生的故事与选择。</p></div><b>${game.log.length} 条</b></div>
+      ${game.log.length?`<div class="log-list archive-log-list">${game.log.slice(0,20).map(item=>`<article class="log-item"><time>第 ${item.day} 天</time><span>${escapeHtml(item.text)}</span></article>`).join("")}</div>`:'<div class="empty-copy">新的故事还没有开始。</div>'}`;
+  }else{
+    content=`
+      <div class="archive-section-head"><div><h3>成长成就</h3><p>由行动、关系和考试共同解锁。</p></div><b>${game.achievements.length} / ${ACHIEVEMENTS.length}</b></div>
+      <div class="archive-achievement-list">
+        ${ACHIEVEMENTS.map(achievement=>{
+          const unlocked=game.achievements.includes(achievement.id);
+          const progress=achievementProgress(achievement);
+          return `<article class="achievement-book-item ${unlocked?"unlocked":""}">
+            <span class="achievement-seal">${unlocked?"✓":"◇"}</span>
+            <div><strong>${achievement.name}</strong><small>${achievement.desc}</small><div class="mini-bar"><i style="width:${Math.round(progress*100)}%"></i></div></div>
+            <b>${Math.round(progress*100)}%</b>
+          </article>`;
+        }).join("")}
+      </div>`;
+  }
+  return `
+    <div class="archive-shell">
+      <div class="eyebrow">SECONDARY PANEL · ${gradeForDay(game.day)}</div>
+      <div class="archive-heading">
+        <div><h2>校园档案</h2><p>${escapeHtml(game.name)} · ${weekForDay(game.day)} 周</p></div>
+        <span class="archive-progress-badge">成长 ${game.achievements.length}/${ACHIEVEMENTS.length}</span>
+      </div>
+      <div class="archive-status">
+        <span><i class="energy"></i>体力 <b>${game.energy}</b></span>
+        <span><i class="stress"></i>压力 <b>${game.stress}</b></span>
+        <span><i class="mood"></i>心情 <b>${game.mood}</b></span>
+        <span><i class="money"></i>零花钱 <b>${game.money}</b></span>
+      </div>
+      <nav class="archive-tabs" aria-label="校园档案分类">
+        ${tabs.map(([id,icon,label])=>`<button data-archive-tab="${id}" class="${active===id?"active":""}" aria-selected="${active===id}"><span>${icon}</span>${label}</button>`).join("")}
+      </nav>
+      <section class="archive-content">${content}</section>
+    </div>`;
+}
+
+function openCampusArchive(tab="relations"){
+  const dialog=$("#game-dialog");
+  openModal(campusArchiveHtml(tab),true);
+  dialog.classList.add("archive-dialog");
+}
+
 function initialState(name,attrs,stageId="high1",track="science"){
   const stage=START_STAGES[stageId]||START_STAGES.high1;
   const relationships={...DEFAULT_RELATIONSHIPS,...stage.relationshipBonus};
@@ -960,7 +1052,6 @@ function openCharacterSaves(id=selectedCharacter||draft.character_id||characterC
 
 
 function renderGame(){
-  const next=nextEvent();
   $("#game-root").innerHTML=`
     <div class="game-shell pixel-game-shell">
       <header class="topbar">
@@ -971,7 +1062,7 @@ function renderGame(){
             <span>${escapeHtml(game.name)}</span>
             <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
           </div>
-          <div class="top-actions"><button class="ghost-button" data-menu="home">首页</button><button class="ghost-button" data-campus-classes>我的班级</button>
+          <div class="top-actions"><button class="ghost-button" data-menu="home">首页</button><button class="ghost-button" data-campus-classes>我的班级</button><button class="ghost-button archive-open-button" data-action="campus-archive">▣ 档案 <span>${game.achievements.length}</span></button>
             <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
             <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
           </div>
@@ -993,63 +1084,37 @@ function renderGame(){
         </div>
       </header>
       <main id="main" class="game-main">
-        <div class="dashboard">
-          <div class="dashboard-column">
-            <section class="game-panel">
-              <div class="panel-heading">
-                <h2>本周行动</h2>
-                <small>剩余 ${game.actionPoints} / ${settings.actionsPerWeek} 次</small>
+        <section class="quick-status-strip" aria-label="当前状态">
+          <div class="quick-stat stat-energy"><span>体力</span><b>${game.energy}</b><div class="mini-bar"><i style="width:${game.energy}%"></i></div></div>
+          <div class="quick-stat stat-stress"><span>压力</span><b>${game.stress}</b><div class="mini-bar"><i style="width:${game.stress}%"></i></div></div>
+          <div class="quick-stat stat-mood"><span>心情</span><b>${game.mood}</b><div class="mini-bar"><i style="width:${game.mood}%"></i></div></div>
+          <div class="quick-stat stat-money"><span>零花钱</span><b>${game.money}<small>元</small></b><div class="mini-bar"><i style="width:${clamp(game.money/600*100,0,100)}%"></i></div></div>
+        </section>
+        <div class="dashboard dashboard-single">
+          <section class="game-panel">
+            <div class="panel-heading">
+              <h2>本周行动</h2>
+              <small>剩余 ${game.actionPoints} / ${settings.actionsPerWeek} 次</small>
+            </div>
+            <div class="action-grid">
+              ${actionCard("study","学","专注学习","选择一门课程，提升对应成绩。")}
+              ${actionCard("rest","憩","好好休息","恢复体力和心情，降低压力。")}
+              ${actionCard("exercise","动","运动锻炼","身体状态变好，压力下降。")}
+              ${actionCard("social","友","与人相处","和朋友聊天，改善心情与关系。")}
+            </div>
+            <div class="week-footer">
+              <p>${game.pendingEvents.length?`有 ${game.pendingEvents.length} 个事件等待处理。`:game.actionPoints===0?"本周行动已经用完，结束后进入下一周。":"行动不必全部用完，你也可以提前结束本周。"}</p>
+              <div class="week-actions">
+                ${game.pendingEvents.length?`<button class="ghost-button pending-event-button" data-action="show-pending">处理待触发事件 (${game.pendingEvents.length})</button>`:""}
+                <button class="primary-button" data-action="end-week">结束本周 →</button>
               </div>
-              <div class="action-grid">
-                ${actionCard("study","学","专注学习","选择一门课程，提升对应成绩。")}
-                ${actionCard("rest","憩","好好休息","恢复体力和心情，降低压力。")}
-                ${actionCard("exercise","动","运动锻炼","身体状态变好，压力下降。")}
-                ${actionCard("social","友","与人相处","和朋友聊天，改善心情与关系。")}
-              </div>
-              <div class="week-footer">
-                <p>${game.pendingEvents.length?`有 ${game.pendingEvents.length} 个事件等待处理。`:game.actionPoints===0?"本周行动已经用完，结束后进入下一周。":"行动不必全部用完，你也可以提前结束本周。"}</p>
-                <div class="week-actions">
-                  ${game.pendingEvents.length?`<button class="ghost-button pending-event-button" data-action="show-pending">处理待触发事件 (${game.pendingEvents.length})</button>`:""}
-                  <button class="primary-button" data-action="end-week">结束本周 →</button>
-                </div>
-              </div>
-            </section>
+            </div>
+          </section>
 
-            <section class="game-panel">
-              <div class="panel-heading"><h2>学业状态</h2><small>${trackLabel()}</small></div>
-              ${(campusOptions(game)||SUBJECTS).map(([id,label])=>subjectRow(id,label)).join("")}
-            </section>
-          </div>
-
-          <aside class="dashboard-column">
-            <section class="game-panel">
-              <div class="panel-heading"><h2>我的状态</h2><small>自动保存</small></div>
-              <div class="stat-grid">
-                ${statBox("体力",game.energy,100)}
-                ${statBox("压力",game.stress,100)}
-                ${statBox("心情",game.mood,100)}
-                ${statBox("零花钱",game.money,600,"元")}
-              </div>
-            </section>
-
-            ${achievementPanelHtml()}
-            ${relationshipPanelHtml()}
-
-            <section class="game-panel">
-              <div class="panel-heading"><h2>下一件大事</h2><small>${next?`${next.day-game.day} 天后`:"等待高考"}</small></div>
-              <div class="next-event">
-                <span>MAIN EVENT</span>
-                <h3>${next?escapeHtml(next.title):"高考已经临近"}</h3>
-                <p>${next?escapeHtml(next.text.slice(0,52))+"……":"全力以赴，完成最后的答卷。"}</p>
-              </div>
-              ${roadmapPanelHtml()}
-            </section>
-
-            <section class="game-panel">
-              <div class="panel-heading"><h2>最近记录</h2><small>${game.log.length} 条</small></div>
-              ${game.log.length?`<div class="log-list">${game.log.slice(0,4).map(item=>`<div class="log-item"><time>第 ${item.day} 天</time><span>${escapeHtml(item.text)}</span></div>`).join("")}</div>`:'<div class="empty-copy">新的故事还没有开始。</div>'}
-            </section>
-          </aside>
+          <section class="game-panel academics-panel">
+            <div class="panel-heading"><h2>学业状态</h2><small>${trackLabel()}</small></div>
+            <div class="subject-grid">${(campusOptions(game)||SUBJECTS).map(([id,label])=>subjectRow(id,label)).join("")}</div>
+          </section>
         </div>
       </main>
       <footer class="music-credit">PIXEL EDITION · LOCAL MUSIC LIBRARY · 曲目直接随游戏加载</footer>
@@ -1585,6 +1650,7 @@ function applyEffects(effects={}){
 function openModal(html, closable=true){
   const dialog=$("#game-dialog");
   modalLocked=!closable;
+  dialog.classList.remove("archive-dialog","phone-dialog");
   dialog.hidden=false;
   dialog.innerHTML=`<section class="dialog-card">${closable?'<button class="dialog-close" data-modal-close aria-label="关闭">×</button>':""}${html}</section>`;
   document.body.classList.add("modal-open");
@@ -1594,6 +1660,7 @@ function closeModal(force=false){
   const dialog=$("#game-dialog");
   dialog.hidden=true;
   dialog.innerHTML="";
+  dialog.classList.remove("archive-dialog","phone-dialog");
   document.body.classList.remove("modal-open");
   currentModal=null;
   modalLocked=false;
@@ -1817,6 +1884,7 @@ document.addEventListener("click",event=>{
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
   if(button.dataset.study)return studySubject(button.dataset.study);
   if(button.dataset.socialFriend)return resolveSocialChoice(button.dataset.socialFriend);
+  if(button.dataset.archiveTab)return openCampusArchive(button.dataset.archiveTab);
   if(button.dataset.tutoring)return resolveTutoringChoice(button.dataset.tutoring);
   if(button.dataset.weekendOption)return resolveWeekendOption(button.dataset.weekendOption);
   if(button.dataset.outingFriend)return resolveFriendChoice(button.dataset.outingFriend);
@@ -1829,6 +1897,7 @@ document.addEventListener("click",event=>{
   if(button.hasAttribute("data-confirm-new"))return resetGame();
   if(button.dataset.action==="toggle-music")return toggleMusic();
   if(button.dataset.action==="settings")return openSettings();
+  if(button.dataset.action==="campus-archive")return openCampusArchive("relations");
   if(button.dataset.action==="all-achievements")return openModal(allAchievementsHtml());
   if(button.dataset.action==="music-library")return openMusicLibrary();
   if(button.dataset.action==="back-settings")return openSettings();
