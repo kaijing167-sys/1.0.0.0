@@ -104,9 +104,8 @@ const ACTION_IMAGES = {
   social: "assets/action-social-pixel.png",
 };
 
-const LOCAL_MUSIC_MODE = location.protocol==="file:"||["localhost","127.0.0.1"].includes(location.hostname);
 function localMusicSource(category,filename){
-  if(!LOCAL_MUSIC_MODE||!filename)return null;
+  if(!filename)return null;
   return new URL(`music-local/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`,location.href).href;
 }
 function musicTrack(id,label,category,filename){
@@ -1053,7 +1052,7 @@ function renderGame(){
           </aside>
         </div>
       </main>
-      <footer class="music-credit">PIXEL EDITION · 本机曲库 · 音乐仅保存在当前设备，不上传公开仓库</footer>
+      <footer class="music-credit">PIXEL EDITION · LOCAL MUSIC LIBRARY · 曲目直接随游戏加载</footer>
     </div>`;
 }
 
@@ -1728,7 +1727,7 @@ function openMusicLibrary(){
   openModal(`
     <div class="eyebrow">LOCAL MUSIC LIBRARY</div>
     <h2>本地音乐库</h2>
-    <p>游戏会优先读取项目内的本机曲库；在线页面也可以选择整个音乐文件夹，系统会按歌名与歌手自动匹配并保存到当前浏览器。商业音频不会上传公开仓库。</p>
+    <p>通过校验的曲目已直接随游戏部署，打开后即可播放。缺失曲目仍可以选择整个音乐文件夹，系统会按歌名与歌手自动匹配并保存到当前浏览器。</p>
     <div class="music-library">
       <div class="music-library-tools">
         <label class="primary-button file-button">批量导入音乐文件夹<input id="music-folder-import" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" webkitdirectory multiple hidden></label>

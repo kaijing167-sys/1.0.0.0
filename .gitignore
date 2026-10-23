@@ -28,7 +28,6 @@ desktop.ini
 
 # User music and downloadable bundles
 frontend/music-local/
-docs/music-local/
 .tmp/
 *.mgg
 *.mflac
