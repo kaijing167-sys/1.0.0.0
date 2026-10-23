@@ -1,0 +1,28 @@
+.character-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.character-card{min-width:0;margin:0}
+.character-portrait{display:block;width:100%;height:auto;aspect-ratio:5/4;object-fit:cover;object-position:center top;border-radius:10px;margin-bottom:20px;background:#c9e1f1}
+.profile-portrait{display:block;width:100%;max-width:460px;height:auto;margin:18px auto;border-radius:12px}
+.avatar-face{position:relative;overflow:hidden;isolation:isolate}
+.avatar-face img{position:absolute;width:250%;height:250%;max-width:none;left:-75%;top:0;object-fit:cover}
+.character-heading{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.character-heading .avatar{flex-shrink:0}
+.character-heading h2{margin:4px 0}
+.character-heading h2 small{font-size:13px;font-weight:400;color:#67838a}
+.character-heading>.tag{margin-left:auto}
+.character-target{font-size:16px;font-weight:600;color:#376978}
+.character-target span{font-size:13px;font-weight:400}
+.character-description{min-height:42px;color:#67838a}
+.character-card .subject-row small{min-width:78px;text-align:right}
+.character-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.character-actions button{border:1px solid #c7dbdf;border-radius:6px;padding:10px 14px}
+.character-actions .primary{border-color:transparent}
+.profile-group{margin-top:14px;border-bottom:1px solid #dae6e8;padding-bottom:12px}
+.profile-group summary{cursor:pointer;font-weight:600;padding:8px 0}
+.profile-fields{margin:6px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.profile-fields>div{display:flex;justify-content:space-between;gap:12px;padding:6px 0}
+.profile-fields dt{color:#71868b;flex-shrink:0}
+.profile-fields dd{margin:0;text-align:right;overflow-wrap:anywhere}
+.character-current{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+#player-name{max-width:85px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#save-header{white-space:nowrap}
+@media(max-width:700px){.character-grid{grid-template-columns:1fr}.profile-fields{grid-template-columns:1fr}.character-current{align-items:flex-start}.character-heading{gap:10px}.character-description{min-height:0}}

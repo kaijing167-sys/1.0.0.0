@@ -3,6 +3,7 @@ const SETTINGS_KEY = "qinghe-game-settings-v1";
 const MUSIC_OFF_MIGRATION_KEY = "qinghe-music-force-off-v1";
 const MUSIC_REENABLE_KEY = "qinghe-music-reenabled-v1";
 const MUSIC_FORCE_OFF = false;
+document.body.classList.add("pixel-theme");
 const TOTAL_DAYS = 1092;
 const DAYS_PER_WEEK = 7;
 const BASE_ATTR = 50;
@@ -14,7 +15,7 @@ const DEFAULT_SETTINGS = {
   actionsPerWeek: 4,
   autoEvents: true,
   confirmEarlyWeek: true,
-  musicEnabled: false,
+  musicEnabled: true,
   eventMusic: true,
   musicVolume: 25,
 };
@@ -97,134 +98,96 @@ const SUBJECTS = [
 ];
 
 const ACTION_IMAGES = {
-  study: "assets/action-study.jpg",
-  rest: "assets/action-rest.jpg",
-  exercise: "assets/action-exercise.jpg",
-  social: "assets/action-social.jpg",
+  study: "assets/action-study-pixel.png",
+  rest: "assets/action-rest-pixel.png",
+  exercise: "assets/action-exercise-pixel.png",
+  social: "assets/action-social-pixel.png",
 };
+
+const LOCAL_MUSIC_MODE = location.protocol==="file:"||["localhost","127.0.0.1"].includes(location.hostname);
+function localMusicSource(category,filename){
+  if(!LOCAL_MUSIC_MODE||!filename)return null;
+  return new URL(`music-local/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`,location.href).href;
+}
+function musicTrack(id,label,category,filename){
+  return [id,label,localMusicSource(category,filename)];
+}
 
 const MUSIC_THEMES = {
   bright: {
-    label: "美好 · 欢快",
+    label: "✨ 美好 · 欢快",
     tracks: [
-      ["bright-qinghuaci", "青花瓷"],
-      ["bright-qingtian", "晴天"],
-      ["bright-daoxiang", "稻香"],
-      ["bright-summer-wind", "夏天的风"],
-      ["bright-childhood", "童年"],
-      ["bright-beautiful-wind", "最美的风"],
-      ["bright-beauty-beat", "Beauty and Beat"],
-      ["builtin-bright-morning", "Morning · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Morning.mp3"],
+      musicTrack("bright-qinghuaci","青花瓷 · 周杰伦","美好欢快",null),
+      musicTrack("bright-qingtian","晴天 · 周杰伦","美好欢快",null),
+      musicTrack("bright-daoxiang","稻香 · 周杰伦","美好欢快",null),
+      musicTrack("bright-summer-wind","夏天的风 · 温岚","美好欢快","夏天的风 - 温岚.mp3"),
+      musicTrack("bright-childhood","童年 · 罗大佑","美好欢快","童年 - 罗大佑.mp3"),
+      musicTrack("bright-best-view","最美的风景 · 许鹤缤","美好欢快","最美的风景 - 许鹤缤.mp3"),
+      musicTrack("bright-beauty-beat","Beauty And A Beat · Justin Bieber","美好欢快","Beauty And A Beat - Justin Bieber、Nicki Minaj.mp3"),
     ],
   },
   love: {
-    label: "恋爱",
+    label: "💗 恋爱",
     tracks: [
-      ["love-us", "我们俩"],
-      ["love-high-heels", "纯高跟鞋"],
-      ["love-courage", "勇气"],
-      ["love-friends", "普通朋友"],
-      ["love-nothing-wrong", "有何不可"],
-      ["love-love-song", "情歌"],
-      ["love-like-you", "喜欢你"],
-      ["builtin-love-heartwarming", "Heartwarming · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heartwarming.mp3"],
+      musicTrack("love-us","我们俩 · 郭顶","恋爱",null),
+      musicTrack("love-red-heels","红色高跟鞋 · 蔡健雅","恋爱",null),
+      musicTrack("love-courage","勇气 · 梁静茹","恋爱","勇气 - 梁静茹.mp3"),
+      musicTrack("love-friends","普通朋友 · 陶喆","恋爱","普通朋友 - 陶喆.mp3"),
+      musicTrack("love-nothing-wrong","有何不可 · 许嵩","恋爱","有何不可 - 许嵩.mp3"),
+      musicTrack("love-love-song","情歌 · 梁静茹","恋爱",null),
+      musicTrack("love-like-you","喜欢你 · BEYOND","恋爱",null),
     ],
   },
   breakup: {
-    label: "分手",
+    label: "💔 分手",
     tracks: [
-      ["breakup-miss", "我怀念的"],
-      ["breakup-quiet", "安静"],
-      ["breakup-rain-love", "雨爱"],
-      ["breakup-preference", "偏爱（痛）"],
-      ["breakup-step-back", "退后"],
-      ["breakup-serious-snow", "认真的雪"],
-      ["builtin-breakup-bittersweet", "Bittersweet · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bittersweet.mp3"],
+      musicTrack("breakup-miss","我怀念的 · 孙燕姿","分手","我怀念的 - 孙燕姿.mp3"),
+      musicTrack("breakup-quiet","安静 · 周杰伦","分手",null),
+      musicTrack("breakup-rain-love","雨爱 · 杨丞琳","分手",null),
+      musicTrack("breakup-preference","偏爱（痛）· 张芸京","分手",null),
+      musicTrack("breakup-step-back","退后 · 周杰伦","分手",null),
+      musicTrack("breakup-serious-snow","认真的雪 · 薛之谦","分手","认真的雪 - 薛之谦.mp3"),
     ],
   },
   sad: {
-    label: "忧伤",
+    label: "😔 忧伤",
     tracks: [
-      ["sad-ten-years", "十年"],
-      ["sad-see-you-again", "See You Again"],
-      ["builtin-sad-heavy-heart", "Heavy Heart · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heavy%20Heart.mp3"],
+      musicTrack("sad-ten-years","十年 · 陈奕迅","忧伤",null),
+      musicTrack("sad-see-you-again","See You Again · Wiz Khalifa","忧伤","See You Again (feat. Charlie Puth) - Wiz Khalifa、Charlie Puth.mp3"),
     ],
   },
   calm: {
-    label: "舒缓",
+    label: "🍃 舒缓",
     tracks: [
-      ["calm-mitsuha", "三葉のテーマ"],
-      ["calm-sacred-place", "Sacred Play Secret Place"],
-      ["calm-magnolia", "Magnolia"],
-      ["builtin-calm-dreamer", "Dreamer · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dreamer.mp3"],
-    ],
-  },
-  tense: {
-    label: "紧张 · 轻快",
-    tracks: [
-      ["tense-life-line", "Life Line"],
-      ["builtin-tense-highlight-reel", "Highlight Reel · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Highlight%20Reel.mp3"],
-    ],
-  },
-  focus: {
-    label: "学习 · 专注",
-    tracks: [
-      ["focus-life-line", "Life Line"],
-      ["builtin-focus-fresh-air", "Fresh Air · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fresh%20Air.mp3"],
-    ],
-  },
-  sadEn: {
-    label: "忧伤 · 英文",
-    tracks: [
-      ["saden-memories", "Memories"],
-      ["saden-free-lucky", "Free lucky"],
-      ["saden-merry-christmas", "Merry Christmas…"],
-      ["builtin-saden-promises", "Promises to Keep · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Promises%20to%20Keep.mp3"],
-    ],
-  },
-  pain: {
-    label: "痛 · 心碎向",
-    tracks: [
-      ["pain-call-of-silence", "Call of Silence"],
-      ["pain-born-a-stranger", "Born a Stranger"],
-      ["pain-south-city-flowers", "城南花已开"],
-      ["builtin-pain-disquiet", "Disquiet · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Disquiet.mp3"],
-    ],
-  },
-  regret: {
-    label: "遗憾",
-    tracks: [
-      ["regret-hanabi", "Hanabi（烟火）"],
-      ["regret-truth", "The truth that you leave"],
-      ["regret-farewell", "诀别书"],
-      ["regret-dont-talk", "We don't Talk Anymore"],
-      ["builtin-regret-sincerely", "Sincerely · Kevin MacLeod", "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Sincerely.mp3"],
+      musicTrack("calm-mitsuha","三葉のテーマ · RADWIMPS","舒缓",null),
+      musicTrack("calm-sacred-place","Sacred Play Secret Place · matryoshka","舒缓",null),
+      musicTrack("calm-magnolia","Magnolia · keshi","舒缓","magnolia - keshi.mp3"),
     ],
   },
 };
 
 const EVENT_MUSIC = {
   opening: "bright",
-  military: "focus",
-  monthly_1: "tense",
+  military: "bright",
+  monthly_1: "calm",
   class_election: "bright",
-  midterm_1: "tense",
+  midterm_1: "calm",
   sports_meet: "bright",
-  final_1: "tense",
+  final_1: "sad",
   direction: "calm",
   summer: "bright",
-  midterm_2: "tense",
+  midterm_2: "calm",
   arts_festival: "bright",
-  midterm_3: "tense",
+  midterm_3: "calm",
   stress: "sad",
-  mock_1: "tense",
-  pledge: "tense",
-  mock_2: "tense",
-  spring_final_mock: "tense",
-  graduation: "regret",
+  mock_1: "calm",
+  pledge: "bright",
+  mock_2: "calm",
+  spring_final_mock: "calm",
+  graduation: "sad",
   last_study_week: "calm",
   before_exam: "calm",
-  gaokao: "tense",
+  gaokao: "calm",
 };
 
 const FRIENDS = [
@@ -530,6 +493,9 @@ const STAGE_OPENINGS = {
 
 let settings = loadSettings();
 let game = loadGame();
+let menuScreen = "home";
+let selectedCharacter = null;
+const CHARACTER_SAVES_KEY = "qinghe-character-journeys-v1";
 let draft = {
   name: "",
   attrs: {...PRESETS.balanced},
@@ -570,6 +536,7 @@ function loadGame(){
     data.tutoringDoneThisWeek=!!data.tutoringDoneThisWeek;
     if(!data.track)data.track="undecided";
     if(!data.stage)data.stage="high1";
+    if(data.class_id)campusValidate(data);
     return data;
   }catch{return null}
 }
@@ -749,14 +716,17 @@ async function crossfadeTo(url,label){
   requestAnimationFrame(fade);
 }
 function normalizeMusicName(value){
-  return value.toLowerCase().replace(/\.[a-z0-9]+$/,"").replace(/[\s_\-—·.,，。()（）[\]【】'’"]/g,"");
+  return value.toLowerCase()
+    .replace(/\.[a-z0-9]+$/,"")
+    .replace(/\([^)]*\)|（[^）]*）/g,"")
+    .replace(/[\s_\-—·.,，。()（）[\]【】'’"]/g,"");
 }
 function matchTrackIds(filename){
   const normalized=normalizeMusicName(filename);
   const matches=[];
   for(const theme of Object.values(MUSIC_THEMES)){
     for(const [id,title] of theme.tracks){
-      const target=normalizeMusicName(title);
+      const target=normalizeMusicName(title.split("·")[0]);
       if((normalized.includes(target)||target.includes(normalized))&&!matches.includes(id))matches.push(id);
     }
   }
@@ -773,6 +743,7 @@ function persist(){
   if(game){
     checkAchievements();
     localStorage.setItem(SAVE_KEY,JSON.stringify(game));
+    if(game.character_id){const rows=readCharacterSaves();rows[game.character_id]=JSON.parse(JSON.stringify(game));localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
   }
 }
 function gradeForDay(day){
@@ -782,6 +753,7 @@ function gradeForDay(day){
   return "高一";
 }
 function trackLabel(){
+  if(game.class_id){const c=campusClass(game.class_id);return c.id+"班 · "+c.combo+c.level;}
   if(game.track==="science")return "理科方向";
   if(game.track==="humanities")return "文科方向";
   return "尚未分科";
@@ -946,6 +918,7 @@ function usedPoints(){return Object.values(draft.attrs).reduce((sum,value)=>sum+
 function remainingPoints(){return EXTRA_POINTS-usedPoints()}
 
 function render(){
+  if(menuScreen!=="play"){renderLanding();return;}
   if(game?.completed){
     renderFinal();
     return;
@@ -957,78 +930,49 @@ function render(){
   renderLanding();
 }
 
-function renderLanding(){
-  $("#game-root").innerHTML=`
-    <main id="main" class="game-landing">
-      <section class="landing-copy">
-        <div class="landing-mark">QINGHE HIGH SCHOOL · 1092 DAYS</div>
-        <h1>青禾纪事</h1>
-        <h2>用三年时间，成为你想成为的人。</h2>
-        <p>从高一开学到高考结束，每一次学习、休息、相遇和选择，都会把你带到不同的未来。</p>
-        <div class="landing-tags"><span>自由养成</span><span>角色创建</span><span>自动事件</span><span>高考倒计时</span></div>
-        <div class="landing-brief">
-          <div><strong>1092</strong><span>天高中旅程</span></div>
-          <div><strong>4</strong><span>次每周行动</span></div>
-          <div><strong>10</strong><span>项成长成就</span></div>
-          <div><strong>多结局</strong><span>由三年选择决定</span></div>
-        </div>
-      </section>
-      <form class="setup-panel" id="setup-form">
-        <div class="setup-heading">
-          <div><h2>创建你的角色</h2><p>选择开局阶段，再写下名字并分配属性。</p></div>
-          <span class="point-pill">剩余 ${remainingPoints()} 点</span>
-        </div>
-        <div class="stage-select">
-          ${Object.entries(START_STAGES).map(([id,stage])=>`<button type="button" data-stage="${id}" class="${draft.stage===id?"selected":""}"><b>${stage.label}</b><small>${stage.difficulty} · 剩余 ${TOTAL_DAYS-stage.day+1} 天</small></button>`).join("")}
-        </div>
-        <p class="stage-description">${START_STAGES[draft.stage].desc}</p>
-        ${draft.stage!=="high1"?`
-          <div class="track-select">
-            <span>选择方向</span>
-            <button type="button" data-track="science" class="${draft.track==="science"?"selected":""}">理科</button>
-            <button type="button" data-track="humanities" class="${draft.track==="humanities"?"selected":""}">文科</button>
-          </div>
-        `:`<p class="stage-description">高一开局将在后续剧情中触发文理分科选择。</p>`}
-        <label class="field">
-          <span>你的名字</span>
-          <input id="player-name" maxlength="12" autocomplete="off" placeholder="请输入名字" value="${escapeHtml(draft.name)}">
-        </label>
-        <div class="preset-list">
-          ${[
-            ["balanced","均衡"],
-            ["scholar","学霸"],
-            ["athlete","体育"],
-            ["social","社团"],
-          ].map(([id,label])=>`<button type="button" data-preset="${id}" class="${draft.preset===id?"selected":""}">${label}</button>`).join("")}
-        </div>
-        <div class="attribute-list">
-          ${ATTRIBUTES.map(([id,label,hint])=>`
-            <div class="attribute-row" title="${hint}">
-              <span>${label}</span>
-              <strong>${draft.attrs[id]}</strong>
-              <button type="button" data-attr="${id}" data-delta="-1" aria-label="${label}减少">−</button>
-              <button type="button" data-attr="${id}" data-delta="1" aria-label="${label}增加">+</button>
-            </div>`).join("")}
-        </div>
-        <button class="start-game" type="submit">开始游戏 →</button>
-        ${game?`<div class="resume-row"><button type="button" data-action="resume">继续上次进度</button></div>`:""}
-      </form>
-    </main>`;
+function readCharacterSaves(){
+  try{const rows=JSON.parse(localStorage.getItem(CHARACTER_SAVES_KEY)||'{}');return rows&&typeof rows==='object'&&!Array.isArray(rows)?rows:{};}catch{return {};}
 }
+function characterSave(id){
+  if(game?.character_id===id)return game;
+  return readCharacterSaves()[id]||null;
+}
+function saveDate(value){
+  if(!value||!Number.isFinite(new Date(value).getTime()))return '旧存档未记录建档日期';
+  return new Date(value).toLocaleString('zh-CN',{hour12:false});
+}
+function renderLanding(){
+  const settingsButton='<button class="menu-settings" data-action="settings" aria-label="设置">⚙ <span>设置</span></button>';
+  let content='';
+  if(menuScreen==='stages'){
+    content=`<section class="menu-stage"><button class="menu-back" data-menu="home">← 返回首页</button><p class="menu-kicker">第二页 · 选择起点</p><h1>从哪一天开始？</h1><p class="menu-subtitle">${escapeHtml(draft.name)}，把接下来的日子交给自己。</p><div class="menu-stages">${Object.entries(START_STAGES).map(([id,s])=>`<button data-menu-stage="${id}"><span>${id==='sprint100'?'100':s.label.slice(0,2)}</span><b>${id==='sprint100'?'天冲刺':'开学'}</b><small>距离高考 ${daysLeft(s.day)} 天</small></button>`).join('')}</div><p class="menu-footnote">选择起点后，进入第三页，正式开始高中生活。</p></section>`;
+  }else{
+    content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
+  }
+  $('#game-root').innerHTML=`<main class="quiet-menu pixel-menu ${menuScreen==='home'?'home-cover':''}">${settingsButton}${content}</main>`;
+}
+function openCharacterSaves(id=selectedCharacter||draft.character_id||characterCatalog[0].id){
+  selectedCharacter=id;
+  const c=characterCatalog.find(c=>c.id===id)||characterCatalog[0],saved=characterSave(c.id);
+  let slots=[];try{slots=JSON.parse(localStorage.getItem('qinghe-journey-slots-v1')||'[]');}catch{}
+  if(!Array.isArray(slots))slots=[];
+  openModal(`<p class="menu-kicker">青春存档</p><h2>选择你的故事</h2><div class="save-characters">${characterCatalog.map(p=>`<button class="save-character ${p.id===c.id?'selected':''}" data-save-character="${p.id}" aria-pressed="${p.id===c.id}"><img src="${campusPortrait(p.id)}" alt=""><b>${escapeHtml(p.name)}</b><small>${characterSave(p.id)?'已有进度':'尚未建档'}</small></button>`).join('')}</div><section class="save-profile"><h3>${escapeHtml(c.name)} <small>${escapeHtml(c.nickname||'')}</small></h3><p>${escapeHtml(c.fields['班级'])} · ${escapeHtml(c.fields['选科组合'])} · 目标 ${escapeHtml(c.fields['目标大学'])}</p><div class="save-date"><span>建档日期</span><b>${saved?saveDate(saved.createdAt):'尚未建立存档'}</b></div>${saved?`<p>当前进度：${gradeForDay(saved.day)} · 距离高考 ${daysLeft(saved.day)} 天</p><div class="profile-stats">${ATTRIBUTES.map(([key,label])=>`<div><span>${label}</span><b>${escapeHtml(saved.attrs[key])}</b></div>`).join('')}</div>`:''}<details class="profile-details"><summary>查看人物完整属性面板</summary><dl>${Object.entries(c.fields).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl></details>${saved?`<details class="profile-details"><summary>查看当前存档学科属性</summary><dl>${CAMPUS_SUBJECTS.filter(([key])=>Number.isFinite(saved.subjects[key])).map(([key,label])=>`<div><dt>${label}</dt><dd>${saved.subjects[key]}</dd></div>`).join('')}</dl></details>`:''}<div class="dialog-footer">${saved?`<button class="primary-button" data-character-load="${c.id}">继续此存档 →</button>`:''}<button class="${saved?'ghost-button':'primary-button'}" data-character-start="${c.id}">以此人物开始</button></div></section>${game&&!game.character_id?'<button class="ghost-button" data-action="resume" data-menu-close>继续原有自定义人物存档</button>':''}${slots.some(r=>!r.empty&&r.state)?`<details class="profile-details"><summary>其他进度存档槽</summary>${slots.filter(r=>!r.empty&&r.state).map(r=>`<p>${escapeHtml(r.name)} · ${saveDate(r.state.createdAt||r.createdAt)} <button class="ghost-button" data-menu-slot="${Number(r.slot)}">读取</button></p>`).join('')}</details>`:''}`);
+}
+
 
 function renderGame(){
   const next=nextEvent();
   $("#game-root").innerHTML=`
-    <div class="game-shell">
+    <div class="game-shell pixel-game-shell">
       <header class="topbar">
         <div class="hud-brand-row">
           <div class="top-brand"><i>青</i><span>青禾纪事</span></div>
           <div class="top-player">
-            <span class="player-avatar">${escapeHtml(game.name.slice(0,1)||"我")}</span>
+            <span class="player-avatar">${game.character_id?`<img src="${campusPortrait(game.character_id)}" alt="${escapeHtml(game.name)}">`:escapeHtml(game.name.slice(0,1)||"我")}</span>
             <span>${escapeHtml(game.name)}</span>
             <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
           </div>
-          <div class="top-actions">
+          <div class="top-actions"><button class="ghost-button" data-menu="home">首页</button><button class="ghost-button" data-campus-classes>我的班级</button>
             <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
             <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
           </div>
@@ -1058,10 +1002,10 @@ function renderGame(){
                 <small>剩余 ${game.actionPoints} / ${settings.actionsPerWeek} 次</small>
               </div>
               <div class="action-grid">
-                ${actionCard("study","▤","专注学习","选择一门课程，提升对应成绩。")}
-                ${actionCard("rest","◌","好好休息","恢复体力和心情，降低压力。")}
-                ${actionCard("exercise","♙","运动锻炼","身体状态变好，压力下降。")}
-                ${actionCard("social","♧","与人相处","和朋友聊天，改善心情与关系。")}
+                ${actionCard("study","学","专注学习","选择一门课程，提升对应成绩。")}
+                ${actionCard("rest","憩","好好休息","恢复体力和心情，降低压力。")}
+                ${actionCard("exercise","动","运动锻炼","身体状态变好，压力下降。")}
+                ${actionCard("social","友","与人相处","和朋友聊天，改善心情与关系。")}
               </div>
               <div class="week-footer">
                 <p>${game.pendingEvents.length?`有 ${game.pendingEvents.length} 个事件等待处理。`:game.actionPoints===0?"本周行动已经用完，结束后进入下一周。":"行动不必全部用完，你也可以提前结束本周。"}</p>
@@ -1074,7 +1018,7 @@ function renderGame(){
 
             <section class="game-panel">
               <div class="panel-heading"><h2>学业状态</h2><small>${trackLabel()}</small></div>
-              ${SUBJECTS.map(([id,label])=>subjectRow(id,label)).join("")}
+              ${(campusOptions(game)||SUBJECTS).map(([id,label])=>subjectRow(id,label)).join("")}
             </section>
           </div>
 
@@ -1109,7 +1053,7 @@ function renderGame(){
           </aside>
         </div>
       </main>
-      <footer class="music-credit">Music: Kevin MacLeod (incompetech.com) · Creative Commons BY 4.0 · 部分曲目为游戏内嵌授权替代音乐</footer>
+      <footer class="music-credit">PIXEL EDITION · 本机曲库 · 音乐仅保存在当前设备，不上传公开仓库</footer>
     </div>`;
 }
 
@@ -1123,9 +1067,10 @@ function statBox(label,value,max,unit=""){
 }
 function subjectRow(id,label){
   const value=game.subjects[id];
-  return `<div class="subject-row"><span>${label}</span><div class="mini-bar"><i style="width:${clamp(value/150*100,0,100)}%"></i></div><b>${value}</b></div>`;
+  return `<div class="subject-row"><span>${label}</span><div class="mini-bar"><i style="width:${clamp(value/campusMax(id)*100,0,100)}%"></i></div><b>${value}</b></div>`;
 }
 function studyOptions(){
+  if(game.class_id)return campusOptions(game);
   if(game.track==="science")return SUBJECTS.filter(([id])=>["chinese","math","english","science"].includes(id));
   if(game.track==="humanities")return SUBJECTS.filter(([id])=>["chinese","math","english","humanities"].includes(id));
   return SUBJECTS;
@@ -1155,6 +1100,7 @@ function renderFinal(){
           <section class="final-card">
             <h2>接下来</h2>
             <p>这一周目已经完成。你可以重新创建角色，尝试另一种高中生活。</p>
+            <button class="ghost-button" data-journey-slots>进度存档槽</button>
             <button class="primary-button" data-action="new-game">重新开始新周目 →</button>
           </section>
         </div>
@@ -1163,6 +1109,7 @@ function renderFinal(){
 }
 
 function changeAttribute(id,delta){
+  if(draft.character_id)return toast("此人物使用填写表属性；可切换自定义人物分配属性");
   const current=draft.attrs[id];
   if(delta>0&&(remainingPoints()<=0||current>=80))return toast(current>=80?"单项属性最高 80":"没有剩余点数了");
   if(delta<0&&current<=BASE_ATTR)return;
@@ -1172,6 +1119,7 @@ function changeAttribute(id,delta){
 }
 
 function applyPreset(id){
+  if(draft.character_id)return toast("此人物使用填写表属性");
   draft.preset=id;
   draft.attrs={...PRESETS[id]};
   renderLanding();
@@ -1189,11 +1137,14 @@ function applyTrack(id){
 }
 
 function startGame(){
-  const name=$("#player-name")?.value.trim();
+  const name=$("#player-name")?.value.trim()||draft.name;
   if(!name)return toast("先给自己取一个名字");
-  if(remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
+  if(!draft.character_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
   draft.name=name;
-  game=initialState(name,draft.attrs,draft.stage,draft.track);
+  if(game)persist();
+  game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
+  game.createdAt=new Date().toISOString();
+  menuScreen="play";
   persist();
   render();
   const opening=draft.stage==="high1"?EVENTS[0]:STAGE_OPENINGS[draft.stage];
@@ -1203,12 +1154,12 @@ function startGame(){
 function performAction(type){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   if(type==="study"){
-    playTheme("focus",{force:true});
+    playTheme("calm",{force:true});
     openModal(`
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
       <p>学习效率会受到学力和当前压力影响。每次行动消耗 1 点行动机会。</p>
-      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / 150</small></button>`).join("")}</div>
+      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)}</small></button>`).join("")}</div>
       <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
     `);
     return;
@@ -1226,7 +1177,7 @@ function performAction(type){
   game.energy=clamp(game.energy+(effects.energy||0),0,100);
   game.stress=clamp(game.stress+(effects.stress||0),0,100);
   game.mood=clamp(game.mood+(effects.mood||0),0,100);
-  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+effects.charm,0,100);
+  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+campusGrowth(effects.charm),0,100);
   addLog(effects.text);
   persist();
   render();
@@ -1275,21 +1226,21 @@ function resolveSocialChoice(friendId){
 
 function studySubject(id){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
-  const label=SUBJECTS.find(item=>item[0]===id)[1];
-  const stressPenalty=Math.max(0,game.stress-60)*0.04;
+  const option=studyOptions().find(item=>item[0]===id);if(!option)return;
+  const label=option[1];
   const modifiers=stageModifiers();
-  const gain=Math.max(1,Math.round(3.6+game.attrs.insight*0.035-stressPenalty+modifiers.studyBonus));
+  const gain=0.5;
   const before=game.subjects[id];
-  game.subjects[id]=Math.min(150,game.subjects[id]+gain);
+  campusEffect(id,gain);
   game.actionPoints--;
   game.energy=clamp(game.energy-8,0,100);
   game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
   game.mood=clamp(game.mood-2,0,100);
-  addLog(`专注学习${label}，能力提升 ${game.subjects[id]-before} 点。`);
+  addLog(`专注学习${label}，能力提升 ${Math.round((game.subjects[id]-before)*100)/100} 点。`);
   persist();
   closeModal();
   render();
-  toast(`${label} +${game.subjects[id]-before}`);
+  toast(`${label} +${Math.round((game.subjects[id]-before)*100)/100}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
@@ -1314,7 +1265,7 @@ function showTutoringDecision(){
     <p>爸妈把几张辅导班宣传单放在桌上。选择一门课后，之后的每个周末都会先完成一次必选补课；也可以先不补。</p>
     <div class="choice-list">
       <button class="choice-button" data-tutoring="none"><strong>暂时不补课</strong><small>保留完整周末，但成绩提升更依赖自己学习。</small></button>
-      ${TUTORING_SUBJECTS.map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
+      ${(game.class_id?campusOptions(game).map(([id,label])=>({id,label})):TUTORING_SUBJECTS).map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
     </div>
   `, false);
 }
@@ -1332,7 +1283,7 @@ function resolveTutoringChoice(subjectId){
 }
 
 function showMandatoryTutoring(){
-  const subject=TUTORING_SUBJECTS.find(item=>item.id===game.tutoring.subject);
+  const subject=[...TUTORING_SUBJECTS,...CAMPUS_SUBJECTS.map(([id,label])=>({id,label}))].find(item=>item.id===game.tutoring.subject);
   if(!subject){
     game.tutoring.subject="none";
     showWeekendOptions();
@@ -1344,8 +1295,7 @@ function showMandatoryTutoring(){
   }
   game.tutoringDoneThisWeek=true;
   game.tutoringCount++;
-  const gain=Math.max(3,Math.round(4.5+game.attrs.insight*0.025));
-  game.subjects[subject.id]=Math.min(150,game.subjects[subject.id]+gain);
+  const gain=campusEffect(subject.id,0.5);
   applyEffects({energy:-10,stress:9,mood:-3});
   addLog(`周末参加${subject.label}补课，能力提升 ${gain} 点。`);
   persist();
@@ -1535,7 +1485,7 @@ function resolveEventChoice(index){
   if(!currentModal?.event)return;
   const event=currentModal.event;
   const choice=event.choices[index];
-  if(choice.track)game.track=choice.track;
+  if(choice.track){if(game.class_id)campusAssign(game,choice.track==="science"?4:13);else game.track=choice.track;}
   applyEffects(choice.effects);
   markEventResolved(event.id);
   addLog(`${event.title}：${choice.result}`);
@@ -1570,7 +1520,7 @@ function calculateExam(event,style){
   const styleMod=style==="sprint"?28:style==="check"?10:0;
   const pressureMod=style==="sprint"?-Math.max(0,game.stress-45)*0.75:0;
   const random=Math.round((Math.random()-.5)*70);
-  const raw=ability*1.95+80-difficulty+styleMod+pressureMod+random;
+  const raw=game.class_id?campusOptions(game).reduce((sum,[id])=>sum+game.subjects[id],0)+(game.attrs.insight-60)*0.3+(game.attrs.mindset-60)*0.2-difficulty+styleMod+pressureMod+random:ability*1.95+80-difficulty+styleMod+pressureMod+random;
   const score=clamp(Math.round(raw),120,750);
   game.examResults.push({day:game.day,title:event.title,score});
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
@@ -1611,7 +1561,7 @@ function completeGame(score){
   else if(score>=460)game.ending="平凡之路：每种青春都有自己的方向";
   else game.ending="重新出发：这一页结束，不是故事结束";
   game.mood=clamp(game.mood+(bestSubject>=100?8:0),0,100);
-  const endingTheme=score>=650&&relation>=65?"love":score>=650?"bright":score>=560?"calm":score>=460?"sad":"pain";
+  const endingTheme=score>=650&&relation>=65?"love":score>=650?"bright":score>=560?"calm":"sad";
   persist();
   closeModal(true);
   render();
@@ -1623,12 +1573,12 @@ function applyEffects(effects={}){
   if(effects.stress)game.stress=clamp(game.stress+effects.stress,0,100);
   if(effects.mood)game.mood=clamp(game.mood+effects.mood,0,100);
   if(effects.money)game.money=Math.max(0,game.money+effects.money);
-  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+effects.charm,0,100);
-  if(effects.stamina)game.attrs.stamina=clamp(game.attrs.stamina+effects.stamina,0,100);
-  if(effects.mindset)game.attrs.mindset=clamp(game.attrs.mindset+effects.mindset,0,100);
+  if(effects.charm)game.attrs.charm=clamp(game.attrs.charm+campusGrowth(effects.charm),0,100);
+  if(effects.stamina)game.attrs.stamina=clamp(game.attrs.stamina+campusGrowth(effects.stamina),0,100);
+  if(effects.mindset)game.attrs.mindset=clamp(game.attrs.mindset+campusGrowth(effects.mindset),0,100);
   if(effects.subjects){
     for(const [id,value] of Object.entries(effects.subjects)){
-      game.subjects[id]=clamp(game.subjects[id]+value,0,150);
+      campusEffect(id,value);
     }
   }
 }
@@ -1648,73 +1598,15 @@ function closeModal(force=false){
   document.body.classList.remove("modal-open");
   currentModal=null;
   modalLocked=false;
-  playTheme("calm");
+  playTheme(settings.menuMusicTheme||"calm");
 }
 function openSettings(){
-  const toggle=(name,title,text)=>`
-    <label class="setting-row">
-      <span><b>${title}</b><small>${text}</small></span>
-      <input class="setting-toggle" type="checkbox" data-setting="${name}" ${settings[name]?"checked":""}>
-    </label>`;
-  openModal(`
-    <div class="eyebrow">SETTINGS</div>
-    <h2>设置</h2>
-    <p>把显示、游戏节奏和存档操作集中在这里。所有设置会自动保存在当前浏览器。</p>
-    <div class="settings-content">
-      <section class="settings-section">
-        <h3>角色</h3>
-        <div class="settings-inline">
-          <input id="settings-name" maxlength="12" value="${escapeHtml(game.name)}" aria-label="角色名称">
-          <button class="ghost-button" data-action="save-name">保存名称</button>
-        </div>
-      </section>
-      <section class="settings-section">
-        <h3>显示</h3>
-        ${toggle("largeText","大字体模式","放大正文与按钮文字，方便阅读。")}
-        ${toggle("compact","紧凑布局","减少面板间距，在同一屏里显示更多内容。")}
-        ${toggle("reducedMotion","减少动态效果","关闭过渡动画和移动效果。")}
-      </section>
-      <section class="settings-section">
-        <h3>游戏节奏</h3>
-        <label class="setting-row">
-          <span><b>每周行动次数</b><small>调整每星期可以安排的行动数量。</small></span>
-          <select id="settings-actions" aria-label="每周行动次数">
-            ${[3,4,5].map(value=>`<option value="${value}" ${settings.actionsPerWeek===value?"selected":""}>${value} 次</option>`).join("")}
-          </select>
-        </label>
-        ${toggle("autoEvents","自动触发事件","考试、周末和主线事件到期后自动弹出。")}
-        ${toggle("confirmEarlyWeek","提前结束确认","还有行动时，结束本周前先确认。")}
-      </section>
-      ${MUSIC_FORCE_OFF?`
-        <section class="settings-section">
-          <h3>音乐</h3>
-          <p class="settings-note">当前版本已强制关闭背景音乐，播放入口和事件音乐均已停用。</p>
-        </section>
-      `:`
-        <section class="settings-section">
-          <h3>音乐</h3>
-          ${toggle("musicEnabled","开启背景音乐","关闭后所有场景音乐都会暂停。")}
-          ${toggle("eventMusic","启用事件专属音乐","考试、低谷、毕业和结局会切换到对应主题。")}
-          <label class="setting-row music-volume-row">
-            <span><b>音乐音量</b><small>当前 ${settings.musicVolume}% · ${musicAvailableCount()} / ${musicTrackCount()} 首可播放</small></span>
-            <input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量">
-          </label>
-          <div class="settings-buttons">
-            <button class="ghost-button" data-action="music-library">管理本地音乐库</button>
-          </div>
-        </section>
-      `}
-      <section class="settings-section">
-        <h3>存档</h3>
-        <p class="settings-note">${game.pendingEvents.length?`当前还有 ${game.pendingEvents.length} 个待处理事件。`:"当前进度已自动保存。"}</p>
-        <div class="settings-buttons">
-          <button class="ghost-button" data-action="export-save">导出存档</button>
-          <label class="ghost-button file-button">导入存档<input id="import-save" type="file" accept="application/json,.json" hidden></label>
-          <button class="ghost-button danger-button" data-action="new-game">重新开始</button>
-        </div>
-      </section>
-    </div>
-  `);
+  openModal(`<div class="eyebrow">声音设置</div><h2>留一点安静给青春</h2>
+    <label class="setting-row"><span><b>背景音乐</b><small>随时开启或暂停</small></span><input class="setting-toggle" type="checkbox" data-setting="musicEnabled" ${settings.musicEnabled?'checked':''}></label>
+    <label class="setting-row"><span><b>音量</b><small id="volume-value">${settings.musicVolume}%</small></span><input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量"></label>
+    <label class="setting-row"><span><b>背景音乐主题</b></span><select id="simple-music-theme" aria-label="背景音乐主题">${Object.entries(MUSIC_THEMES).map(([id,t])=>`<option value="${id}" ${(settings.menuMusicTheme||'calm')===id?'selected':''}>${t.label}</option>`).join('')}</select></label>
+    <label class="setting-row"><span><b>剧情自动切换音乐</b></span><input class="setting-toggle" type="checkbox" data-setting="eventMusic" ${settings.eventMusic?'checked':''}></label>
+    <div class="dialog-footer"><button class="ghost-button" data-action="music-library">选择本地音乐</button><button class="primary-button" data-modal-close>完成</button></div>`);
 }
 
 function updateSetting(name,value){
@@ -1734,12 +1626,13 @@ function updateSetting(name,value){
   }
   persistSettings();
   if(name==="musicEnabled"){
-    if(value)playTheme(currentMusicTheme,{force:true});
+    if(value)playTheme(settings.menuMusicTheme||"calm",{force:true});
     else pauseMusic();
   }
   if(name==="eventMusic"){
     playTheme(value&&currentModal?.event?(EVENT_MUSIC[currentModal.event.id]||"calm"):"calm",{force:true});
   }
+  if(name==="musicVolume"&&$("#volume-value"))$("#volume-value").textContent=settings.musicVolume+"%";
   if(game)render();
   if(name==="autoEvents"&&value&&game?.pendingEvents.length){
     closeModal(true);
@@ -1802,7 +1695,7 @@ async function importSave(file){
     const imported=parsed.game||parsed;
     if(!imported||imported.version!==2||!imported.attrs||!imported.subjects)throw new Error("invalid");
     if(!Array.isArray(imported.pendingEvents))imported.pendingEvents=[];
-    game=imported;
+    game=campusValidate(imported);
     if(parsed.settings)settings={...DEFAULT_SETTINGS,...parsed.settings};
     persist();
     persistSettings();
@@ -1817,12 +1710,12 @@ async function importSave(file){
 function openMusicLibrary(){
   const sections=Object.entries(MUSIC_THEMES).map(([themeId,theme])=>`
     <details class="music-theme" open>
-      <summary><b>${theme.label}</b><span>${theme.tracks.filter(([id])=>musicCache.has(id)).length} / ${theme.tracks.length}</span></summary>
+      <summary><b>${theme.label}</b><span>${theme.tracks.filter(([id,,src])=>musicCache.has(id)||!!src).length} / ${theme.tracks.length}</span></summary>
       <div class="music-track-list">
         ${theme.tracks.map(([trackId,title,src])=>{
-          const local=musicCache.has(trackId),builtIn=!!src,available=local||builtIn;
+          const local=musicCache.has(trackId),bundled=!!src,available=local||bundled;
           return `<div class="music-track ${available?"loaded":""}">
-            <div><b>${escapeHtml(title)}</b><small>${local?"已导入本地文件":builtIn?"内置授权音乐，可直接播放":"尚未导入音频文件"}</small></div>
+            <div><b>${escapeHtml(title)}</b><small>${local?"已导入浏览器":bundled?"本机曲库，可直接播放":"尚未找到音频文件"}</small></div>
             <div class="music-track-actions">
               <button class="ghost-button" data-preview-track="${trackId}" ${available?"":"disabled"}>试听</button>
               <label class="ghost-button file-button">${available?"替换":"选择文件"}<input type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" data-music-file="${trackId}" hidden></label>
@@ -1835,7 +1728,7 @@ function openMusicLibrary(){
   openModal(`
     <div class="eyebrow">LOCAL MUSIC LIBRARY</div>
     <h2>本地音乐库</h2>
-    <p>音乐文件只保存在当前浏览器。可以逐个选择，也可以直接选择存放这些歌曲的文件夹，系统会按文件名自动匹配。</p>
+    <p>游戏会优先读取项目内的本机曲库；在线页面也可以选择整个音乐文件夹，系统会按歌名与歌手自动匹配并保存到当前浏览器。商业音频不会上传公开仓库。</p>
     <div class="music-library">
       <div class="music-library-tools">
         <label class="primary-button file-button">批量导入音乐文件夹<input id="music-folder-import" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac" webkitdirectory multiple hidden></label>
@@ -1909,8 +1802,9 @@ function confirmNewGame(){
 function resetGame(){
   localStorage.removeItem(SAVE_KEY);
   game=null;
+  menuScreen="home";
   closeModal(true);
-  draft={name:"",attrs:{...PRESETS.balanced},preset:"balanced"};
+  draft={name:"",attrs:{...PRESETS.balanced},preset:"balanced",stage:"high1",track:"science"};
   render();
 }
 
@@ -1950,6 +1844,7 @@ document.addEventListener("click",event=>{
   if(button.dataset.action==="choose-friend-again")return showFriendSelect();
   if(button.dataset.action==="resume"){
     game=loadGame();
+    menuScreen="play";
     if(game)render();
     return;
   }
@@ -1981,7 +1876,38 @@ document.addEventListener("keydown",event=>{
   if(event.key==="Escape"&&!$("#game-dialog").hidden)closeModal();
 });
 
+function prepareMenuStart(id){
+  const characterId=id||draft.character_id||game?.character_id||characterCatalog[0].id;
+  if(characterSave(characterId)&&!confirm('此人物已有存档。开始新故事将替换此人物的自动存档，继续吗？'))return;
+  const stage=draft.stage||'high1';
+  campusDraft(characterId);
+  draft.stage=stage;
+  menuScreen='stages';closeModal(true);render();
+}
+document.addEventListener('click',event=>{
+  const b=event.target.closest('button');if(!b||b.disabled)return;
+  if(b.dataset.menu==='home'){if(game)persist();menuScreen='home';closeModal(true);render();}
+  if(b.dataset.menu==='start')prepareMenuStart();
+  if(b.dataset.menu==='saves')openCharacterSaves();
+  if(b.dataset.saveCharacter)openCharacterSaves(b.dataset.saveCharacter);
+  if(b.dataset.characterStart){
+    prepareMenuStart(b.dataset.characterStart);
+  }
+  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;startGame();}
+  if(b.dataset.characterLoad){
+    try{game=campusValidate(JSON.parse(JSON.stringify(characterSave(b.dataset.characterLoad))));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取，请检查存档数据');}
+  }
+  if(b.hasAttribute('data-menu-close'))closeModal(true);
+  if(b.dataset.menuSlot){
+    try{const row=JSON.parse(localStorage.getItem('qinghe-journey-slots-v1')||'[]').find(r=>r.slot===Number(b.dataset.menuSlot));game=campusValidate(JSON.parse(JSON.stringify(row.state)));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取');}
+  }
+});
+document.addEventListener('change',event=>{
+  if(event.target.id==='simple-music-theme'){settings.menuMusicTheme=event.target.value;persistSettings();if(settings.musicEnabled)playTheme(settings.menuMusicTheme,{force:true});}
+});
+
 render();
+if(location.hash==="#classes"&&game)campusShowClasses();
 initializeMusicLibrary().then(()=>{
   pauseMusic();
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});

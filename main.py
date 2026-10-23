@@ -1,7 +1,21 @@
 import time
+from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from database import Base, engine
+from save_router import save_router
+from character_router import character_router
+
+
+@asynccontextmanager
+async def lifespan(app):
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    yield
+    await engine.dispose()
 
 from epilogue_sse import epilogue_router
 from exam_router import exam_router
@@ -11,6 +25,7 @@ from weekend_system import weekend_router
 
 
 app = FastAPI(
+    lifespan=lifespan,
     title="高中模拟器文字游戏后端 API Core Engine",
     version="2.0.0",
     description="快照存档、事件检定、考场排位、社交、多周目与毕业季 SSE",
@@ -38,6 +53,9 @@ app.include_router(social_router)
 app.include_router(weekend_router)
 app.include_router(ng_router)
 app.include_router(epilogue_router)
+app.include_router(save_router)
+app.include_router(character_router)
+app.mount("/play", StaticFiles(directory=Path(__file__).parent / "frontend", html=True), name="play")
 
 
 @app.get("/")
