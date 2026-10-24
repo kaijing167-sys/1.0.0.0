@@ -1224,7 +1224,6 @@ function startGame(){
 function performAction(type){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   if(type==="study"){
-    playTheme("calm",{force:true});
     openModal(`
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
@@ -1316,7 +1315,6 @@ function studySubject(id){
 
 function openWeekend(){
   if(game.weekendResolved||game.actionPoints>0)return;
-  playTheme("bright",{force:true});
   if(!game.tutoring.decided){
     showTutoringDecision();
     return;
@@ -1538,8 +1536,8 @@ function showNextEvent(){
 function openEvent(event){
   currentModal={type:"event",event};
   const theme=EVENT_MUSIC[event.id]||"calm";
-  modalMusicRestorePending=settings.eventMusic&&theme!==currentMusicTheme;
-  if(modalMusicRestorePending)playTheme(theme,{force:true});
+  modalMusicRestorePending=false;
+  if(settings.eventMusic&&theme!==currentMusicTheme)playTheme(theme,{force:true});
   if(event.type==="exam"||event.type==="gaokao"){
     openExam(event);
     return;
@@ -1597,10 +1595,10 @@ function calculateExam(event,style){
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
   markEventResolved(event.id);
   addLog(`${event.title}成绩：${score} 分。`);
+  modalMusicRestorePending=false;
   if(settings.eventMusic){
     const theme=score>=650?"bright":score<460?"sad":"calm";
     if(theme!==currentMusicTheme){
-      modalMusicRestorePending=true;
       playTheme(theme,{force:true});
     }
   }
@@ -1687,7 +1685,7 @@ function openSettings(){
     <label class="setting-row"><span><b>背景音乐</b><small>随时开启或暂停</small></span><input class="setting-toggle" type="checkbox" data-setting="musicEnabled" ${settings.musicEnabled?'checked':''}></label>
     <label class="setting-row"><span><b>音量</b><small id="volume-value">${settings.musicVolume}%</small></span><input id="settings-volume" type="range" min="0" max="100" value="${settings.musicVolume}" aria-label="音乐音量"></label>
     <label class="setting-row"><span><b>背景音乐主题</b></span><select id="simple-music-theme" aria-label="背景音乐主题">${Object.entries(MUSIC_THEMES).map(([id,t])=>`<option value="${id}" ${(settings.menuMusicTheme||'calm')===id?'selected':''}>${t.label}</option>`).join('')}</select></label>
-    <label class="setting-row"><span><b>剧情自动切换音乐</b></span><input class="setting-toggle" type="checkbox" data-setting="eventMusic" ${settings.eventMusic?'checked':''}></label>
+    <label class="setting-row"><span><b>剧情 / 考试自动切换音乐</b><small>仅在进入剧情或考试时切换</small></span><input class="setting-toggle" type="checkbox" data-setting="eventMusic" ${settings.eventMusic?'checked':''}></label>
     <div class="dialog-footer"><button class="ghost-button" data-action="music-library">选择本地音乐</button><button class="primary-button" data-modal-close>完成</button></div>`);
 }
 
@@ -1995,6 +1993,6 @@ render();
 if(location.hash==="#classes"&&game)campusShowClasses();
 initializeMusicLibrary().then(()=>{
   pauseMusic();
-  if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme("calm",{force:true});
+  if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme(settings.menuMusicTheme||"calm");
   if(game)render();
 });
