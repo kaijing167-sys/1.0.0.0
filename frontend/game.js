@@ -118,7 +118,6 @@ const MUSIC_THEMES = {
     label: "✨ 美好 · 欢快",
     tracks: [
       musicTrack("bright-qinghuaci","青花瓷 · 周杰伦","美好欢快",null),
-      musicTrack("bright-qingtian","晴天 · 周杰伦","美好欢快",null),
       musicTrack("bright-daoxiang","稻香 · 周杰伦","美好欢快",null),
       musicTrack("bright-summer-wind","夏天的风 · 温岚","美好欢快","夏天的风 - 温岚.mp3"),
       musicTrack("bright-childhood","童年 · 罗大佑","美好欢快","童年 - 罗大佑.mp3"),
@@ -505,6 +504,7 @@ let draft = {
 };
 let currentModal = null;
 let modalLocked = false;
+let modalMusicRestorePending = false;
 const musicAudio = [new Audio(), new Audio()];
 let musicCache = new Map();
 let musicUrlCache = new Map();
@@ -659,9 +659,15 @@ async function pauseMusic(){
 }
 async function playTheme(themeId,{force=false}={}){
   if(MUSIC_FORCE_OFF||!settings.musicEnabled)return;
-  if(!force&&themeId===currentMusicTheme&&currentMusicTrack)return;
-  currentMusicTheme=themeId;
-  const available=availableMusic(themeId);
+  let resolvedTheme=themeId;
+  let available=availableMusic(resolvedTheme);
+  if(!available.length){
+    resolvedTheme=Object.keys(MUSIC_THEMES).find(id=>availableMusic(id).length)||null;
+    if(!resolvedTheme)return;
+    available=availableMusic(resolvedTheme);
+  }
+  if(!force&&resolvedTheme===currentMusicTheme&&currentMusicTrack)return;
+  currentMusicTheme=resolvedTheme;
   if(!available.length){
     currentMusicTrack=null;
     return;
@@ -1532,7 +1538,8 @@ function showNextEvent(){
 function openEvent(event){
   currentModal={type:"event",event};
   const theme=EVENT_MUSIC[event.id]||"calm";
-  if(settings.eventMusic&&theme!==currentMusicTheme)playTheme(theme,{force:true});
+  modalMusicRestorePending=settings.eventMusic&&theme!==currentMusicTheme;
+  if(modalMusicRestorePending)playTheme(theme,{force:true});
   if(event.type==="exam"||event.type==="gaokao"){
     openExam(event);
     return;
@@ -1590,7 +1597,13 @@ function calculateExam(event,style){
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
   markEventResolved(event.id);
   addLog(`${event.title}成绩：${score} 分。`);
-  if(settings.eventMusic)playTheme(score>=650?"bright":score<460?"sad":"calm",{force:true});
+  if(settings.eventMusic){
+    const theme=score>=650?"bright":score<460?"sad":"calm";
+    if(theme!==currentMusicTheme){
+      modalMusicRestorePending=true;
+      playTheme(theme,{force:true});
+    }
+  }
   persist();
   currentModal={type:"exam-result",event};
   openModal(`
@@ -1627,6 +1640,7 @@ function completeGame(score){
   game.mood=clamp(game.mood+(bestSubject>=100?8:0),0,100);
   const endingTheme=score>=650&&relation>=65?"love":score>=650?"bright":score>=560?"calm":"sad";
   persist();
+  modalMusicRestorePending=false;
   closeModal(true);
   render();
   if(settings.eventMusic)playTheme(endingTheme,{force:true});
@@ -1657,6 +1671,7 @@ function openModal(html, closable=true){
 }
 function closeModal(force=false){
   if(modalLocked&&!force)return;
+  const shouldRestoreMusic=modalMusicRestorePending;
   const dialog=$("#game-dialog");
   dialog.hidden=true;
   dialog.innerHTML="";
@@ -1664,7 +1679,8 @@ function closeModal(force=false){
   document.body.classList.remove("modal-open");
   currentModal=null;
   modalLocked=false;
-  playTheme(settings.menuMusicTheme||"calm");
+  modalMusicRestorePending=false;
+  if(shouldRestoreMusic&&settings.musicEnabled)playTheme(settings.menuMusicTheme||"calm");
 }
 function openSettings(){
   openModal(`<div class="eyebrow">声音设置</div><h2>留一点安静给青春</h2>
@@ -1854,6 +1870,7 @@ function previewMusicTrack(trackId){
   if(!url)return toast("请先导入这个音频文件");
   currentMusicTheme="preview";
   currentMusicTrack=trackId;
+  modalMusicRestorePending=true;
   crossfadeTo(url,trackById(trackId)?.[1]);
 }
 
