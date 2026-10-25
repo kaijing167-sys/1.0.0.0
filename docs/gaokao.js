@@ -37,17 +37,13 @@ function buildGaokaoReport(g){
 function gaokaoResultsTable(report){
   const player=report.rows.find(p=>p.active);
   const rank=player?.rank;
+  if(!player)return '';
   return `<section class="final-card gaokao-report" aria-labelledby="gaokao-report-title">
-    <h2 id="gaokao-report-title">高考成绩单 · 全校 ${report.rows.length} 人</h2>
-    <p>各科成绩直接等于本次结算的能力值，总分为所选六科之和（满分 750）。当前人物使用本局最终能力，其他同学使用名册现有能力；表格按总分排列。</p>
+    <h2 id="gaokao-report-title">我的高考成绩单</h2>
+    <p>这是属于 ${escapeHtml(player.name)} 的答卷。各科成绩就是本局最终能力值，六科相加为高考总分。</p>
     ${player?`<p class="gaokao-player-summary"><b>${escapeHtml(player.name)} · ${player.combination} · 总分 ${player.total}</b><br>河南 2025 ${rank?.label||''}参考位次：${gaokaoRankText(rank)}${rank?.kind==='exact'?`；同分位次范围 ${rank.start.toLocaleString()}—${rank.end.toLocaleString()} 名`:rank?.kind==='top'?`；最高公布分段范围 1—${rank.end} 名`:''}</p>`:''}
     <p class="gaokao-rank-note" id="gaokao-rank-note">省位次取 2025 年河南同类别一分一段表的累计人数，物理类、历史类分别查询。小数总分向下取整查表，不插值；最高分段只显示公布范围，100 分以下不推算。官方统计含政策性照顾分，本游戏不另加分、不重复赋分，位次仅作游戏参考。</p>
-    <div class="gaokao-table-scroll" tabindex="0" role="region" aria-label="全校高考成绩表，可横向和纵向滚动">
-      <table class="gaokao-table" aria-describedby="gaokao-rank-note"><caption>各科成绩、总分与河南省参考位次；— 表示未选科</caption>
-        <thead><tr><th scope="col">姓名</th><th scope="col">班级 / 选科</th>${CAMPUS_SUBJECTS.map(([id,label])=>`<th scope="col">${label}<small>/${campusMax(id)}</small></th>`).join('')}<th scope="col">总分<small>/750</small></th><th scope="col">类别</th><th scope="col">河南参考位次<br>（累计人数）</th><th scope="col">同分位次范围</th></tr></thead>
-        <tbody>${report.rows.map(p=>`<tr class="${p.active?'gaokao-current':''}"><th scope="row">${escapeHtml(p.name)}${p.active?'（你）':''}</th><td>${p.class_id} 班 / ${p.combination}</td>${CAMPUS_SUBJECTS.map(([id])=>`<td>${p.subjects[id]??'—'}</td>`).join('')}<td><b>${p.total}</b></td><td>${p.rank?.label||'—'}</td><td>${gaokaoRankText(p.rank)}</td><td>${p.rank?.kind==='exact'?`${p.rank.start.toLocaleString()}—${p.rank.end.toLocaleString()}`:p.rank?.kind==='top'?`1—${p.rank.end}（最高分段）`:'—'}</td></tr>`).join('')}</tbody>
-      </table>
-    </div>
+    <dl class="personal-subjects" aria-label="我的六科成绩">${CAMPUS_SUBJECTS.filter(([id])=>Object.hasOwn(player.subjects,id)).map(([id,label])=>`<div><dt>${label}</dt><dd><strong>${player.subjects[id]}</strong><span> / ${campusMax(id)}</span></dd></div>`).join('')}</dl>
     <p class="gaokao-source">数据来源：<a href="${HENAN_2025_RANKS.source}" target="_blank" rel="noopener noreferrer">河南省教育考试院 2025 年分数段统计表</a> · <a href="${HENAN_2025_RANKS.categories.physics.pdf}" target="_blank" rel="noopener noreferrer">物理类原表</a> · <a href="${HENAN_2025_RANKS.categories.history.pdf}" target="_blank" rel="noopener noreferrer">历史类原表</a></p>
   </section>`;
 }
