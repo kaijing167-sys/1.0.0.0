@@ -2,7 +2,13 @@
 
 一款关于高中生活的文字养成游戏。选择你的起点，安排学习、休息、运动和社交，经历校园事件与考试，把青春写成自己的故事。
 
-**[在线试玩最新版](https://kaijing167-sys.github.io/1.0.0.0/?v=henan2025-20261025)** · [GitHub 仓库](https://github.com/kaijing167-sys/1.0.0.0)
+## 在线试玩
+
+**[点击进入试玩网站](https://kaijing167-sys.github.io/1.0.0.0/?v=henan2025-20261025)**
+
+试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/](https://kaijing167-sys.github.io/1.0.0.0/)
+
+无需下载安装，打开浏览器即可开始游戏。源码见 [GitHub 仓库](https://github.com/kaijing167-sys/1.0.0.0)。
 
 ## 当前版本
 
