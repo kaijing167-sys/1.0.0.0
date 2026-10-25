@@ -1,0 +1,18 @@
+.admissions-wrap { text-align: left; }
+.admissions-wrap h1 { font-size: clamp(26px, 5vw, 44px); }
+.admissions-wrap > .final-card { margin: 24px 0; }
+.admissions-wrap p { line-height: 1.8; }
+.admissions-note { color: #526777; font-size: 13px; }
+.admissions-choice { border: 1px solid #d9e5ed; border-radius: 14px; padding: 16px; margin: 20px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; }
+.admissions-choice legend { padding: 0 8px; font-weight: 700; color: #326483; }
+.admissions-choice label { display: grid; gap: 8px; min-width: 0; }
+.admissions-choice input { box-sizing: border-box; width: 100%; min-width: 0; border: 1px solid #b9cddd; border-radius: 8px; padding: 12px; font: inherit; background: white; color: #233f53; }
+.admissions-choice input:focus-visible { outline: 3px solid #f1ce68; outline-offset: 2px; }
+.admissions-offer { border-radius: 12px; background: #fff3ce; padding: 20px; font-size: 20px; }
+.admissions-result li { margin: 16px 0; }
+.admissions-result li p { margin: 4px 0; }
+.admissions-wrap a { color: #326483; text-decoration: underline; }
+.admissions-catalog summary { cursor: pointer; font-weight: 700; }
+.admissions-catalog ul { line-height: 1.9; }
+#admissions-errors { color: #a43333; }
+@media (max-width: 600px) { .admissions-choice { grid-template-columns: 1fr; } .admissions-wrap .dialog-footer { display: flex; flex-direction: column; gap: 12px; } }
