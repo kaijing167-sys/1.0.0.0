@@ -3,23 +3,149 @@ const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const fs=require('node:fs');
 const path=require('node:path');
+const zlib=require('node:zlib');
+const admissionsGzip=fs.readFileSync(path.join(__dirname,'../frontend/admissions-records-2025.json.gz'));
+const admissionsRecords=JSON.parse(zlib.gunzipSync(admissionsGzip));
 function harness(){
  const elements=new Map(),storage=new Map(),listeners={};
  const el=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'测试',hidden:true,classList:{add(){},remove(){},toggle(){}},addEventListener(){}});return elements.get(id)};
- const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController});
- for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','henan-2025-data.js','gaokao.js','admissions-data.js','admissions.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
+ const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController,Response,DecompressionStream,__admissionsRecords:admissionsRecords,__admissionsGzip:admissionsGzip});
+ for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','henan-2025-data.js','gaokao.js','admissions-data.js','university-catalog.js','admissions.js','university-browser.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
    let source=fs.readFileSync(path.join(__dirname,'../frontend',name),'utf8');
    if(name==='game.js')source=source.slice(0,source.lastIndexOf('initializeMusicLibrary().then'));
    vm.runInContext(source,context,{filename:name});
  }
- vm.runInContext('settings.musicEnabled=false;settings.eventMusic=false',context);
+ vm.runInContext('Math.random=()=>.5;settings.musicEnabled=false;settings.eventMusic=false;HENAN_2025_ADMISSIONS.schools=__admissionsRecords.schools;HENAN_2025_ADMISSIONS.loaded=true',context);
  return {run:s=>vm.runInContext(s,context),el,storage,click(dataset){const button={dataset,disabled:false,hasAttribute:()=>false,getAttribute:()=>null};for(const fn of listeners.click)fn({target:{closest:()=>button}})}};
 }
+
+test('expanded data contains real programs for elite, ordinary and junior institutions',()=>{
+ const h=harness();
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.stats.institutions'),1220);
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.stats.programs'),30626);
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.stats.elite985'),38);
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.stats.elite211'),111);
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.stats.junior'),1303);
+ for(const [school,major,category,min] of [['北京大学','法学','history',682],['清华大学','计算机类','physics',704],['郑州大学','法学','history',622],['郑州铁路职业技术学院','建筑装饰工程技术','history',466]]){
+   const p=h.run(`admissionsPrograms(admissionsSchool('${school}'),'${category}').find(p=>p.major==='${major}')`);
+   assert.equal(p.minScore,min);assert.ok(p.scoreId>0&&p.planId>0);assert.ok(p.minRank>0);
+   const choices=[{school,major},...Array.from({length:4},()=>({school:'',major:''}))];
+   assert.equal(h.run(`evaluateAdmissions({total:${min+1},rank:{category:'${category}'},subjects:{chinese:150,math:150,english:150,${category}:100,chemistry:100,politics:100}},${JSON.stringify(choices)}).status`),'admitted');
+ }
+});
+
+test('junior programs use the junior floor, while undergraduate lower-score special rounds stay pending',()=>{
+ const h=harness();
+ const choice={school:'河南工业职业技术学院',major:'大数据与财务管理（第102组·专业代号55）'};
+ const run=score=>h.run(`evaluateAdmissions({total:${score},rank:{category:'physics'},subjects:{chinese:100,math:100,english:100,physics:50,chemistry:50,geography:50}},${JSON.stringify([choice,...Array.from({length:4},()=>({school:'',major:''}))])})`);
+ assert.equal(run(380).status,'admitted');assert.equal(run(379).status,'pending');assert.equal(run(378).status,'unplaced');
+ h.run(`globalThis.lowerProgram=HENAN_2025_ADMISSIONS.schools.flatMap(s=>s.groups.filter(g=>g.degree==='undergraduate').flatMap(g=>g.programs.filter(p=>p[1]<(g.category==='physics'?426:470)).map(p=>({school:s.name,major:p[0],min:p[1],category:g.category,requires:g.requires})))).find(p=>p.min>185)`);
+ assert.ok(h.run('!!lowerProgram'));
+ assert.equal(h.run(`evaluateAdmissions({total:lowerProgram.min+1,rank:{category:lowerProgram.category},subjects:Object.fromEntries(['chinese','math','english',lowerProgram.category,...lowerProgram.requires].map(id=>[id,100]))},[{school:lowerProgram.school,major:lowerProgram.major},...Array.from({length:4},()=>({school:'',major:''}))]).rows[0].state`),'supplemental');
+});
+
+test('same-name majors with different enrollment codes never silently share a cutoff',()=>{
+ const h=harness();
+ const p=h.run(`admissionsPrograms(admissionsSchool('北京师范大学'),'history').filter(p=>p.major.startsWith('汉语言文学（第101组'))`);
+ assert.equal(p.length,2);assert.deepEqual(p.map(p=>p.minScore).sort(),[653,655]);
+ const choice=major=>[{school:'北京师范大学',major},...Array.from({length:4},()=>({school:'',major:''}))];
+ for(const record of p){const result=h.run(`evaluateAdmissions({total:654,rank:{category:'history'},subjects:{chinese:150,math:150,english:150,history:100,politics:100,geography:100}},${JSON.stringify(choice(record.major))})`);assert.equal(result.status,record.minScore===653?'admitted':'unplaced');}
+ assert.equal(h.run(`evaluateAdmissions({total:700,rank:{category:'history'},subjects:{history:100}},${JSON.stringify(choice('汉语言文学'))}).status`),'pending');
+});
+
+test('official record IDs and subject plans are retained, and the published gzip mirrors match',()=>{
+ const h=harness();
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.schools.reduce((n,s)=>n+s.groups.reduce((m,g)=>m+g.programs.length,0),0)'),30626);
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.schools.flatMap(s=>s.groups.flatMap(g=>g.programs)).filter(p=>p[2].scoreId&&p[2].planId).length'),30620);
+ assert.ok(fs.readFileSync(path.join(__dirname,'../docs/admissions-records-2025.json.gz')).equals(admissionsGzip));
+ assert.equal(h.run(`admissionsPrograms(admissionsSchool('清华大学'),'physics').find(p=>p.major==='计算机类').requires.join(',')`),'chemistry');
+ assert.match(h.run(`admissionsChoiceEvidence('北京大学','法学','history')`),/最低分参考位次|官方选科依据/);
+});
+
+test('compressed admissions load once, validate completeness, and retry after an invalid download',async()=>{
+ const h=harness();
+ h.run(`HENAN_2025_ADMISSIONS.loaded=false;HENAN_2025_ADMISSIONS.schools=[];globalThis.downloads=0;fetch=async()=>{downloads++;return new Response(__admissionsGzip)}`);
+ await h.run('Promise.all([loadAdmissionsCatalog(),loadAdmissionsCatalog()])');
+ assert.equal(h.run('downloads'),1);assert.equal(h.run('HENAN_2025_ADMISSIONS.schools.length'),1580);
+ h.run(`HENAN_2025_ADMISSIONS.loaded=false;HENAN_2025_ADMISSIONS.schools=[];admissionsLoadPromise=null;fetch=async()=>new Response('invalid compressed file')`);
+ await assert.rejects(h.run('loadAdmissionsCatalog()'));
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.loaded'),false);
+ h.run('fetch=async()=>new Response(__admissionsGzip)');await h.run('loadAdmissionsCatalog()');
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.loaded'),true);
+});
+
+test('leaving the loading page prevents a late download from replacing the personal score page',async()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'))");
+ h.run(`HENAN_2025_ADMISSIONS.loaded=false;HENAN_2025_ADMISSIONS.schools=[];fetch=()=>new Promise(resolve=>{globalThis.deliverDownload=resolve});openAdmissions()`);
+ assert.match(h.el('#game-root').innerHTML,/正在载入/);
+ h.run("openAdmissions('scores');deliverDownload(new Response(__admissionsGzip))");
+ await h.run('admissionsLoadPromise');await Promise.resolve();
+ assert.equal(h.run('game.postExamPage'),'scores');assert.match(h.el('#game-root').innerHTML,/我的高考成绩单/);
+});
+
+test('personal good-news score page renders exactly six subjects and no other student names',()=>{
+ for(const id of ['hu-yy','zhang-z','hu-zx','hao-kj']){
+  const h=harness();h.run(`campusDraft('${id}');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'))`);
+  const html=h.el('#game-root').innerHTML;
+  assert.match(html,/<h1>喜报<\/h1>/);assert.match(html,/celebration-screen/);
+  assert.match(html,/我的高考成绩单/);assert.equal((html.match(/<dt>/g)||[]).length,6);
+  assert.doesNotMatch(html,/全校|全校高考成绩表|<table/);
+  const others=h.run(`characterCatalog.filter(c=>c.id!=='${id}').map(c=>c.name).join('|')`);
+  assert.doesNotMatch(html,new RegExp(others));
+  h.run('game=loadGame();render()');assert.doesNotMatch(h.el('#game-root').innerHTML,new RegExp(others));
+ }
+});
+
+test('university directory covers every 985 and 211 root, all civil undergraduate schools and selected junior colleges',()=>{
+ const h=harness();
+ assert.equal(h.run('UNIVERSITY_CATALOG.schools.length'),1388);
+ assert.equal(h.run('universityMatches("985").length'),39);
+ assert.equal(h.run('universityMatches("211").length'),115);
+ assert.equal(h.run('universityMatches("junior").length'),20);
+ assert.equal(h.run('UNIVERSITY_CATALOG.schools.filter(s=>s.level==="本科"&&!s.special).length'),1365);
+ assert.equal(h.run('new Set(UNIVERSITY_CATALOG.schools.map(s=>s.code)).size'),1388);
+ assert.equal(h.run('universityProfile("中国矿业大学徐海学院").elite211'),false);
+ assert.equal(h.run('universityProfile("国防科学技术大学").elite985'),true);
+ assert.equal(h.run('universityProfile("北京师范大学（北京校区）").name'),'北京师范大学');
+ assert.equal(h.run('universityMatches("985","清华")[0].name'),'清华大学');
+ assert.equal(h.run('universityMatches("junior","郑州铁路")[0].name'),'郑州铁路职业技术学院');
+ assert.equal(h.run('universityMatches("ordinary","清华").length'),0);
+ assert.match(h.run('universityCoverage("清华大学","physics")'),/已核实/);
+ assert.match(h.run('universityCoverage("河南城建学院","physics")'),/已核实/);
+});
+
+test('school picker fills the selected choice and clears mismatched majors and stale outcomes',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));openAdmissions();universityBrowser.target=3;game.admissions.result={status:'admitted'};game.admissions.choices[3]={school:'东华大学',major:'计算机类'}");
+ h.run('fillUniversity(universityProfile("清华大学").code)');
+ assert.equal(h.run('game.admissions.choices[3].school'),'清华大学');
+ assert.equal(h.run('game.admissions.choices[3].major'),'');
+ assert.equal(h.run('game.admissions.result'),undefined);
+ assert.equal(h.el('#admissions-school-3').value,'清华大学');
+ assert.match(h.el('#admissions-coverage-3').textContent,/已核实/);
+ h.run("universityBrowser.tier='985';universityBrowser.page=1;refreshUniversityResults()");
+ assert.match(h.el('#university-results').innerHTML,/第 2 \/ 2 页/);
+ const rows=h.run(`evaluateAdmissions(admissionsPlayer(),[{school:'清华大学',major:'计算机科学与技术'},...Array.from({length:4},()=>({school:'',major:''}))])`);
+ assert.equal(rows.status,'pending');assert.equal(rows.admitted,null);
+});
+
+test('only successful simulated admission gets a celebration, on its own final page',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));admissionsPlayer().total=646.5;game.finalScore=admissionsPlayer().total;openAdmissions()");
+ for(let i=0;i<5;i++){h.el('#admissions-school-'+i).value='';h.el('#admissions-major-'+i).value='';}
+ h.el('#admissions-school-0').value='东华大学';h.el('#admissions-major-0').value='计算机类';
+ h.run('submitAdmissions()');assert.equal(h.run('game.postExamPage'),'admission-result');
+ assert.match(h.el('#game-root').innerHTML,/admission-banner/);assert.match(h.el('#game-root').innerHTML,/喜报/);
+ assert.doesNotMatch(h.el('#game-root').innerHTML,/<form/);
+ h.run('game=loadGame();render()');assert.match(h.el('#game-root').innerHTML,/admission-banner/);
+ h.run("game.admissions.choices[0]={school:'清华大学',major:'计算机科学与技术'};renderAdmissionsResult()");
+ assert.match(h.el('#game-root').innerHTML,/录取结果待定/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-banner|喜报/);
+ h.run("game.gaokaoReport.rows.find(p=>p.active).total=400;game.admissions.choices[0]={school:'东华大学',major:'计算机类'};renderAdmissionsResult()");
+ assert.match(h.el('#game-root').innerHTML,/本次模拟未录取/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-banner|喜报/);
+});
 
 test('score page leads to a separate five-choice page, submissions and reload keep the result',()=>{
  const h=harness();
  h.click({admissionsPage:'choices'});assert.equal(h.run('game'),null);
- h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'))");
+ h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));admissionsPlayer().total=646.5;game.finalScore=admissionsPlayer().total");
  assert.match(h.el('#game-root').innerHTML,/下一页：志愿填报/);
  assert.doesNotMatch(h.el('#game-root').innerHTML,/<form id="admissions-form"/);
  h.click({admissionsPage:'choices'});
@@ -55,7 +181,7 @@ test('admissions follows preference order and never guesses ties or missing data
 });
 
 test('admissions checks real elective requirements and rejects incomplete and duplicate choices',()=>{
- const h=harness();h.run("campusDraft('hu-yy');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'))");
+ const h=harness();h.run("campusDraft('hu-yy');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));admissionsPlayer().total=600;game.finalScore=admissionsPlayer().total");
  const evaluate=choices=>h.run(`evaluateAdmissions(admissionsPlayer(),${JSON.stringify([...choices,...Array.from({length:5-choices.length},()=>({school:'',major:''}))])})`);
  assert.equal(evaluate([]).status,'invalid');
  assert.equal(evaluate([{school:'江苏大学',major:''}]).status,'invalid');
@@ -66,29 +192,30 @@ test('admissions checks real elective requirements and rejects incomplete and du
  assert.equal(evaluate([{school:'河南农业大学',major:'人文地理与城乡规划'}]).rows[0].state,'ineligible');
  assert.equal(evaluate([{school:'河南农业大学',major:'动物生产类'}]).status,'admitted');
  h.run("admissionsPlayer().rank.category='history';admissionsPlayer().subjects={chinese:140,math:140,english:140,history:90,politics:90,geography:90}");
- assert.equal(evaluate([{school:'河南城建学院',major:'计算机科学与技术'}]).rows[0].state,'ineligible');
+ assert.equal(evaluate([{school:'河南城建学院',major:'计算机科学与技术'}]).rows[0].state,'unknown');
  assert.equal(evaluate([{school:'河南城建学院',major:'法学'}]).status,'admitted');
 });
 
 test('all admission records have professional cutoffs, verified sources and deterministic boundaries',()=>{
  const h=harness();
- assert.equal(h.run('HENAN_2025_ADMISSIONS.schools.length'),5);
- assert.ok(h.run(`HENAN_2025_ADMISSIONS.schools.every(s=>s.source.startsWith('https://')&&s.groups.every(g=>g.programs.every(([m,n])=>m&&Number.isInteger(n)&&n>=(g.category==='physics'?427:471)&&n<=750)))`));
+ assert.equal(h.run('HENAN_2025_ADMISSIONS.schools.length'),1580);
+ assert.ok(h.run(`HENAN_2025_ADMISSIONS.schools.every(s=>s.source.startsWith('https://')&&s.groups.every(g=>g.programs.every(([m,n,meta])=>m&&Number.isInteger(n)&&n>=185&&n<=750&&Number.isInteger(meta.minRank)&&meta.source.startsWith('https://'))))`));
  assert.ok(h.run(`HENAN_2025_ADMISSIONS.schools.every(s=>s.groups.every(g=>g.programs.every(([major,minScore])=>{
    const subjects=Object.fromEntries(['chinese','math','english',g.category==='physics'?'physics':'history',...g.requires].map(id=>[id,100]));
    const choices=[{school:s.name,major},...Array.from({length:4},()=>({school:'',major:''}))];
-   return [-1,0,1].every(delta=>evaluateAdmissions({total:minScore+delta,rank:{category:g.category},subjects},choices).status===['unplaced','pending','admitted'][delta+1]);
+   const control=g.degree==='junior'?185:g.category==='physics'?427:471;
+   return [-1,0,1].every(delta=>evaluateAdmissions({total:minScore+delta,rank:{category:g.category},subjects},choices).status===(delta<0?'unplaced':delta===0||minScore+delta<control?'pending':'admitted'));
  })))`));
 });
 
-test('gaokao uses exact six abilities for every person and saves the final table',()=>{
+test('gaokao separates abilities from actual scores and saves the final table',()=>{
  for(const [id,total] of [['hu-yy',557],['zhang-z',594],['hu-zx',646.5],['hao-kj',566]]){
-  const h=harness();h.run(`campusDraft('${id}');startGame();game.stress=100;game.attrs.insight=0;Math.random=()=>{throw Error('高考不应随机')};game.day=1092;openExam(EVENTS.find(e=>e.id==='gaokao'))`);
-  assert.equal(h.run('game.completed'),true);assert.equal(h.run('game.finalScore'),total);
+  const h=harness();h.run(`campusDraft('${id}');startGame();game.stress=100;game.attrs.insight=0;game.learning.seed=12345;game.day=1092;openExam(EVENTS.find(e=>e.id==='gaokao'))`);
+  assert.equal(h.run('game.completed'),true);assert.notEqual(h.run('game.finalScore'),total);assert.equal(h.run('game.gaokaoReport.version'),2);
   assert.equal(h.run('game.gaokaoReport.rows.length'),210);
   assert.ok(h.run('game.gaokaoReport.rows.every(p=>Object.keys(p.subjects).length===6&&Math.round(Object.values(p.subjects).reduce((a,b)=>a+b,0)*100)/100===p.total)'));
   assert.equal(h.run('game.gaokaoReport.rows.filter(p=>p.active).length'),1);
-  assert.match(h.el('#game-root').innerHTML,/高考成绩单/);assert.match(h.el('#game-root').innerHTML,/河南参考位次/);
+  assert.match(h.el('#game-root').innerHTML,/高考成绩单/);assert.match(h.el('#game-root').innerHTML,/河南.*参考位次/);
   const snapshot=h.run('JSON.stringify(game.gaokaoReport)');
   h.run('game=loadGame();render()');assert.equal(h.run('JSON.stringify(game.gaokaoReport)'),snapshot);
   h.run("calculateGaokao(EVENTS.find(e=>e.id==='gaokao'))");assert.equal(h.run('game.examResults.length'),1);
@@ -109,7 +236,7 @@ test('a full 100-day sprint reaches the saved final report through scheduled eve
  assert.equal(h.run('game.completed'),true);
  assert.equal(h.run("game.fired.includes('gaokao')"),true);
  assert.match(h.el('#game-root').innerHTML,/高考成绩单/);
- assert.equal(h.run('game.finalScore'),h.run('campusOptions(game).reduce((sum,[id])=>sum+game.subjects[id],0)'));
+ assert.equal(h.run('game.finalScore'),h.run('game.gaokaoReport.rows.find(p=>p.active).total'));assert.notEqual(h.run('game.finalScore'),h.run('campusOptions(game).reduce((sum,[id])=>sum+game.subjects[id],0)'));
 });
 
 test('rank lookup uses the right category, floor, ties, and published boundaries',()=>{
@@ -156,7 +283,7 @@ test('four people start in original day engine and keep exact subject conversion
  }
 });
 test('study, event gains, class transfers and reload use same journey',()=>{
- const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.physics=99.8;studySubject('physics')");
+ const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.physics=99.8;learningRandom=()=>.2;studySubject('physics')");
  assert.equal(h.run('game.subjects.physics'),100);assert.equal(h.run('game.actionPoints'),3);
  const before=h.run('JSON.stringify(game.subjects)');h.run('campusTransfer(14)');
  assert.equal(h.run('JSON.stringify(game.subjects)'),before);assert.equal(h.run('game.day'),993);
@@ -179,16 +306,16 @@ test('changing opening class counts against the character original class and kee
  function characterMath(){return h.run("characterCatalog.find(c=>c.id==='hu-zx').initial_state.attrs.math")}
 });
 test('study, tutoring and events grow slowly and preserve decimals in saves',()=>{
- const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.chinese=120;studySubject('chinese')");
- assert.equal(h.run('game.subjects.chinese'),120.5);
+ const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.chinese=120;learningRandom=()=>0;studySubject('chinese')");
+ assert.equal(h.run('game.subjects.chinese'),120.15);
  h.run("game.tutoring={decided:true,subject:'chinese'};showMandatoryTutoring()");
- assert.equal(h.run('game.subjects.chinese'),121);
+ assert.equal(h.run('game.subjects.chinese'),120.30);
  h.run('applyEffects({subjects:{chinese:12,science:12},charm:8,mindset:10});persist();game=loadGame()');
- assert.equal(h.run('game.subjects.chinese'),121.5);
+ assert.equal(h.run('game.subjects.chinese'),120.45);
  assert.equal(h.run("game.attrs.charm"),70.5);
- h.run("game.subjects.chinese=149.8;game.tutoringDoneThisWeek=false;showMandatoryTutoring()");
+ h.run("game.subjects.chinese=149.95;game.tutoringDoneThisWeek=false;showMandatoryTutoring()");
  assert.equal(h.run('game.subjects.chinese'),150);
- assert.match(h.el('#game-dialog').innerHTML,/\+0\.2/);
+ assert.match(h.el('#game-dialog').innerHTML,/\+0\.05/);
  h.run('applyEffects({subjects:{chinese:-4}})');assert.equal(h.run('game.subjects.chinese'),146);
 });
 test('all classes contain exactly 30 unique people across transfers and reloads',()=>{
@@ -278,4 +405,24 @@ test('an old unanswered AI message can be retried locally without duplicate user
  const h=harness();h.run("campusDraft('hu-zx');startGame();game.chatHistory={su:[{role:'user',content:'你好',time:Date.now()}]};openPhoneChat('su')");
  assert.match(h.el('#game-dialog').innerHTML,/重试/);await h.run('sendPhoneMessage(true)');
  assert.equal(h.run('phoneHistory().length'),2);assert.equal(h.run('phoneHistory()[1].role'),'assistant');
+});
+
+test('old unfinished saves begin learning history at migration without invented past',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();delete game.learning;game.day=1050;persist();game=loadGame();render();globalThis.oldScores=JSON.stringify(game.subjects)");
+ assert.equal(h.run('game.learning.startDay'),1050);assert.equal(h.run('learningPreparation(game).days'),0);
+ assert.equal(h.run('learningPreparation(game).quality'),.5);
+ assert.equal(h.run('JSON.stringify(game.subjects)'),h.run('oldScores'));
+ h.run('advanceWeek();persist();game=loadGame()');assert.equal(h.run('learningPreparation(game).days'),7);
+});
+test('learning state, memory, RNG and settled weeks survive independent character saves',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();studySubject('chinese');advanceWeek();globalThis.learningSnapshot=JSON.stringify(game.learning);persist();campusDraft('hu-yy');startGame()");
+ assert.notEqual(h.run('JSON.stringify(game.learning)'),h.run('learningSnapshot'));
+ h.run("game=campusValidate(JSON.parse(JSON.stringify(characterSave('hu-zx'))));render()");
+ assert.equal(h.run('JSON.stringify(game.learning)'),h.run('learningSnapshot'));
+ assert.ok(h.run('Object.keys(game.learning.memory).length>=6'));
+});
+test('legacy completed score snapshots stay unchanged through the new rules',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));game.gaokaoReport.version=1;delete game.gaokaoReport.rows.find(p=>p.active).preparation;globalThis.legacy=JSON.stringify(game.gaokaoReport);persist();game=loadGame();render()");
+ assert.equal(h.run('JSON.stringify(game.gaokaoReport)'),h.run('legacy'));
+ assert.match(h.el('#game-root').innerHTML,/旧版已结算/);
 });

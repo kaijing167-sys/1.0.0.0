@@ -537,6 +537,7 @@ function loadGame(){
     if(!data.track)data.track="undecided";
     if(!data.stage)data.stage="high1";
     if(data.class_id)campusValidate(data);
+    learningState(data);
     return data;
   }catch{return null}
 }
@@ -1017,6 +1018,8 @@ function remainingPoints(){return EXTRA_POINTS-usedPoints()}
 function render(){
   if(menuScreen!=="play"){renderLanding();return;}
   if(game?.completed){
+    if(['choices','admission-result'].includes(game.postExamPage)&&game.gaokaoReport&&!HENAN_2025_ADMISSIONS.loaded){openAdmissions(game.postExamPage);return;}
+    if(game.postExamPage==='admission-result'&&game.gaokaoReport&&game.admissions?.result){renderAdmissionsResult();return;}
     if(game.postExamPage==='choices'&&game.gaokaoReport){renderAdmissions();return;}
     renderFinal();
     return;
@@ -1045,7 +1048,7 @@ function renderLanding(){
   if(menuScreen==='stages'){
     content=`<section class="menu-stage"><button class="menu-back" data-menu="home">← 返回首页</button><p class="menu-kicker">第二页 · 选择起点</p><h1>从哪一天开始？</h1><p class="menu-subtitle">${escapeHtml(draft.name)}，把接下来的日子交给自己。</p><div class="menu-stages">${Object.entries(START_STAGES).map(([id,s])=>`<button data-menu-stage="${id}"><span>${id==='sprint100'?'100':s.label.slice(0,2)}</span><b>${id==='sprint100'?'天冲刺':'开学'}</b><small>距离高考 ${daysLeft(s.day)} 天</small></button>`).join('')}</div><p class="menu-footnote">选择起点后，进入第三页，正式开始高中生活。</p></section>`;
   }else{
-    content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
+    content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><p class="menu-footnote">河南 2025 志愿版 · ${HENAN_2025_ADMISSIONS.stats.institutions} 所院校 · ${HENAN_2025_ADMISSIONS.stats.programs} 条专业录取数据</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
   }
   $('#game-root').innerHTML=`<main class="quiet-menu pixel-menu ${menuScreen==='home'?'home-cover':''}">${settingsButton}${content}</main>`;
 }
@@ -1156,18 +1159,17 @@ function renderFinal(){
   const best=Math.max(...Object.values(game.gaokaoReport.rows.find(p=>p.active).subjects));
   const bestRelationship=Math.max(...Object.values(game.relationships||{}));
   $("#game-root").innerHTML=`
-    <main id="main" class="final-screen">
+    <main id="main" class="final-screen celebration-screen">
       <div class="final-wrap">
-        <div class="eyebrow">FINAL REPORT · ${escapeHtml(game.name)}</div>
-        <h1>${escapeHtml(game.ending)}</h1>
-        <p>高中三年到这里结束了。分数只是一部分，你所做的选择也塑造了另一个自己。</p>
-        <div class="final-score"><strong>${game.finalScore}</strong><small>/ 750</small></div>
+        <div class="celebration-streamers" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span><span>✧</span></div>
+        <header class="score-good-news"><p class="eyebrow">青春有答卷 · 努力有回响</p><h1>喜报</h1><p class="good-news-name">${escapeHtml(game.name)} · 高考出分啦</p><p>一路的坚持，终于写成今天的成绩。</p><div class="final-score"><strong>${game.finalScore}</strong><small>/ 750 分</small></div><span class="good-news-seal">青春纪念</span></header>
         ${gaokaoResultsTable(game.gaokaoReport)}
         <div class="final-grid">
           <section class="final-card">
             <h2>三年记录</h2>
+            <p>${escapeHtml(game.ending)}</p>
             <div class="final-facts">
-              <div class="final-fact"><span>学业最高能力</span><strong>${best}</strong></div>
+              <div class="final-fact"><span>单科最高实考分</span><strong>${best}</strong></div>
               <div class="final-fact"><span>心态</span><strong>${game.attrs.mindset}</strong></div>
               <div class="final-fact"><span>魅力</span><strong>${game.attrs.charm}</strong></div>
               <div class="final-fact"><span>最高羁绊</span><strong>${bestRelationship}</strong></div>
@@ -1221,6 +1223,7 @@ function startGame(){
   draft.name=name;
   if(game)persist();
   game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
+  learningState(game);
   game.createdAt=new Date().toISOString();
   menuScreen="play";
   persist();
@@ -1235,8 +1238,8 @@ function performAction(type){
     openModal(`
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
-      <p>学习效率会受到学力和当前压力影响。每次行动消耗 1 点行动机会。</p>
-      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)}</small></button>`).join("")}</div>
+      <p>学习可能进步、持平或暂时退步，学力、体力和压力影响概率。长期不复习会增加遗忘风险。每次消耗 1 次行动。</p>
+      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)} · 本周遗忘风险约 ${Math.round(learningRisk(game,id,game.day+7)*100)}%</small></button>`).join("")}</div>
       <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
     `);
     return;
@@ -1250,6 +1253,7 @@ function performAction(type){
     exercise:{energy:7,stress:-10,mood:12,text:"运动之后，身体和心情都轻松了一点。"},
   }[type];
   if(!effects)return;
+  learningRecord(game,type);
   game.actionPoints--;
   game.energy=clamp(game.energy+(effects.energy||0),0,100);
   game.stress=clamp(game.stress+(effects.stress||0),0,100);
@@ -1306,18 +1310,17 @@ function studySubject(id){
   const option=studyOptions().find(item=>item[0]===id);if(!option)return;
   const label=option[1];
   const modifiers=stageModifiers();
-  const gain=0.5;
   const before=game.subjects[id];
-  campusEffect(id,gain);
+  learningStudy(game,id);
   game.actionPoints--;
   game.energy=clamp(game.energy-8,0,100);
   game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
   game.mood=clamp(game.mood-2,0,100);
-  addLog(`专注学习${label}，能力提升 ${Math.round((game.subjects[id]-before)*100)/100} 点。`);
+  addLog(`专注学习${label}，能力变化 ${Math.round((game.subjects[id]-before)*100)/100} 点（学习不保证立即进步，已记录复习）。`);
   persist();
   closeModal();
   render();
-  toast(`${label} +${Math.round((game.subjects[id]-before)*100)/100}`);
+  toast(`${label} ${game.subjects[id]>=before?"+":""}${Math.round((game.subjects[id]-before)*100)/100}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
@@ -1341,7 +1344,7 @@ function showTutoringDecision(){
     <p>爸妈把几张辅导班宣传单放在桌上。选择一门课后，之后的每个周末都会先完成一次必选补课；也可以先不补。</p>
     <div class="choice-list">
       <button class="choice-button" data-tutoring="none"><strong>暂时不补课</strong><small>保留完整周末，但成绩提升更依赖自己学习。</small></button>
-      ${(game.class_id?campusOptions(game).map(([id,label])=>({id,label})):TUTORING_SUBJECTS).map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
+      ${(game.class_id?campusOptions(game).map(([id,label])=>({id,label})):TUTORING_SUBJECTS).map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周复习${subject.label}，效果有波动，也会消耗体力和增加压力。</small></button>`).join("")}
     </div>
   `, false);
 }
@@ -1371,9 +1374,9 @@ function showMandatoryTutoring(){
   }
   game.tutoringDoneThisWeek=true;
   game.tutoringCount++;
-  const gain=campusEffect(subject.id,0.5);
+  const gain=learningStudy(game,subject.id);
   applyEffects({energy:-10,stress:9,mood:-3});
-  addLog(`周末参加${subject.label}补课，能力提升 ${gain} 点。`);
+  addLog(`周末参加${subject.label}补课，能力变化 ${gain} 点。`);
   persist();
   render();
   openModal(`
@@ -1381,7 +1384,7 @@ function showMandatoryTutoring(){
     <h2>${subject.label}补课结束</h2>
     <div class="result-copy">这周的${subject.label}补习完成了。你在笔记上又补上了几页重点，接下来可以自由安排周末。</div>
     <div class="final-facts">
-      <div class="final-fact"><span>${subject.label}提升</span><strong>+${gain}</strong></div>
+      <div class="final-fact"><span>${subject.label}变化</span><strong>${gain>=0?"+":""}${gain}</strong></div>
       <div class="final-fact"><span>体力</span><strong>−10</strong></div>
       <div class="final-fact"><span>压力</span><strong>+9</strong></div>
       <div class="final-fact"><span>补课次数</span><strong>${game.tutoringCount}</strong></div>
@@ -1515,8 +1518,12 @@ function endWeek(){
 }
 
 function advanceWeek(){
+  if(game.completed||game.day>=TOTAL_DAYS)return;
   const previous=game.day;
-  game.day=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
+  const toDay=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
+  const losses=learningSettle(game,toDay);
+  if(losses.length)addLog(`本周知识保持：${losses.map(([id,n])=>`${[...CAMPUS_SUBJECTS,...SUBJECTS].find(s=>s[0]===id)?.[1]||id} −${n}`).join("、")}。轮换复习可降低后续遗忘风险。`);
+  game.day=toDay;
   game.actionPoints=settings.actionsPerWeek;
   game.energy=clamp(game.energy+15,0,100);
   game.stress=clamp(game.stress-Math.round(8*stageModifiers().weeklyRecovery),0,100);
