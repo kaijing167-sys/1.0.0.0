@@ -605,7 +605,7 @@ button:disabled{opacity:.62;filter:saturate(.55)}
 .action-card.has-image:before{
   inset:0;
   background:
-    linear-gradient(180deg,rgba(17,27,50,.04) 0%,rgba(17,27,50,.08) 40%,rgba(17,27,50,.94) 40%,rgba(17,27,50,.94) 100%);
+    linear-gradient(180deg,transparent 0%,transparent 62%,rgba(17,27,50,.80) 82%,rgba(17,27,50,.96) 100%);
   z-index:0;
 }
 .action-card.has-image:after{
@@ -632,13 +632,13 @@ button:disabled{opacity:.62;filter:saturate(.55)}
   color:var(--px-gold);
   font-size:15px;
   font-weight:900;
-  text-shadow:2px 2px 0 var(--px-night);
+  text-shadow:1px 1px 0 rgba(16,26,46,.65);
 }
 .action-card.has-image p{
   color:#f5edda;
   font-size:10px;
   line-height:1.55;
-  text-shadow:1px 1px 0 var(--px-night);
+  text-shadow:1px 1px 0 rgba(16,26,46,.72);
 }
 .action-card.has-image:hover:not(:disabled){
   border-color:var(--px-gold);
