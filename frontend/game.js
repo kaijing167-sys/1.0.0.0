@@ -954,6 +954,7 @@ function remainingPoints(){return EXTRA_POINTS-usedPoints()}
 function render(){
   if(menuScreen!=="play"){renderLanding();return;}
   if(game?.completed){
+    if(['choices','admission-result'].includes(game.postExamPage)&&game.gaokaoReport&&!HENAN_2025_ADMISSIONS.loaded){openAdmissions(game.postExamPage);return;}
     if(game.postExamPage==='admission-result'&&game.gaokaoReport&&game.admissions?.result){renderAdmissionsResult();return;}
     if(game.postExamPage==='choices'&&game.gaokaoReport){renderAdmissions();return;}
     renderFinal();
