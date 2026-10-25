@@ -954,6 +954,7 @@ function remainingPoints(){return EXTRA_POINTS-usedPoints()}
 function render(){
   if(menuScreen!=="play"){renderLanding();return;}
   if(game?.completed){
+    if(game.postExamPage==='choices'&&game.gaokaoReport){renderAdmissions();return;}
     renderFinal();
     return;
   }
@@ -1139,7 +1140,8 @@ function renderFinal(){
           </section>
           <section class="final-card">
             <h2>接下来</h2>
-            <p>这一周目已经完成。你可以重新创建角色，尝试另一种高中生活。</p>
+            <p>成绩已经公布，下一页填写 5 个大学与专业志愿，查看模拟录取结果。</p>
+            <button class="primary-button" data-admissions-page="choices">下一页：志愿填报 →</button>
             <button class="ghost-button" data-journey-slots>进度存档槽</button>
             <button class="primary-button" data-action="new-game">重新开始新周目 →</button>
           </section>
