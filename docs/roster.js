@@ -78,7 +78,8 @@ function campusEffect(id,value){
   let total=0;
   for(const key of targets){
     const before=game.subjects[key]||0;
-    const delta=campusGrowth(value*(key!==id?2/3:1));
+    if(value>0){learningStudy(game,key);total+=game.subjects[key]-before;continue;}
+    const delta=value*(key!==id?2/3:1);
     game.subjects[key]=Math.round(clamp(before+delta,0,campusMax(key))*100)/100;
     total+=game.subjects[key]-before;
   }
@@ -102,3 +103,112 @@ document.addEventListener('click',e=>{
   if(b.dataset.campusTransfer)campusTransfer(Number(b.dataset.campusTransfer));
 });
 document.addEventListener('change',e=>{if(e.target.id==='campus-start-class')draft.class_id=Number(e.target.value)||null;});
+
+// Game simulation inspired by forgetting/spacing research; parameters are game balance, not clinical estimates.
+function learningClamp(x,a=0,b=1){return Math.max(a,Math.min(b,Number.isFinite(x)?x:a))}
+function learningSubjects(g){return g.class_id?['chinese','math','english',...campusClass(g.class_id).subjects]:[ 'chinese','math','english',...(g.track==='undecided'?['science','humanities']:[g.track==='humanities'?'humanities':'science'])]}
+function learningState(g){
+  if(!g.learning||g.learning.version!==1){
+    g.learning={version:1,startDay:g.day,settledDay:g.day,seed:Math.floor(Math.random()*4294967296)>>>0,memory:{},weeks:[],current:{}};
+  }
+  const l=g.learning;
+  for(const id of learningSubjects(g))if(!l.memory[id])l.memory[id]={lastReview:g.day,stability:14};
+  return l;
+}
+function learningRandom(g){
+  const l=learningState(g);l.seed=(Math.imul(l.seed,1664525)+1013904223)>>>0;return l.seed/4294967296;
+}
+function learningHealth(g){
+  return learningClamp(.4*learningClamp(g.energy/100)+.4*(1-learningClamp(g.stress/100))+.2*learningClamp(g.mood/100));
+}
+function learningRecord(g,type,id){
+  const l=learningState(g),c=l.current;
+  c.study??={};c.actions??=0;c.healthSum??=0;c.samples??=0;
+  if(type==='study')c.study[id]=(c.study[id]||0)+1;
+  c.actions++;c.healthSum+=learningHealth(g);c.samples++;
+  if(type==='rest'||type==='exercise')c.recovery=(c.recovery||0)+1;
+}
+function learningTargets(g,id){return id==='science'?['physics','chemistry','biology']:id==='humanities'?['history','politics','geography']:[id]}
+function learningStudy(g,id,random=()=>learningRandom(g)){
+  const l=learningState(g),targets=g.class_id?learningTargets(g,id):[id];
+  const health=learningHealth(g),insight=learningClamp(g.attrs.insight/100);
+  let total=0;
+  // One outcome for this study action, with bounded gains even in story/tutoring effects.
+  const roll=random(),up=.50+.20*health+.10*insight,down=.04+.16*(1-health);
+  const change=roll<up?.15+.35*random():roll<1-down?0:-(.05+.20*random());
+  for(const key of targets){
+    const m=l.memory[key]??={lastReview:g.day,stability:14};
+    const gap=g.day-m.lastReview;
+    if(gap>=4)m.stability=learningClamp(m.stability+5,14,70);
+    m.lastReview=g.day;
+    const before=g.subjects[key]||0;
+    g.subjects[key]=Math.round(learningClamp(before+change,0,campusMax(key))*100)/100;
+    total+=g.subjects[key]-before;
+    learningRecord(g,'study',key);
+  }
+  return Math.round(total/targets.length*100)/100;
+}
+function learningRisk(g,id,day=g.day){
+  const m=learningState(g).memory[id];
+  if(!m)return 0;
+  return .04+.71*(1-Math.exp(-Math.max(0,day-m.lastReview)/m.stability));
+}
+function learningSettle(g,toDay,random=()=>learningRandom(g)){
+  const l=learningState(g),from=l.settledDay,span=toDay-from;
+  if(span<=0)return [];
+  const losses=[];
+  for(const id of learningSubjects(g)){
+    const risk=learningRisk(g,id,toDay);
+    // Weekly hazard scaled for the final partial week; ordinary school instruction provides a floor.
+    if(random()<1-Math.pow(1-risk,span/7)){
+      const loss=(.10+.40*random())*Math.min(1,span/7),before=g.subjects[id];
+      g.subjects[id]=Math.round(learningClamp(before-loss,0,campusMax(id))*100)/100;
+      if(before>g.subjects[id])losses.push([id,Math.round((before-g.subjects[id])*100)/100]);
+    }
+  }
+  const c=l.current;
+  l.weeks.push({from,to:toDay,study:{...(c.study||{})},recovery:c.recovery||0,health:c.samples?(c.healthSum+learningHealth(g))/(c.samples+1):learningHealth(g)});
+  l.weeks=l.weeks.filter(w=>w.to>toDay-107);l.current={};l.settledDay=toDay;
+  return losses;
+}
+function learningPreparation(g,day=g.day){
+  const l=learningState(g),ids=learningSubjects(g),start=Math.max(day-100,l.startDay);
+  const weeks=l.weeks.filter(w=>w.to>start&&w.from<day);
+  if(l.settledDay<day)weeks.push({from:l.settledDay,to:day,study:l.current.study||{},health:l.current.samples?l.current.healthSum/l.current.samples:learningHealth(g)});
+  let days=0,effort=0,health=0,consistent=0;
+  const touches=Object.fromEntries(ids.map(id=>[id,0]));
+  for(const w of weeks){
+    const n=Math.max(0,Math.min(day,w.to)-Math.max(start,w.from)),weight=n/7;
+    const count=ids.reduce((sum,id)=>sum+Math.min(4,w.study[id]||0),0);
+    days+=n;effort+=learningClamp(count/2.6)*n;health+=w.health*n;consistent+=(count>=2?1:count/2)*n;
+    for(const id of ids)touches[id]+=Math.min(1,w.study[id]||0)*weight;
+  }
+  const observed=learningClamp(days/100),denom=Math.max(days,1);
+  const subject=Object.fromEntries(ids.map(id=>[id,.5*(1-observed)+observed*learningClamp(touches[id]/Math.max(days/14,1))]));
+  const coverage=ids.reduce((sum,id)=>sum+subject[id],0)/ids.length;
+  const sustained=.5*(1-observed)+observed*effort/denom;
+  const wellness=.5*(1-observed)+observed*health/denom;
+  const consistency=.5*(1-observed)+observed*consistent/denom;
+  const quality=learningClamp(.32*sustained+.30*coverage+.25*wellness+.13*consistency);
+  const resilience=learningClamp(.65*quality+.25*learningClamp(g.attrs.mindset/100)+.10*learningClamp(g.attrs.stamina/100));
+  return {days:Math.round(days),quality,coverage,effort:sustained,wellness,consistency,subject,resilience,badChance:.005+.18*Math.pow(1-resilience,3)};
+}
+function learningExam(g,abilities,ids,random=()=>learningRandom(g),preparation=learningPreparation(g)){
+  const p=preparation,roll=random(),bad=roll<p.badChance,good=!bad&&roll>1-(.03+.07*p.quality);
+  const centered=()=>random()+random()+random()-1.5;
+  const shared=centered()*(.012+.035*(1-p.resilience));
+  const shock=bad?-(.10+.12*random()):good?.025+.025*random():0;
+  const subjects={};
+  for(const id of ids){
+    const prep=p.subject[id]??.5;
+    const mean=.90+.065*p.quality+.025*prep+.01*learningClamp(g.attrs.insight/100);
+    const dayState=.008*(learningHealth(g)-.5);
+    const noise=centered()*(.010+.025*(1-prep));
+    subjects[id]=Math.round(learningClamp(abilities[id]*(mean+shared+shock+dayState+noise),0,campusMax(id))*100)/100;
+  }
+  return {subjects,preparation:p,performance:bad?'失常发挥':good?'超常发挥':'正常波动'};
+}
+function learningSummary(g){
+  const p=learningPreparation(g);
+  return `近百天已记录 ${p.days} 天 · 综合准备 ${Math.round(p.quality*100)}/100。轮换复习有助于保持知识，休息和运动有助于稳定发挥；能力值不等于高考成绩。`;
+}

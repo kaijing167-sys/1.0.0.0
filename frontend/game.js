@@ -1074,6 +1074,7 @@ function renderGame(){
             ${relationshipPanelHtml()}
 
             <section class="game-panel">
+              <p class="hint">${learningSummary(game)}</p>
               <div class="panel-heading"><h2>下一件大事</h2><small>${next?`${next.day-game.day} 天后`:"等待高考"}</small></div>
               <div class="next-event">
                 <span>MAIN EVENT</span>
@@ -1132,7 +1133,7 @@ function renderFinal(){
             <h2>三年记录</h2>
             <p>${escapeHtml(game.ending)}</p>
             <div class="final-facts">
-              <div class="final-fact"><span>学业最高能力</span><strong>${best}</strong></div>
+              <div class="final-fact"><span>单科最高实考分</span><strong>${best}</strong></div>
               <div class="final-fact"><span>心态</span><strong>${game.attrs.mindset}</strong></div>
               <div class="final-fact"><span>魅力</span><strong>${game.attrs.charm}</strong></div>
               <div class="final-fact"><span>最高羁绊</span><strong>${bestRelationship}</strong></div>
@@ -1186,6 +1187,7 @@ function startGame(){
   draft.name=name;
   if(game)persist();
   game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
+  learningState(game);
   game.createdAt=new Date().toISOString();
   menuScreen="play";
   persist();
@@ -1201,8 +1203,8 @@ function performAction(type){
     openModal(`
       <div class="eyebrow">LEARNING · 专注学习</div>
       <h2>今天学什么？</h2>
-      <p>学习效率会受到学力和当前压力影响。每次行动消耗 1 点行动机会。</p>
-      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)}</small></button>`).join("")}</div>
+      <p>学习可能进步、持平或暂时退步，学力、体力和压力影响概率。长期不复习会增加遗忘风险。每次消耗 1 次行动。</p>
+      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)} · 本周遗忘风险约 ${Math.round(learningRisk(game,id,game.day+7)*100)}%</small></button>`).join("")}</div>
       <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
     `);
     return;
@@ -1216,6 +1218,7 @@ function performAction(type){
     exercise:{energy:7,stress:-10,mood:12,text:"运动之后，身体和心情都轻松了一点。"},
   }[type];
   if(!effects)return;
+  learningRecord(game,type);
   game.actionPoints--;
   game.energy=clamp(game.energy+(effects.energy||0),0,100);
   game.stress=clamp(game.stress+(effects.stress||0),0,100);
@@ -1272,18 +1275,17 @@ function studySubject(id){
   const option=studyOptions().find(item=>item[0]===id);if(!option)return;
   const label=option[1];
   const modifiers=stageModifiers();
-  const gain=0.5;
   const before=game.subjects[id];
-  campusEffect(id,gain);
+  learningStudy(game,id);
   game.actionPoints--;
   game.energy=clamp(game.energy-8,0,100);
   game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
   game.mood=clamp(game.mood-2,0,100);
-  addLog(`专注学习${label}，能力提升 ${Math.round((game.subjects[id]-before)*100)/100} 点。`);
+  addLog(`专注学习${label}，能力变化 ${Math.round((game.subjects[id]-before)*100)/100} 点（学习不保证立即进步，已记录复习）。`);
   persist();
   closeModal();
   render();
-  toast(`${label} +${Math.round((game.subjects[id]-before)*100)/100}`);
+  toast(`${label} ${game.subjects[id]>=before?"+":""}${Math.round((game.subjects[id]-before)*100)/100}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
@@ -1308,7 +1310,7 @@ function showTutoringDecision(){
     <p>爸妈把几张辅导班宣传单放在桌上。选择一门课后，之后的每个周末都会先完成一次必选补课；也可以先不补。</p>
     <div class="choice-list">
       <button class="choice-button" data-tutoring="none"><strong>暂时不补课</strong><small>保留完整周末，但成绩提升更依赖自己学习。</small></button>
-      ${(game.class_id?campusOptions(game).map(([id,label])=>({id,label})):TUTORING_SUBJECTS).map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周固定提升${subject.label}，但会消耗体力和增加压力。</small></button>`).join("")}
+      ${(game.class_id?campusOptions(game).map(([id,label])=>({id,label})):TUTORING_SUBJECTS).map(subject=>`<button class="choice-button" data-tutoring="${subject.id}"><strong>补${subject.label}</strong><small>每周复习${subject.label}，效果有波动，也会消耗体力和增加压力。</small></button>`).join("")}
     </div>
   `, false);
 }
@@ -1338,9 +1340,9 @@ function showMandatoryTutoring(){
   }
   game.tutoringDoneThisWeek=true;
   game.tutoringCount++;
-  const gain=campusEffect(subject.id,0.5);
+  const gain=learningStudy(game,subject.id);
   applyEffects({energy:-10,stress:9,mood:-3});
-  addLog(`周末参加${subject.label}补课，能力提升 ${gain} 点。`);
+  addLog(`周末参加${subject.label}补课，能力变化 ${gain} 点。`);
   persist();
   render();
   openModal(`
@@ -1348,7 +1350,7 @@ function showMandatoryTutoring(){
     <h2>${subject.label}补课结束</h2>
     <div class="result-copy">这周的${subject.label}补习完成了。你在笔记上又补上了几页重点，接下来可以自由安排周末。</div>
     <div class="final-facts">
-      <div class="final-fact"><span>${subject.label}提升</span><strong>+${gain}</strong></div>
+      <div class="final-fact"><span>${subject.label}变化</span><strong>${gain>=0?"+":""}${gain}</strong></div>
       <div class="final-fact"><span>体力</span><strong>−10</strong></div>
       <div class="final-fact"><span>压力</span><strong>+9</strong></div>
       <div class="final-fact"><span>补课次数</span><strong>${game.tutoringCount}</strong></div>
@@ -1482,8 +1484,12 @@ function endWeek(){
 }
 
 function advanceWeek(){
+  if(game.completed||game.day>=TOTAL_DAYS)return;
   const previous=game.day;
-  game.day=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
+  const toDay=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
+  const losses=learningSettle(game,toDay);
+  if(losses.length)addLog(`本周知识保持：${losses.map(([id,n])=>`${[...CAMPUS_SUBJECTS,...SUBJECTS].find(s=>s[0]===id)?.[1]||id} −${n}`).join("、")}。轮换复习可降低后续遗忘风险。`);
+  game.day=toDay;
   game.actionPoints=settings.actionsPerWeek;
   game.energy=clamp(game.energy+15,0,100);
   game.stress=clamp(game.stress-Math.round(8*stageModifiers().weeklyRecovery),0,100);
