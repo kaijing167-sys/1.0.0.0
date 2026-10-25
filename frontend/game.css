@@ -602,3 +602,20 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
   .topbar,#review-tool,#review-panel,#game-toast{display:none!important}
   .game-main{padding:0}
 }
+
+:root { --gaokao-table-border: #d9e5ed; }
+.gaokao-report { margin: 24px 0; min-width: 0; text-align: left; }
+.gaokao-report p { line-height: 1.8; }
+.gaokao-player-summary { padding: 16px; border-radius: 12px; background: #eaf5fc; color: #244d67; }
+.gaokao-rank-note, .gaokao-source { font-size: 13px; color: #526777; }
+.gaokao-table-scroll { overflow: auto; max-height: 560px; border: 1px solid var(--gaokao-table-border); border-radius: 10px; }
+.gaokao-table { border-collapse: separate; border-spacing: 0; min-width: 1250px; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+.gaokao-table caption { padding: 12px; text-align: left; background: #f5f9fc; }
+.gaokao-table th, .gaokao-table td { padding: 12px 10px; border-bottom: 1px solid var(--gaokao-table-border); text-align: right; white-space: nowrap; }
+.gaokao-table thead th { position: sticky; top: 0; background: #eaf2f8; z-index: 2; color: #294a60; }
+.gaokao-table th:first-child { position: sticky; left: 0; text-align: left; background: #fff; z-index: 1; }
+.gaokao-table thead th:first-child { z-index: 3; background: #eaf2f8; }
+.gaokao-table tbody tr:nth-child(even) { background: #f8fafc; }
+.gaokao-table .gaokao-current, .gaokao-table .gaokao-current th:first-child { background: #fff3ce; color: #57431a; }
+.gaokao-table small { display: block; font-size: 10px; font-weight: normal; }
+.gaokao-source a { color: #326483; text-decoration: underline; }

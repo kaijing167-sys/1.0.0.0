@@ -1111,7 +1111,12 @@ function studyOptions(){
 }
 
 function renderFinal(){
-  const best=Math.max(game.subjects.chinese,game.subjects.math,game.subjects.english,game.subjects.science,game.subjects.humanities);
+  if(!game.gaokaoReport){
+    game.gaokaoReport=buildGaokaoReport(game);
+    game.finalScore=game.gaokaoReport.rows.find(p=>p.active).total;
+    persist();
+  }
+  const best=Math.max(...Object.values(game.gaokaoReport.rows.find(p=>p.active).subjects));
   const bestRelationship=Math.max(...Object.values(game.relationships||{}));
   $("#game-root").innerHTML=`
     <main id="main" class="final-screen">
@@ -1120,6 +1125,7 @@ function renderFinal(){
         <h1>${escapeHtml(game.ending)}</h1>
         <p>高中三年到这里结束了。分数只是一部分，你所做的选择也塑造了另一个自己。</p>
         <div class="final-score"><strong>${game.finalScore}</strong><small>/ 750</small></div>
+        ${gaokaoResultsTable(game.gaokaoReport)}
         <div class="final-grid">
           <section class="final-card">
             <h2>三年记录</h2>
@@ -1534,6 +1540,7 @@ function resolveEventChoice(index){
 }
 
 function openExam(event){
+  if(event.type==="gaokao")return calculateGaokao(event);
   currentModal={type:"exam",event};
   openModal(`
     <div class="eyebrow">${event.eyebrow} · 自动触发</div>
@@ -1548,6 +1555,7 @@ function openExam(event){
 }
 
 function calculateExam(event,style){
+  if(event.type==="gaokao")return calculateGaokao(event);
   const base=(game.subjects.chinese+game.subjects.math+game.subjects.english+game.subjects.science+game.subjects.humanities)/5;
   const ability=(game.attrs.insight*0.8+game.attrs.mindset*0.45+base*1.75);
   const difficulty=event.difficulty*13;

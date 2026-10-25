@@ -7,7 +7,7 @@ function harness(){
  const elements=new Map(),storage=new Map(),listeners={};
  const el=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'测试',hidden:true,classList:{add(){},remove(){},toggle(){}},addEventListener(){}});return elements.get(id)};
  const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController});
- for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
+ for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','henan-2025-data.js','gaokao.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
    let source=fs.readFileSync(path.join(__dirname,'../frontend',name),'utf8');
    if(name==='game.js')source=source.slice(0,source.lastIndexOf('initializeMusicLibrary().then'));
    vm.runInContext(source,context,{filename:name});
@@ -15,6 +15,71 @@ function harness(){
  vm.runInContext('settings.musicEnabled=false;settings.eventMusic=false',context);
  return {run:s=>vm.runInContext(s,context),el,storage,click(dataset){const button={dataset,disabled:false,hasAttribute:()=>false,getAttribute:()=>null};for(const fn of listeners.click)fn({target:{closest:()=>button}})}};
 }
+
+test('gaokao uses exact six abilities for every person and saves the final table',()=>{
+ for(const [id,total] of [['hu-yy',557],['zhang-z',594],['hu-zx',646.5],['hao-kj',566]]){
+  const h=harness();h.run(`campusDraft('${id}');startGame();game.stress=100;game.attrs.insight=0;Math.random=()=>{throw Error('高考不应随机')};game.day=1092;openExam(EVENTS.find(e=>e.id==='gaokao'))`);
+  assert.equal(h.run('game.completed'),true);assert.equal(h.run('game.finalScore'),total);
+  assert.equal(h.run('game.gaokaoReport.rows.length'),210);
+  assert.ok(h.run('game.gaokaoReport.rows.every(p=>Object.keys(p.subjects).length===6&&Math.round(Object.values(p.subjects).reduce((a,b)=>a+b,0)*100)/100===p.total)'));
+  assert.equal(h.run('game.gaokaoReport.rows.filter(p=>p.active).length'),1);
+  assert.match(h.el('#game-root').innerHTML,/高考成绩单/);assert.match(h.el('#game-root').innerHTML,/河南参考位次/);
+  const snapshot=h.run('JSON.stringify(game.gaokaoReport)');
+  h.run('game=loadGame();render()');assert.equal(h.run('JSON.stringify(game.gaokaoReport)'),snapshot);
+  h.run("calculateGaokao(EVENTS.find(e=>e.id==='gaokao'))");assert.equal(h.run('game.examResults.length'),1);
+ }
+});
+
+test('a full 100-day sprint reaches the saved final report through scheduled events',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();settings.autoEvents=false");
+ h.run(`for(let week=0;week<20&&!game.completed;week++){
+   advanceWeek();
+   for(let i=0;i<30&&game.pendingEvents.length&&!game.completed;i++){
+     currentModal=null;showNextEvent();
+     if(game.completed)break;
+     if(currentModal?.type==='exam'){calculateExam(currentModal.event,'steady');continueAfterEvent();}
+     else {resolveEventChoice(0);continueAfterEvent();}
+   }
+ }`);
+ assert.equal(h.run('game.completed'),true);
+ assert.equal(h.run("game.fired.includes('gaokao')"),true);
+ assert.match(h.el('#game-root').innerHTML,/高考成绩单/);
+ assert.equal(h.run('game.finalScore'),h.run('campusOptions(game).reduce((sum,[id])=>sum+game.subjects[id],0)'));
+});
+
+test('rank lookup uses the right category, floor, ties, and published boundaries',()=>{
+ const h=harness();
+ assert.equal(h.run("henanRank(600,'physics').cumulative"),45887);
+ assert.equal(h.run("henanRank(500,'physics').cumulative"),209695);
+ assert.equal(h.run("henanRank(550,'history').cumulative"),26513);
+ assert.equal(h.run("henanRank(646.5,'physics').score"),646);
+ assert.equal(h.run("henanRank(646.5,'physics').cumulative"),9989);
+ assert.equal(h.run("henanRank(646.5,'physics').start"),9538);
+ assert.equal(h.run("henanRank(750,'physics').kind"),'top');
+ assert.equal(h.run("henanRank(750,'physics').end"),12);
+ assert.equal(h.run("henanRank(685,'history').kind"),'empty');
+ assert.equal(h.run("henanRank(100,'physics').cumulative"),555040);
+ assert.equal(h.run("henanRank(99.9,'history').kind"),'below');
+ assert.equal(h.run("henanRank(99.9,'history').start"),352176);
+ for(const category of ['physics','history']){
+  assert.ok(h.run(`HENAN_2025_RANKS.categories.${category}.rows.every((r,i,a)=>Number.isInteger(r[0])&&Number.isInteger(r[1])&&(!i||(r[0]<a[i-1][0]&&r[1]>=a[i-1][1])))`));
+ }
+});
+
+test('transfers use final selection, leave roster intact, and legacy completion stays readable',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();campusAssign(game,14)");
+ const before=h.run('JSON.stringify(campusPopulation)');
+ h.run("openExam(EVENTS.find(e=>e.id==='gaokao'))");
+ assert.equal(h.run('game.gaokaoReport.rows.find(p=>p.active).rank.category'),'history');
+ assert.equal(h.run('game.gaokaoReport.rows.find(p=>p.active).subjects.physics'),undefined);
+ assert.ok(h.run('CAMPUS_CLASSES.every(c=>game.gaokaoReport.rows.filter(p=>p.class_id===c.id).length===30)'));
+ assert.equal(h.run('JSON.stringify(campusPopulation)'),before);
+ h.run('delete game.gaokaoReport;game.finalScore=120;renderFinal()');
+ assert.equal(h.run('game.finalScore'),h.run('game.gaokaoReport.rows.find(p=>p.active).total'));
+ h.run("game=initialState('自定义',PRESETS.balanced);game.completed=true;renderFinal()");
+ assert.equal(h.run('game.gaokaoReport.rows.length'),210);
+ assert.ok(h.run('Number.isFinite(game.finalScore)'));
+});
 test('four people start in original day engine and keep exact subject conversion',()=>{
  const h=harness();h.run('openCharacterSaves()');assert.match(h.el('#game-dialog').innerHTML,/hu-zx/);
  for(const [id,score,cls] of [['hu-yy',557,8],['zhang-z',594,8],['hu-zx',646.5,2],['hao-kj',566,2]]){
