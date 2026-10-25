@@ -1,0 +1,9752 @@
+{
+  "year": 2025,
+  "source": "https://www.gaokao.haedu.cn/",
+  "scoreEndpoint": "/api/zy_admission/index",
+  "planEndpoint": "/api/plan_zy/index",
+  "stats": {
+    "admissionUnits": 1580,
+    "institutions": 1220,
+    "programs": 30626,
+    "undergraduate": 29323,
+    "junior": 1303,
+    "elite985": 38,
+    "elite211": 111,
+    "queried": 1385
+  },
+  "skipped": {
+    "invalidOrUnpublishedScore": 955,
+    "noExactPlanMatch": 87,
+    "outsideOrdinaryScope": 1769
+  },
+  "conflicts": [],
+  "fallbacks": [
+    {
+      "school": "河南城建学院",
+      "name": "建筑学",
+      "category": "history"
+    },
+    {
+      "school": "河南城建学院",
+      "name": "城乡规划",
+      "category": "history"
+    },
+    {
+      "school": "河南城建学院",
+      "name": "建筑学",
+      "category": "physics"
+    },
+    {
+      "school": "河南城建学院",
+      "name": "道路桥梁渡河工程",
+      "category": "physics"
+    },
+    {
+      "school": "河南农业大学",
+      "name": "动物医学类",
+      "category": "physics"
+    },
+    {
+      "school": "江苏大学",
+      "name": "临床医学",
+      "category": "physics"
+    }
+  ],
+  "schools": [
+    {
+      "name": "北京大学",
+      "code": "10001",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 96
+    },
+    {
+      "name": "清华大学",
+      "code": "10003",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 58
+    },
+    {
+      "name": "中国人民大学",
+      "code": "10002",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 50
+    },
+    {
+      "name": "北京航空航天大学",
+      "code": "10006",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 32
+    },
+    {
+      "name": "北京理工大学",
+      "code": "10007",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 23
+    },
+    {
+      "name": "中国农业大学",
+      "code": "10019",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 62
+    },
+    {
+      "name": "北京师范大学",
+      "code": "10027",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 67
+    },
+    {
+      "name": "南开大学",
+      "code": "10055",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 28
+    },
+    {
+      "name": "中央民族大学",
+      "code": "10052",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 54
+    },
+    {
+      "name": "天津大学",
+      "code": "10056",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 20
+    },
+    {
+      "name": "东北大学",
+      "code": "10145",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 48
+    },
+    {
+      "name": "大连理工大学",
+      "code": "10141",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 42
+    },
+    {
+      "name": "吉林大学",
+      "code": "10183",
+      "level": "本科",
+      "scoreRows": 114,
+      "planRows": 146
+    },
+    {
+      "name": "哈尔滨工业大学",
+      "code": "10213",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 31
+    },
+    {
+      "name": "复旦大学",
+      "code": "10246",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 50
+    },
+    {
+      "name": "同济大学",
+      "code": "10247",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 30
+    },
+    {
+      "name": "上海交通大学",
+      "code": "10248",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 41
+    },
+    {
+      "name": "华东师范大学",
+      "code": "10269",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 72
+    },
+    {
+      "name": "南京大学",
+      "code": "10284",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 48
+    },
+    {
+      "name": "东南大学",
+      "code": "10286",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 27
+    },
+    {
+      "name": "浙江大学",
+      "code": "10335",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 40
+    },
+    {
+      "name": "中国科学技术大学",
+      "code": "10358",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 37
+    },
+    {
+      "name": "厦门大学",
+      "code": "10384",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 82
+    },
+    {
+      "name": "山东大学",
+      "code": "10422",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 72
+    },
+    {
+      "name": "中国海洋大学",
+      "code": "10423",
+      "level": "本科",
+      "scoreRows": 63,
+      "planRows": 75
+    },
+    {
+      "name": "武汉大学",
+      "code": "10486",
+      "level": "本科",
+      "scoreRows": 67,
+      "planRows": 82
+    },
+    {
+      "name": "华中科技大学",
+      "code": "10487",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 78
+    },
+    {
+      "name": "湖南大学",
+      "code": "10532",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 59
+    },
+    {
+      "name": "中南大学",
+      "code": "10533",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 54
+    },
+    {
+      "name": "中山大学",
+      "code": "10558",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 55
+    },
+    {
+      "name": "华南理工大学",
+      "code": "10561",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 59
+    },
+    {
+      "name": "四川大学",
+      "code": "10610",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 54
+    },
+    {
+      "name": "重庆大学",
+      "code": "10611",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 45
+    },
+    {
+      "name": "电子科技大学",
+      "code": "10614",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 44
+    },
+    {
+      "name": "西安交通大学",
+      "code": "10698",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 65
+    },
+    {
+      "name": "西北工业大学",
+      "code": "10699",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 46
+    },
+    {
+      "name": "郑州大学",
+      "code": "10459",
+      "level": "本科",
+      "scoreRows": 99,
+      "planRows": 126
+    },
+    {
+      "name": "西北农林科技大学",
+      "code": "10712",
+      "level": "本科",
+      "scoreRows": 68,
+      "planRows": 82
+    },
+    {
+      "name": "兰州大学",
+      "code": "10730",
+      "level": "本科",
+      "scoreRows": 62,
+      "planRows": 86
+    },
+    {
+      "name": "北京交通大学",
+      "code": "10004",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 26
+    },
+    {
+      "name": "北京科技大学",
+      "code": "10008",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 29
+    },
+    {
+      "name": "北京工业大学",
+      "code": "10005",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 12
+    },
+    {
+      "name": "北京化工大学",
+      "code": "10010",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 27
+    },
+    {
+      "name": "北京林业大学",
+      "code": "10022",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 70
+    },
+    {
+      "name": "北京邮电大学",
+      "code": "10013",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 30
+    },
+    {
+      "name": "北京中医药大学",
+      "code": "10026",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 31
+    },
+    {
+      "name": "北京外国语大学",
+      "code": "10030",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 57
+    },
+    {
+      "name": "中国传媒大学",
+      "code": "10033",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 67
+    },
+    {
+      "name": "中央财经大学",
+      "code": "10034",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 39
+    },
+    {
+      "name": "对外经济贸易大学",
+      "code": "10036",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 38
+    },
+    {
+      "name": "北京体育大学",
+      "code": "10043",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 37
+    },
+    {
+      "name": "中央音乐学院",
+      "code": "10045",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "中国政法大学",
+      "code": "10053",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 35
+    },
+    {
+      "name": "华北电力大学",
+      "code": "10054",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 54
+    },
+    {
+      "name": "中国矿业大学（北京）",
+      "code": "11413",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 33
+    },
+    {
+      "name": "中国石油大学（北京）",
+      "code": "11414",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 37
+    },
+    {
+      "name": "中国地质大学（北京）",
+      "code": "11415",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 58
+    },
+    {
+      "name": "天津医科大学",
+      "code": "10062",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 28
+    },
+    {
+      "name": "河北工业大学",
+      "code": "10080",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "内蒙古大学",
+      "code": "10126",
+      "level": "本科",
+      "scoreRows": 64,
+      "planRows": 64
+    },
+    {
+      "name": "太原理工大学",
+      "code": "10112",
+      "level": "本科",
+      "scoreRows": 55,
+      "planRows": 62
+    },
+    {
+      "name": "辽宁大学",
+      "code": "10140",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 79
+    },
+    {
+      "name": "延边大学",
+      "code": "10184",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 28
+    },
+    {
+      "name": "大连海事大学",
+      "code": "10151",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 41
+    },
+    {
+      "name": "东北师范大学",
+      "code": "10200",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 68
+    },
+    {
+      "name": "东北农业大学",
+      "code": "10224",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 67
+    },
+    {
+      "name": "哈尔滨工程大学",
+      "code": "10217",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 41
+    },
+    {
+      "name": "东北林业大学",
+      "code": "10225",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 82
+    },
+    {
+      "name": "华东理工大学",
+      "code": "10251",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 43
+    },
+    {
+      "name": "东华大学",
+      "code": "10255",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 53
+    },
+    {
+      "name": "上海外国语大学",
+      "code": "10271",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 27
+    },
+    {
+      "name": "上海大学",
+      "code": "10280",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 34
+    },
+    {
+      "name": "上海财经大学",
+      "code": "10272",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 33
+    },
+    {
+      "name": "苏州大学",
+      "code": "10285",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 78
+    },
+    {
+      "name": "南京理工大学",
+      "code": "10288",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 31
+    },
+    {
+      "name": "南京航空航天大学",
+      "code": "10287",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 62
+    },
+    {
+      "name": "中国矿业大学",
+      "code": "10290",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 65
+    },
+    {
+      "name": "江南大学",
+      "code": "10295",
+      "level": "本科",
+      "scoreRows": 57,
+      "planRows": 69
+    },
+    {
+      "name": "河海大学",
+      "code": "10294",
+      "level": "本科",
+      "scoreRows": 73,
+      "planRows": 81
+    },
+    {
+      "name": "南京农业大学",
+      "code": "10307",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 70
+    },
+    {
+      "name": "中国药科大学",
+      "code": "10316",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 25
+    },
+    {
+      "name": "南京师范大学",
+      "code": "10319",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 37
+    },
+    {
+      "name": "安徽大学",
+      "code": "10357",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 42
+    },
+    {
+      "name": "合肥工业大学",
+      "code": "10359",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 55
+    },
+    {
+      "name": "福州大学",
+      "code": "10386",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 53
+    },
+    {
+      "name": "南昌大学",
+      "code": "10403",
+      "level": "本科",
+      "scoreRows": 60,
+      "planRows": 76
+    },
+    {
+      "name": "中国石油大学（华东）",
+      "code": "10425",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 65
+    },
+    {
+      "name": "中国地质大学（武汉）",
+      "code": "10491",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 54
+    },
+    {
+      "name": "武汉理工大学",
+      "code": "10497",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 60
+    },
+    {
+      "name": "华中农业大学",
+      "code": "10504",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 54
+    },
+    {
+      "name": "华中师范大学",
+      "code": "10511",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 97
+    },
+    {
+      "name": "中南财经政法大学",
+      "code": "10520",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 75
+    },
+    {
+      "name": "暨南大学",
+      "code": "10559",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 56
+    },
+    {
+      "name": "湖南师范大学",
+      "code": "10542",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 64
+    },
+    {
+      "name": "华南师范大学",
+      "code": "10574",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 17
+    },
+    {
+      "name": "广西大学",
+      "code": "10593",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 26
+    },
+    {
+      "name": "海南大学",
+      "code": "10589",
+      "level": "本科",
+      "scoreRows": 78,
+      "planRows": 93
+    },
+    {
+      "name": "西南大学",
+      "code": "10635",
+      "level": "本科",
+      "scoreRows": 76,
+      "planRows": 93
+    },
+    {
+      "name": "西南交通大学",
+      "code": "10613",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 90
+    },
+    {
+      "name": "四川农业大学",
+      "code": "10626",
+      "level": "本科",
+      "scoreRows": 58,
+      "planRows": 64
+    },
+    {
+      "name": "西南财经大学",
+      "code": "10651",
+      "level": "本科",
+      "scoreRows": 47,
+      "planRows": 65
+    },
+    {
+      "name": "云南大学",
+      "code": "10673",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 59
+    },
+    {
+      "name": "贵州大学",
+      "code": "10657",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 42
+    },
+    {
+      "name": "西藏大学",
+      "code": "10694",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 44
+    },
+    {
+      "name": "西北大学",
+      "code": "10697",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 27
+    },
+    {
+      "name": "西安电子科技大学",
+      "code": "10701",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 38
+    },
+    {
+      "name": "长安大学",
+      "code": "10710",
+      "level": "本科",
+      "scoreRows": 60,
+      "planRows": 76
+    },
+    {
+      "name": "青海大学",
+      "code": "10743",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 69
+    },
+    {
+      "name": "宁夏大学",
+      "code": "10749",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 23
+    },
+    {
+      "name": "陕西师范大学",
+      "code": "10718",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 85
+    },
+    {
+      "name": "新疆大学",
+      "code": "10755",
+      "level": "本科",
+      "scoreRows": 90,
+      "planRows": 92
+    },
+    {
+      "name": "石河子大学",
+      "code": "10759",
+      "level": "本科",
+      "scoreRows": 73,
+      "planRows": 92
+    },
+    {
+      "name": "河南职业技术学院",
+      "code": "10824",
+      "level": "专科",
+      "scoreRows": 79,
+      "planRows": 91
+    },
+    {
+      "name": "郑州铁路职业技术学院",
+      "code": "10843",
+      "level": "专科",
+      "scoreRows": 82,
+      "planRows": 125
+    },
+    {
+      "name": "开封大学",
+      "code": "11069",
+      "level": "专科",
+      "scoreRows": 59,
+      "planRows": 76
+    },
+    {
+      "name": "焦作大学",
+      "code": "11522",
+      "level": "专科",
+      "scoreRows": 57,
+      "planRows": 71
+    },
+    {
+      "name": "河南工业职业技术学院",
+      "code": "12794",
+      "level": "专科",
+      "scoreRows": 81,
+      "planRows": 83
+    },
+    {
+      "name": "南阳医学高等专科学校",
+      "code": "13781",
+      "level": "专科",
+      "scoreRows": 46,
+      "planRows": 64
+    },
+    {
+      "name": "商丘医学高等专科学校",
+      "code": "13782",
+      "level": "专科",
+      "scoreRows": 35,
+      "planRows": 44
+    },
+    {
+      "name": "河南经贸职业学院",
+      "code": "13788",
+      "level": "专科",
+      "scoreRows": 98,
+      "planRows": 116
+    },
+    {
+      "name": "河南交通职业技术学院",
+      "code": "13789",
+      "level": "专科",
+      "scoreRows": 78,
+      "planRows": 96
+    },
+    {
+      "name": "河南农业职业学院",
+      "code": "13790",
+      "level": "专科",
+      "scoreRows": 86,
+      "planRows": 86
+    },
+    {
+      "name": "北京工业职业技术学院",
+      "code": "10853",
+      "level": "专科",
+      "scoreRows": 20,
+      "planRows": 18
+    },
+    {
+      "name": "天津医学高等专科学校",
+      "code": "12880",
+      "level": "专科",
+      "scoreRows": 41,
+      "planRows": 20
+    },
+    {
+      "name": "石家庄铁路职业技术学院",
+      "code": "12424",
+      "level": "专科",
+      "scoreRows": 25,
+      "planRows": 24
+    },
+    {
+      "name": "辽宁省交通高等专科学校",
+      "code": "11500",
+      "level": "专科",
+      "scoreRows": 51,
+      "planRows": 57
+    },
+    {
+      "name": "黑龙江建筑职业技术学院",
+      "code": "12053",
+      "level": "专科",
+      "scoreRows": 14,
+      "planRows": 15
+    },
+    {
+      "name": "上海城建职业学院",
+      "code": "12495",
+      "level": "专科",
+      "scoreRows": 52,
+      "planRows": 47
+    },
+    {
+      "name": "南京信息职业技术学院",
+      "code": "13112",
+      "level": "专科",
+      "scoreRows": 15,
+      "planRows": 21
+    },
+    {
+      "name": "浙江金融职业学院",
+      "code": "12870",
+      "level": "专科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "长沙民政职业技术学院",
+      "code": "10827",
+      "level": "专科",
+      "scoreRows": 39,
+      "planRows": 39
+    },
+    {
+      "name": "重庆医药高等专科学校",
+      "code": "14009",
+      "level": "专科",
+      "scoreRows": 10,
+      "planRows": 16
+    },
+    {
+      "name": "华北水利水电大学",
+      "code": "10078",
+      "level": "本科",
+      "scoreRows": 85,
+      "planRows": 129
+    },
+    {
+      "name": "郑州轻工业大学",
+      "code": "10462",
+      "level": "本科",
+      "scoreRows": 87,
+      "planRows": 104
+    },
+    {
+      "name": "河南理工大学",
+      "code": "10460",
+      "level": "本科",
+      "scoreRows": 98,
+      "planRows": 138
+    },
+    {
+      "name": "河南工业大学",
+      "code": "10463",
+      "level": "本科",
+      "scoreRows": 74,
+      "planRows": 108
+    },
+    {
+      "name": "中原工学院",
+      "code": "10465",
+      "level": "本科",
+      "scoreRows": 77,
+      "planRows": 97
+    },
+    {
+      "name": "河南科技大学",
+      "code": "10464",
+      "level": "本科",
+      "scoreRows": 122,
+      "planRows": 173
+    },
+    {
+      "name": "河南农业大学",
+      "code": "10466",
+      "level": "本科",
+      "scoreRows": 81,
+      "planRows": 142
+    },
+    {
+      "name": "河南牧业经济学院",
+      "code": "10469",
+      "level": "本科",
+      "scoreRows": 74,
+      "planRows": 84
+    },
+    {
+      "name": "河南科技学院",
+      "code": "10467",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 81
+    },
+    {
+      "name": "河南中医药大学",
+      "code": "10471",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 126
+    },
+    {
+      "name": "河南大学",
+      "code": "10475",
+      "level": "本科",
+      "scoreRows": 99,
+      "planRows": 217
+    },
+    {
+      "name": "河南医药大学",
+      "code": "10472",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 100
+    },
+    {
+      "name": "河南师范大学",
+      "code": "10476",
+      "level": "本科",
+      "scoreRows": 85,
+      "planRows": 234
+    },
+    {
+      "name": "信阳师范大学",
+      "code": "10477",
+      "level": "本科",
+      "scoreRows": 70,
+      "planRows": 154
+    },
+    {
+      "name": "周口师范学院",
+      "code": "10478",
+      "level": "本科",
+      "scoreRows": 76,
+      "planRows": 158
+    },
+    {
+      "name": "安阳师范学院",
+      "code": "10479",
+      "level": "本科",
+      "scoreRows": 71,
+      "planRows": 155
+    },
+    {
+      "name": "许昌学院",
+      "code": "10480",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 78
+    },
+    {
+      "name": "南阳师范学院",
+      "code": "10481",
+      "level": "本科",
+      "scoreRows": 80,
+      "planRows": 211
+    },
+    {
+      "name": "洛阳师范学院",
+      "code": "10482",
+      "level": "本科",
+      "scoreRows": 68,
+      "planRows": 162
+    },
+    {
+      "name": "商丘师范学院",
+      "code": "10483",
+      "level": "本科",
+      "scoreRows": 74,
+      "planRows": 149
+    },
+    {
+      "name": "河南财经政法大学",
+      "code": "10484",
+      "level": "本科",
+      "scoreRows": 83,
+      "planRows": 139
+    },
+    {
+      "name": "郑州航空工业管理学院",
+      "code": "10485",
+      "level": "本科",
+      "scoreRows": 67,
+      "planRows": 120
+    },
+    {
+      "name": "黄淮学院",
+      "code": "10918",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 75
+    },
+    {
+      "name": "平顶山学院",
+      "code": "10919",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 95
+    },
+    {
+      "name": "郑州工程技术学院",
+      "code": "11068",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 84
+    },
+    {
+      "name": "洛阳理工学院",
+      "code": "11070",
+      "level": "本科",
+      "scoreRows": 57,
+      "planRows": 67
+    },
+    {
+      "name": "信阳农林学院",
+      "code": "11326",
+      "level": "本科",
+      "scoreRows": 68,
+      "planRows": 110
+    },
+    {
+      "name": "新乡学院",
+      "code": "11071",
+      "level": "本科",
+      "scoreRows": 70,
+      "planRows": 89
+    },
+    {
+      "name": "河南工学院",
+      "code": "11329",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 40
+    },
+    {
+      "name": "河南工程学院",
+      "code": "11517",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 78
+    },
+    {
+      "name": "安阳工学院",
+      "code": "11330",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 78
+    },
+    {
+      "name": "河南财政金融学院",
+      "code": "11652",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 85
+    },
+    {
+      "name": "南阳理工学院",
+      "code": "11653",
+      "level": "本科",
+      "scoreRows": 68,
+      "planRows": 99
+    },
+    {
+      "name": "河南城建学院",
+      "code": "11765",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 67
+    },
+    {
+      "name": "河南警察学院",
+      "code": "11788",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 45
+    },
+    {
+      "name": "郑州警察学院",
+      "code": "12735",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "黄河科技学院",
+      "code": "11834",
+      "level": "本科",
+      "scoreRows": 82,
+      "planRows": 142
+    },
+    {
+      "name": "郑州科技学院",
+      "code": "12746",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 105
+    },
+    {
+      "name": "郑州工业应用技术学院",
+      "code": "12747",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 116
+    },
+    {
+      "name": "郑州师范学院",
+      "code": "12949",
+      "level": "本科",
+      "scoreRows": 62,
+      "planRows": 188
+    },
+    {
+      "name": "郑州财经学院",
+      "code": "13497",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 55
+    },
+    {
+      "name": "黄河交通学院",
+      "code": "13498",
+      "level": "本科",
+      "scoreRows": 47,
+      "planRows": 79
+    },
+    {
+      "name": "商丘工学院",
+      "code": "13500",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 58
+    },
+    {
+      "name": "河南开封科技传媒学院",
+      "code": "13501",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 77
+    },
+    {
+      "name": "中原科技学院",
+      "code": "13502",
+      "level": "本科",
+      "scoreRows": 59,
+      "planRows": 128
+    },
+    {
+      "name": "信阳学院",
+      "code": "13503",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 62
+    },
+    {
+      "name": "安阳学院",
+      "code": "13504",
+      "level": "本科",
+      "scoreRows": 64,
+      "planRows": 162
+    },
+    {
+      "name": "豫北医学院",
+      "code": "13505",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 36
+    },
+    {
+      "name": "新乡工程学院",
+      "code": "13506",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 79
+    },
+    {
+      "name": "郑州工商学院",
+      "code": "13507",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 96
+    },
+    {
+      "name": "郑州经贸学院",
+      "code": "13508",
+      "level": "本科",
+      "scoreRows": 55,
+      "planRows": 74
+    },
+    {
+      "name": "商丘学院",
+      "code": "14003",
+      "level": "本科",
+      "scoreRows": 74,
+      "planRows": 178
+    },
+    {
+      "name": "郑州商学院",
+      "code": "14040",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 85
+    },
+    {
+      "name": "郑州升达经贸管理学院",
+      "code": "14333",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 108
+    },
+    {
+      "name": "河南科技职业大学",
+      "code": "14169",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 37
+    },
+    {
+      "name": "郑州西亚斯学院",
+      "code": "14654",
+      "level": "本科",
+      "scoreRows": 70,
+      "planRows": 102
+    },
+    {
+      "name": "郑州美术学院",
+      "code": "14831",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "漯河食品工程职业大学",
+      "code": "14233",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 76
+    },
+    {
+      "name": "河南体育学院",
+      "code": "14879",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 24
+    },
+    {
+      "name": "郑州健康学院",
+      "code": "12948",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 80
+    },
+    {
+      "name": "黄河水利职业技术大学",
+      "code": "12058",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 125
+    },
+    {
+      "name": "北方工业大学",
+      "code": "10009",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 54
+    },
+    {
+      "name": "北京工商大学",
+      "code": "10011",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 15
+    },
+    {
+      "name": "北京服装学院",
+      "code": "10012",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 24
+    },
+    {
+      "name": "北京印刷学院",
+      "code": "10015",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 30
+    },
+    {
+      "name": "北京建筑大学",
+      "code": "10016",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 35
+    },
+    {
+      "name": "北京石油化工学院",
+      "code": "10017",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "北京电子科技学院",
+      "code": "10018",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "北京协和医学院",
+      "code": "10023",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "北京农学院",
+      "code": "10020",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 24
+    },
+    {
+      "name": "首都医科大学",
+      "code": "10025",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 15
+    },
+    {
+      "name": "首都师范大学",
+      "code": "10028",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 26
+    },
+    {
+      "name": "首都体育学院",
+      "code": "10029",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 14
+    },
+    {
+      "name": "北京第二外国语学院",
+      "code": "10031",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 33
+    },
+    {
+      "name": "北京物资学院",
+      "code": "10037",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 32
+    },
+    {
+      "name": "北京语言大学",
+      "code": "10032",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 44
+    },
+    {
+      "name": "首都经济贸易大学",
+      "code": "10038",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 11
+    },
+    {
+      "name": "中国消防救援学院",
+      "code": "10039",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "外交学院",
+      "code": "10040",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "中国音乐学院",
+      "code": "10046",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "国际关系学院",
+      "code": "10042",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "中国人民公安大学",
+      "code": "10041",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 59
+    },
+    {
+      "name": "中国戏曲学院",
+      "code": "10049",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 28
+    },
+    {
+      "name": "中央美术学院",
+      "code": "10047",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 19
+    },
+    {
+      "name": "中央戏剧学院",
+      "code": "10048",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 27
+    },
+    {
+      "name": "北京舞蹈学院",
+      "code": "10051",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "北京电影学院",
+      "code": "10050",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 19
+    },
+    {
+      "name": "中华女子学院",
+      "code": "11149",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 22
+    },
+    {
+      "name": "北京信息科技大学",
+      "code": "11232",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 27
+    },
+    {
+      "name": "北京联合大学",
+      "code": "11417",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 24
+    },
+    {
+      "name": "北京城市学院",
+      "code": "11418",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 69
+    },
+    {
+      "name": "中国青年政治学院",
+      "code": "11625",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "首钢工学院",
+      "code": "11831",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "中国劳动关系学院",
+      "code": "12453",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 48
+    },
+    {
+      "name": "北京金融科技学院",
+      "code": "13630",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 28
+    },
+    {
+      "name": "首都师范大学科德学院",
+      "code": "13629",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 41
+    },
+    {
+      "name": "北京邮电大学世纪学院",
+      "code": "13901",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 31
+    },
+    {
+      "name": "北京警察学院",
+      "code": "14019",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "北京工业大学耿丹学院",
+      "code": "13904",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 33
+    },
+    {
+      "name": "北京第二外国语学院中瑞酒店管理学院",
+      "code": "14201",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 24
+    },
+    {
+      "name": "中国科学院大学",
+      "code": "14430",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 20
+    },
+    {
+      "name": "中国社会科学院大学",
+      "code": "14596",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 18
+    },
+    {
+      "name": "北京科技职业大学",
+      "code": "10858",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "民政职业大学",
+      "code": "14139",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 28
+    },
+    {
+      "name": "天津科技大学",
+      "code": "10057",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 69
+    },
+    {
+      "name": "天津工业大学",
+      "code": "10058",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 44
+    },
+    {
+      "name": "中国民航大学",
+      "code": "10059",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 38
+    },
+    {
+      "name": "天津理工大学",
+      "code": "10060",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 81
+    },
+    {
+      "name": "天津农学院",
+      "code": "10061",
+      "level": "本科",
+      "scoreRows": 55,
+      "planRows": 55
+    },
+    {
+      "name": "天津中医药大学",
+      "code": "10063",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 32
+    },
+    {
+      "name": "天津师范大学",
+      "code": "10065",
+      "level": "本科",
+      "scoreRows": 63,
+      "planRows": 91
+    },
+    {
+      "name": "天津职业技术师范大学",
+      "code": "10066",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 40
+    },
+    {
+      "name": "天津外国语大学",
+      "code": "10068",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 56
+    },
+    {
+      "name": "天津商业大学",
+      "code": "10069",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 59
+    },
+    {
+      "name": "天津财经大学",
+      "code": "10070",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 38
+    },
+    {
+      "name": "天津音乐学院",
+      "code": "10072",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "天津体育学院",
+      "code": "10071",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 14
+    },
+    {
+      "name": "天津美术学院",
+      "code": "10073",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 8
+    },
+    {
+      "name": "天津城建大学",
+      "code": "10792",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 54
+    },
+    {
+      "name": "天津天狮学院",
+      "code": "10859",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 42
+    },
+    {
+      "name": "天津中德应用技术大学",
+      "code": "12105",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 34
+    },
+    {
+      "name": "天津传媒学院",
+      "code": "13659",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 21
+    },
+    {
+      "name": "天津外国语大学滨海外事学院",
+      "code": "13658",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "南开大学滨海学院",
+      "code": "13663",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "天津商业大学宝德学院",
+      "code": "13660",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 25
+    },
+    {
+      "name": "天津医科大学临床医学院",
+      "code": "13661",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "天津师范大学津沽学院",
+      "code": "13896",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "天津理工大学中环信息学院",
+      "code": "13897",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "北京科技大学天津学院",
+      "code": "13898",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 43
+    },
+    {
+      "name": "天津仁爱学院",
+      "code": "14038",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 44
+    },
+    {
+      "name": "天津财经大学珠江学院",
+      "code": "14087",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 40
+    },
+    {
+      "name": "天津警察学院",
+      "code": "12723",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "河北大学",
+      "code": "10075",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 34
+    },
+    {
+      "name": "河北工程大学",
+      "code": "10076",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 60
+    },
+    {
+      "name": "河北地质大学",
+      "code": "10077",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 29
+    },
+    {
+      "name": "华北理工大学",
+      "code": "10081",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 44
+    },
+    {
+      "name": "河北科技大学",
+      "code": "10082",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 27
+    },
+    {
+      "name": "河北建筑工程学院",
+      "code": "10084",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "河北水利电力学院",
+      "code": "10085",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "河北农业大学",
+      "code": "10086",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "河北医科大学",
+      "code": "10089",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "河北北方学院",
+      "code": "10092",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "承德医学院",
+      "code": "10093",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "河北师范大学",
+      "code": "10094",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 27
+    },
+    {
+      "name": "保定学院",
+      "code": "10096",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 20
+    },
+    {
+      "name": "河北民族师范学院",
+      "code": "10098",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 10
+    },
+    {
+      "name": "廊坊师范学院",
+      "code": "10100",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 17
+    },
+    {
+      "name": "唐山师范学院",
+      "code": "10099",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "衡水学院",
+      "code": "10101",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 13
+    },
+    {
+      "name": "石家庄学院",
+      "code": "10102",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 10
+    },
+    {
+      "name": "邯郸学院",
+      "code": "10103",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 6
+    },
+    {
+      "name": "邢台学院",
+      "code": "10104",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 7
+    },
+    {
+      "name": "沧州师范学院",
+      "code": "10105",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 6
+    },
+    {
+      "name": "石家庄铁道大学",
+      "code": "10107",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 43
+    },
+    {
+      "name": "燕山大学",
+      "code": "10216",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 43
+    },
+    {
+      "name": "河北科技师范学院",
+      "code": "10798",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "唐山学院",
+      "code": "11033",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "华北科技学院",
+      "code": "11104",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 35
+    },
+    {
+      "name": "中国人民警察大学",
+      "code": "11105",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 43
+    },
+    {
+      "name": "河北体育学院",
+      "code": "11236",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北金融学院",
+      "code": "11420",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "北华航天工业学院",
+      "code": "11629",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 17
+    },
+    {
+      "name": "防灾科技学院",
+      "code": "11775",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 0
+    },
+    {
+      "name": "中央司法警官学院",
+      "code": "11903",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北经贸大学",
+      "code": "11832",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "河北传媒学院",
+      "code": "12784",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 73
+    },
+    {
+      "name": "河北美术学院",
+      "code": "13075",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北工程技术学院",
+      "code": "12796",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北大学工商学院",
+      "code": "13404",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北科技学院",
+      "code": "13391",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 13
+    },
+    {
+      "name": "河北外国语学院",
+      "code": "13402",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 29
+    },
+    {
+      "name": "河北师范大学汇华学院",
+      "code": "13411",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "华北理工大学轻工学院",
+      "code": "13408",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 24
+    },
+    {
+      "name": "河北工业职业技术大学",
+      "code": "16204",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 24
+    },
+    {
+      "name": "河北经贸大学经济管理学院",
+      "code": "13414",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北医科大学临床学院",
+      "code": "13415",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北科技工程职业技术大学",
+      "code": "16203",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 30
+    },
+    {
+      "name": "河北石油职业技术大学",
+      "code": "16202",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 28
+    },
+    {
+      "name": "燕山大学里仁学院",
+      "code": "13592",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河北工程大学科信学院",
+      "code": "13578",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "河北农业大学现代科技学院",
+      "code": "13595",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "石家庄铁道大学四方学院",
+      "code": "13593",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "河北地质大学华信学院",
+      "code": "13594",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "华北理工大学冀唐学院",
+      "code": "13596",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "保定理工学院",
+      "code": "13891",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "燕京理工学院",
+      "code": "13895",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 61
+    },
+    {
+      "name": "北京中医药大学东方学院",
+      "code": "13899",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "沧州交通学院",
+      "code": "14202",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 34
+    },
+    {
+      "name": "河北东方学院",
+      "code": "14225",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "河北中医药大学",
+      "code": "14432",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "张家口学院",
+      "code": "14458",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 8
+    },
+    {
+      "name": "河北环境工程学院",
+      "code": "51721",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 28
+    },
+    {
+      "name": "唐山工业职业技术大学",
+      "code": "12787",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "邢台医学院",
+      "code": "12884",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 13
+    },
+    {
+      "name": "山西大学",
+      "code": "10108",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 43
+    },
+    {
+      "name": "太原科技大学",
+      "code": "10109",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 41
+    },
+    {
+      "name": "中北大学",
+      "code": "10110",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 76
+    },
+    {
+      "name": "山西农业大学",
+      "code": "10113",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 55
+    },
+    {
+      "name": "山西医科大学",
+      "code": "10114",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 36
+    },
+    {
+      "name": "长治医学院",
+      "code": "10117",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 22
+    },
+    {
+      "name": "山西师范大学",
+      "code": "10118",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 27
+    },
+    {
+      "name": "太原师范学院",
+      "code": "10119",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 24
+    },
+    {
+      "name": "山西大同大学",
+      "code": "10120",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 9
+    },
+    {
+      "name": "晋中学院",
+      "code": "10121",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 29
+    },
+    {
+      "name": "长治学院",
+      "code": "10122",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 20
+    },
+    {
+      "name": "运城学院",
+      "code": "10123",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "山西财经大学",
+      "code": "10125",
+      "level": "本科",
+      "scoreRows": 64,
+      "planRows": 66
+    },
+    {
+      "name": "忻州师范学院",
+      "code": "10124",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 32
+    },
+    {
+      "name": "山西中医药大学",
+      "code": "10809",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "吕梁学院",
+      "code": "10812",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 36
+    },
+    {
+      "name": "太原学院",
+      "code": "11242",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 25
+    },
+    {
+      "name": "山西警察学院",
+      "code": "12111",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山西应用科技学院",
+      "code": "12779",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "山西工程科技职业大学",
+      "code": "16201",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 20
+    },
+    {
+      "name": "山西工学院",
+      "code": "13534",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "晋中信息学院",
+      "code": "13535",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 41
+    },
+    {
+      "name": "山西电子科技学院",
+      "code": "13537",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "晋中健康学院",
+      "code": "13598",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山西晋中理工学院",
+      "code": "13538",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "山西科技学院",
+      "code": "13597",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "山西财经大学华商学院",
+      "code": "13608",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山西工商学院",
+      "code": "13691",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "太原工业学院",
+      "code": "14101",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 28
+    },
+    {
+      "name": "运城职业技术大学",
+      "code": "14226",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "山西传媒学院",
+      "code": "14434",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 24
+    },
+    {
+      "name": "山西工程技术学院",
+      "code": "14527",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "山西能源学院",
+      "code": "51189",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "山西文化旅游职业大学",
+      "code": "13696",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山西医药学院",
+      "code": "14898",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "内蒙古科技大学",
+      "code": "10127",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 46
+    },
+    {
+      "name": "内蒙古工业大学",
+      "code": "10128",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "内蒙古农业大学",
+      "code": "10129",
+      "level": "本科",
+      "scoreRows": 47,
+      "planRows": 48
+    },
+    {
+      "name": "内蒙古师范大学",
+      "code": "10135",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 25
+    },
+    {
+      "name": "内蒙古医科大学",
+      "code": "10132",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "内蒙古民族大学",
+      "code": "10136",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 27
+    },
+    {
+      "name": "赤峰学院",
+      "code": "10138",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 12
+    },
+    {
+      "name": "内蒙古财经大学",
+      "code": "10139",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "呼伦贝尔学院",
+      "code": "10819",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 10
+    },
+    {
+      "name": "集宁师范学院",
+      "code": "11427",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "河套学院",
+      "code": "11631",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "呼和浩特民族学院",
+      "code": "11709",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "内蒙古大学创业学院",
+      "code": "14199",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "内蒙古艺术学院",
+      "code": "14531",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 14
+    },
+    {
+      "name": "内蒙古鸿德文理学院",
+      "code": "14205",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "内蒙古警察学院",
+      "code": "12797",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "内蒙古建筑职业技术大学",
+      "code": "10871",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "鄂尔多斯应用技术学院",
+      "code": "14532",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "兴安职业技术大学",
+      "code": "12443",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "呼和浩特职业技术大学",
+      "code": "12670",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "沈阳工业大学",
+      "code": "10142",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 49
+    },
+    {
+      "name": "沈阳航空航天大学",
+      "code": "10143",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 40
+    },
+    {
+      "name": "沈阳理工大学",
+      "code": "10144",
+      "level": "本科",
+      "scoreRows": 47,
+      "planRows": 48
+    },
+    {
+      "name": "辽宁科技大学",
+      "code": "10146",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 55
+    },
+    {
+      "name": "辽宁工程技术大学",
+      "code": "10147",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 56
+    },
+    {
+      "name": "辽宁石油化工大学",
+      "code": "10148",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 36
+    },
+    {
+      "name": "沈阳化工大学",
+      "code": "10149",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 38
+    },
+    {
+      "name": "大连工业大学",
+      "code": "10152",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 42
+    },
+    {
+      "name": "大连交通大学",
+      "code": "10150",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 44
+    },
+    {
+      "name": "沈阳建筑大学",
+      "code": "10153",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 52
+    },
+    {
+      "name": "沈阳农业大学",
+      "code": "10157",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 45
+    },
+    {
+      "name": "辽宁工业大学",
+      "code": "10154",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 44
+    },
+    {
+      "name": "大连海洋大学",
+      "code": "10158",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 33
+    },
+    {
+      "name": "中国医科大学",
+      "code": "10159",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 15
+    },
+    {
+      "name": "锦州医科大学",
+      "code": "10160",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "大连医科大学",
+      "code": "10161",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 26
+    },
+    {
+      "name": "辽宁中医药大学",
+      "code": "10162",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 27
+    },
+    {
+      "name": "沈阳药科大学",
+      "code": "10163",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 21
+    },
+    {
+      "name": "沈阳医学院",
+      "code": "10164",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 24
+    },
+    {
+      "name": "辽宁师范大学",
+      "code": "10165",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 45
+    },
+    {
+      "name": "沈阳师范大学",
+      "code": "10166",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 39
+    },
+    {
+      "name": "渤海大学",
+      "code": "10167",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 57
+    },
+    {
+      "name": "鞍山师范学院",
+      "code": "10169",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 43
+    },
+    {
+      "name": "大连外国语大学",
+      "code": "10172",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 39
+    },
+    {
+      "name": "东北财经大学",
+      "code": "10173",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 49
+    },
+    {
+      "name": "中国刑事警察学院",
+      "code": "10175",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "沈阳音乐学院",
+      "code": "10177",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "沈阳体育学院",
+      "code": "10176",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 12
+    },
+    {
+      "name": "鲁迅美术学院",
+      "code": "10178",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 35
+    },
+    {
+      "name": "辽宁对外经贸学院",
+      "code": "10841",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 62
+    },
+    {
+      "name": "沈阳大学",
+      "code": "11035",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 41
+    },
+    {
+      "name": "大连大学",
+      "code": "11258",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 45
+    },
+    {
+      "name": "辽宁警察学院",
+      "code": "11432",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "辽宁科技学院",
+      "code": "11430",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 32
+    },
+    {
+      "name": "沈阳工程学院",
+      "code": "11632",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 31
+    },
+    {
+      "name": "辽东学院",
+      "code": "11779",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 34
+    },
+    {
+      "name": "大连民族大学",
+      "code": "12026",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 29
+    },
+    {
+      "name": "辽宁理工职业大学",
+      "code": "12595",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 41
+    },
+    {
+      "name": "沈阳工业大学工程学院",
+      "code": "13199",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "大连理工大学城市学院",
+      "code": "13198",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 35
+    },
+    {
+      "name": "沈阳航空航天大学北方科技学院",
+      "code": "13200",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "沈阳工学院",
+      "code": "13201",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 68
+    },
+    {
+      "name": "大连工业大学艺术与信息工程学院",
+      "code": "13203",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "大连科技学院",
+      "code": "13207",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 63
+    },
+    {
+      "name": "沈阳城市建设学院",
+      "code": "13208",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 41
+    },
+    {
+      "name": "大连医科大学中山学院",
+      "code": "13212",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "锦州医科大学医疗学院",
+      "code": "13213",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "辽宁师范大学海华学院",
+      "code": "13215",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 31
+    },
+    {
+      "name": "辽宁理工学院",
+      "code": "13217",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 33
+    },
+    {
+      "name": "大连财经学院",
+      "code": "13218",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 58
+    },
+    {
+      "name": "大连艺术学院",
+      "code": "13599",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "沈阳城市学院",
+      "code": "13220",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 46
+    },
+    {
+      "name": "辽宁中医药大学杏林学院",
+      "code": "13609",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 18
+    },
+    {
+      "name": "沈阳科技学院",
+      "code": "13621",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 48
+    },
+    {
+      "name": "辽宁何氏医学院",
+      "code": "13610",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 35
+    },
+    {
+      "name": "大连东软信息学院",
+      "code": "13631",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 65
+    },
+    {
+      "name": "辽宁财贸学院",
+      "code": "13900",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "辽宁传媒学院",
+      "code": "13957",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 24
+    },
+    {
+      "name": "营口理工学院",
+      "code": "14435",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 27
+    },
+    {
+      "name": "朝阳师范学院",
+      "code": "10171",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 43
+    },
+    {
+      "name": "长春理工大学",
+      "code": "10186",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 58
+    },
+    {
+      "name": "东北电力大学",
+      "code": "10188",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 38
+    },
+    {
+      "name": "长春工业大学",
+      "code": "10190",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 66
+    },
+    {
+      "name": "吉林建筑大学",
+      "code": "10191",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 41
+    },
+    {
+      "name": "吉林化工大学",
+      "code": "10192",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 54
+    },
+    {
+      "name": "吉林农业大学",
+      "code": "10193",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 34
+    },
+    {
+      "name": "长春中医药大学",
+      "code": "10199",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 27
+    },
+    {
+      "name": "北华大学",
+      "code": "10201",
+      "level": "本科",
+      "scoreRows": 58,
+      "planRows": 71
+    },
+    {
+      "name": "通化师范学院",
+      "code": "10202",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 30
+    },
+    {
+      "name": "吉林师范大学",
+      "code": "10203",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 51
+    },
+    {
+      "name": "吉林工程技术师范学院",
+      "code": "10204",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 23
+    },
+    {
+      "name": "长春师范大学",
+      "code": "10205",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 26
+    },
+    {
+      "name": "白城师范学院",
+      "code": "10206",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 47
+    },
+    {
+      "name": "吉林财经大学",
+      "code": "10207",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 54
+    },
+    {
+      "name": "吉林体育学院",
+      "code": "10208",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 25
+    },
+    {
+      "name": "吉林艺术学院",
+      "code": "10209",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 29
+    },
+    {
+      "name": "吉林外国语大学",
+      "code": "10964",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 67
+    },
+    {
+      "name": "吉林工商学院",
+      "code": "11261",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 55
+    },
+    {
+      "name": "长春工程学院",
+      "code": "11437",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 38
+    },
+    {
+      "name": "吉林农业科技学院",
+      "code": "11439",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 38
+    },
+    {
+      "name": "吉林警察学院",
+      "code": "11441",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 6
+    },
+    {
+      "name": "长春大学",
+      "code": "11726",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 56
+    },
+    {
+      "name": "长春光华学院",
+      "code": "13600",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 24
+    },
+    {
+      "name": "长春工业大学人文信息学院",
+      "code": "13601",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 35
+    },
+    {
+      "name": "长春电子科技学院",
+      "code": "13602",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 29
+    },
+    {
+      "name": "吉林建筑科技学院",
+      "code": "13604",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 40
+    },
+    {
+      "name": "长春财经学院",
+      "code": "13603",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 41
+    },
+    {
+      "name": "长春建筑学院",
+      "code": "13605",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 46
+    },
+    {
+      "name": "长春科技学院",
+      "code": "13606",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 51
+    },
+    {
+      "name": "吉林动画学院",
+      "code": "13607",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 18
+    },
+    {
+      "name": "吉林师范大学博达学院",
+      "code": "13622",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 30
+    },
+    {
+      "name": "长春大学旅游学院",
+      "code": "13623",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 43
+    },
+    {
+      "name": "长春人文学院",
+      "code": "13662",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 40
+    },
+    {
+      "name": "吉林医药学院",
+      "code": "13706",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "长春汽车职业技术大学",
+      "code": "11436",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 12
+    },
+    {
+      "name": "长春职业技术大学",
+      "code": "13161",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 15
+    },
+    {
+      "name": "吉林铁道职业技术大学",
+      "code": "14052",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 21
+    },
+    {
+      "name": "黑龙江大学",
+      "code": "10212",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 58
+    },
+    {
+      "name": "哈尔滨理工大学",
+      "code": "10214",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 44
+    },
+    {
+      "name": "黑龙江科技大学",
+      "code": "10219",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 53
+    },
+    {
+      "name": "东北石油大学",
+      "code": "10220",
+      "level": "本科",
+      "scoreRows": 69,
+      "planRows": 73
+    },
+    {
+      "name": "黑龙江八一农垦大学",
+      "code": "10223",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 45
+    },
+    {
+      "name": "佳木斯大学",
+      "code": "10222",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 25
+    },
+    {
+      "name": "哈尔滨医科大学",
+      "code": "10226",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 37
+    },
+    {
+      "name": "牡丹江医科大学",
+      "code": "10229",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "黑龙江中医药大学",
+      "code": "10228",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 35
+    },
+    {
+      "name": "哈尔滨师范大学",
+      "code": "10231",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 52
+    },
+    {
+      "name": "牡丹江师范学院",
+      "code": "10233",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 40
+    },
+    {
+      "name": "哈尔滨学院",
+      "code": "10234",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 53
+    },
+    {
+      "name": "大庆师范学院",
+      "code": "10235",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 32
+    },
+    {
+      "name": "绥化学院",
+      "code": "10236",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 30
+    },
+    {
+      "name": "哈尔滨商业大学",
+      "code": "10240",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 67
+    },
+    {
+      "name": "哈尔滨体育学院",
+      "code": "10242",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 12
+    },
+    {
+      "name": "哈尔滨金融学院",
+      "code": "10245",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 38
+    },
+    {
+      "name": "齐齐哈尔大学",
+      "code": "10232",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 50
+    },
+    {
+      "name": "齐齐哈尔医学院",
+      "code": "11230",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "黑龙江工业学院",
+      "code": "11445",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 27
+    },
+    {
+      "name": "黑龙江东方学院",
+      "code": "11446",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 31
+    },
+    {
+      "name": "哈尔滨信息工程学院",
+      "code": "11635",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 19
+    },
+    {
+      "name": "黑龙江工程学院",
+      "code": "11802",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 34
+    },
+    {
+      "name": "齐齐哈尔工程学院",
+      "code": "12729",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 22
+    },
+    {
+      "name": "黑龙江外国语学院",
+      "code": "13296",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 19
+    },
+    {
+      "name": "黑龙江财经学院",
+      "code": "13298",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 48
+    },
+    {
+      "name": "哈尔滨石油学院",
+      "code": "13299",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 34
+    },
+    {
+      "name": "黑龙江工商学院",
+      "code": "13300",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 17
+    },
+    {
+      "name": "哈尔滨远东理工学院",
+      "code": "13301",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 11
+    },
+    {
+      "name": "哈尔滨剑桥学院",
+      "code": "13303",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 16
+    },
+    {
+      "name": "黑龙江工程学院昆仑旅游学院",
+      "code": "13304",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 27
+    },
+    {
+      "name": "哈尔滨广厦学院",
+      "code": "13306",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 24
+    },
+    {
+      "name": "哈尔滨华德学院",
+      "code": "13307",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 34
+    },
+    {
+      "name": "黑河学院",
+      "code": "13744",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 39
+    },
+    {
+      "name": "哈尔滨音乐学院",
+      "code": "14560",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 39
+    },
+    {
+      "name": "哈尔滨职业技术大学",
+      "code": "12911",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "上海理工大学",
+      "code": "10252",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 18
+    },
+    {
+      "name": "上海海事大学",
+      "code": "10254",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 38
+    },
+    {
+      "name": "上海电力大学",
+      "code": "10256",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 31
+    },
+    {
+      "name": "上海应用技术大学",
+      "code": "10259",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 49
+    },
+    {
+      "name": "上海健康医学院",
+      "code": "10262",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "上海海洋大学",
+      "code": "10264",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 15
+    },
+    {
+      "name": "上海中医药大学",
+      "code": "10268",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 16
+    },
+    {
+      "name": "上海师范大学",
+      "code": "10270",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 34
+    },
+    {
+      "name": "上海对外经贸大学",
+      "code": "10273",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 45
+    },
+    {
+      "name": "上海海关学院",
+      "code": "10274",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 9
+    },
+    {
+      "name": "华东政法大学",
+      "code": "10276",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 16
+    },
+    {
+      "name": "上海音乐学院",
+      "code": "10278",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "上海体育大学",
+      "code": "10277",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 24
+    },
+    {
+      "name": "上海公安学院",
+      "code": "10283",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "上海戏剧学院",
+      "code": "10279",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 18
+    },
+    {
+      "name": "上海工程技术大学",
+      "code": "10856",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 40
+    },
+    {
+      "name": "上海立信会计金融学院",
+      "code": "11047",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 56
+    },
+    {
+      "name": "上海电机学院",
+      "code": "11458",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "上海杉达学院",
+      "code": "11833",
+      "level": "本科",
+      "scoreRows": 47,
+      "planRows": 59
+    },
+    {
+      "name": "上海政法学院",
+      "code": "11835",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 51
+    },
+    {
+      "name": "上海第二工业大学",
+      "code": "12044",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 33
+    },
+    {
+      "name": "上海商学院",
+      "code": "12050",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 25
+    },
+    {
+      "name": "上海立达学院",
+      "code": "12587",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 18
+    },
+    {
+      "name": "上海建桥学院",
+      "code": "12799",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 58
+    },
+    {
+      "name": "上海兴伟学院",
+      "code": "12914",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "上海中侨职业技术大学",
+      "code": "12915",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 31
+    },
+    {
+      "name": "上海视觉艺术学院",
+      "code": "13632",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 22
+    },
+    {
+      "name": "上海外国语大学贤达经济人文学院",
+      "code": "13636",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 53
+    },
+    {
+      "name": "上海师范大学天华学院",
+      "code": "13893",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "上海科技大学",
+      "code": "14423",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "上海纽约大学",
+      "code": "16404",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "江苏科技大学",
+      "code": "10289",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 45
+    },
+    {
+      "name": "南京工业大学",
+      "code": "10291",
+      "level": "本科",
+      "scoreRows": 57,
+      "planRows": 72
+    },
+    {
+      "name": "常州大学",
+      "code": "10292",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 41
+    },
+    {
+      "name": "南京邮电大学",
+      "code": "10293",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 33
+    },
+    {
+      "name": "江苏大学",
+      "code": "10299",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 63
+    },
+    {
+      "name": "南京林业大学",
+      "code": "10298",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 61
+    },
+    {
+      "name": "南京信息工程大学",
+      "code": "10300",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 68
+    },
+    {
+      "name": "盐城工学院",
+      "code": "10305",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 18
+    },
+    {
+      "name": "南通大学",
+      "code": "10304",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 74
+    },
+    {
+      "name": "南京医科大学",
+      "code": "10312",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "南京中医药大学",
+      "code": "10315",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "徐州医科大学",
+      "code": "10313",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "江苏师范大学",
+      "code": "10320",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 43
+    },
+    {
+      "name": "淮阴师范学院",
+      "code": "10323",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 15
+    },
+    {
+      "name": "盐城师范学院",
+      "code": "10324",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 13
+    },
+    {
+      "name": "南京财经大学",
+      "code": "10327",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 24
+    },
+    {
+      "name": "江苏警官学院",
+      "code": "10329",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "南京体育学院",
+      "code": "10330",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "南京艺术学院",
+      "code": "10331",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 26
+    },
+    {
+      "name": "苏州工学院",
+      "code": "10333",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 41
+    },
+    {
+      "name": "苏州科技大学",
+      "code": "10332",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 52
+    },
+    {
+      "name": "南京工业职业技术大学",
+      "code": "10850",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 32
+    },
+    {
+      "name": "常州工学院",
+      "code": "11055",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 12
+    },
+    {
+      "name": "淮阴工学院",
+      "code": "11049",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 28
+    },
+    {
+      "name": "扬州大学",
+      "code": "11117",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 72
+    },
+    {
+      "name": "三江学院",
+      "code": "11122",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 43
+    },
+    {
+      "name": "南京工程学院",
+      "code": "11276",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 45
+    },
+    {
+      "name": "南京审计大学",
+      "code": "11287",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 59
+    },
+    {
+      "name": "南京晓庄学院",
+      "code": "11460",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "江苏理工学院",
+      "code": "11463",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 38
+    },
+    {
+      "name": "江苏海洋大学",
+      "code": "11641",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 58
+    },
+    {
+      "name": "徐州工程学院",
+      "code": "11998",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 18
+    },
+    {
+      "name": "南京特殊教育师范学院",
+      "code": "12048",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 36
+    },
+    {
+      "name": "南通理工学院",
+      "code": "12056",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 30
+    },
+    {
+      "name": "南京警察学院",
+      "code": "12213",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "东南大学成贤学院",
+      "code": "12689",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "泰州学院",
+      "code": "12917",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 19
+    },
+    {
+      "name": "无锡太湖学院",
+      "code": "13571",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 45
+    },
+    {
+      "name": "金陵科技学院",
+      "code": "13573",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 38
+    },
+    {
+      "name": "南京大学金陵学院",
+      "code": "13646",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "中国矿业大学徐海学院",
+      "code": "13579",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 33
+    },
+    {
+      "name": "南京航空航天大学金城学院",
+      "code": "13655",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 35
+    },
+    {
+      "name": "南京理工大学紫金学院",
+      "code": "13654",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 32
+    },
+    {
+      "name": "南京传媒学院",
+      "code": "13687",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 46
+    },
+    {
+      "name": "南京理工大学泰州科技学院",
+      "code": "13842",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 7
+    },
+    {
+      "name": "南京师范大学泰州学院",
+      "code": "13843",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 27
+    },
+    {
+      "name": "南京工业大学浦江学院",
+      "code": "13905",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "南京中医药大学翰林学院",
+      "code": "13981",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "南京师范大学中北学院",
+      "code": "13906",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 34
+    },
+    {
+      "name": "南京医科大学康达学院",
+      "code": "13980",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "无锡学院",
+      "code": "13982",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 45
+    },
+    {
+      "name": "苏州城市学院",
+      "code": "13983",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 22
+    },
+    {
+      "name": "苏州大学应用技术学院",
+      "code": "13984",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "苏州科技大学天平学院",
+      "code": "13985",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "江苏大学京江学院",
+      "code": "13986",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "扬州大学广陵学院",
+      "code": "13987",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 34
+    },
+    {
+      "name": "江苏师范大学科文学院",
+      "code": "13988",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 47
+    },
+    {
+      "name": "南京邮电大学通达学院",
+      "code": "13989",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "南京财经大学红山学院",
+      "code": "13990",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "江苏科技大学苏州理工学院",
+      "code": "13991",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "常州大学怀德学院",
+      "code": "13992",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 12
+    },
+    {
+      "name": "南通大学杏林学院",
+      "code": "13993",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "南京审计大学金审学院",
+      "code": "13994",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "宿迁学院",
+      "code": "14160",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "江苏第二师范学院",
+      "code": "14436",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 19
+    },
+    {
+      "name": "西交利物浦大学",
+      "code": "16403",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "昆山杜克大学",
+      "code": "16406",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "连云港师范学院",
+      "code": "11585",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 8
+    },
+    {
+      "name": "无锡职业技术大学",
+      "code": "10848",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "苏州职业技术大学",
+      "code": "11054",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "扬州职业技术大学",
+      "code": "11462",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "杭州电子科技大学",
+      "code": "10336",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 26
+    },
+    {
+      "name": "浙江工业大学",
+      "code": "10337",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 22
+    },
+    {
+      "name": "浙江海洋大学",
+      "code": "10340",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 48
+    },
+    {
+      "name": "浙江农林大学",
+      "code": "10341",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 51
+    },
+    {
+      "name": "温州医科大学",
+      "code": "10343",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 39
+    },
+    {
+      "name": "浙江理工大学",
+      "code": "10338",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 37
+    },
+    {
+      "name": "浙江中医药大学",
+      "code": "10344",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 28
+    },
+    {
+      "name": "浙江师范大学",
+      "code": "10345",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 30
+    },
+    {
+      "name": "湖州师范学院",
+      "code": "10347",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 24
+    },
+    {
+      "name": "杭州师范大学",
+      "code": "10346",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 23
+    },
+    {
+      "name": "温州大学",
+      "code": "10351",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 33
+    },
+    {
+      "name": "台州学院",
+      "code": "10350",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 27
+    },
+    {
+      "name": "丽水学院",
+      "code": "10352",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 33
+    },
+    {
+      "name": "绍兴文理学院",
+      "code": "10349",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 21
+    },
+    {
+      "name": "浙江工商大学",
+      "code": "10353",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 22
+    },
+    {
+      "name": "嘉兴大学",
+      "code": "10354",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 32
+    },
+    {
+      "name": "中国计量大学",
+      "code": "10356",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 46
+    },
+    {
+      "name": "浙江万里学院",
+      "code": "10876",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 55
+    },
+    {
+      "name": "浙江科技大学",
+      "code": "11057",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 32
+    },
+    {
+      "name": "宁波工程学院",
+      "code": "11058",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 43
+    },
+    {
+      "name": "浙江水利水电学院",
+      "code": "11481",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 64
+    },
+    {
+      "name": "浙江警察学院",
+      "code": "11483",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "浙江财经大学",
+      "code": "11482",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 37
+    },
+    {
+      "name": "衢州学院",
+      "code": "11488",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 21
+    },
+    {
+      "name": "中国美术学院",
+      "code": "10355",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 14
+    },
+    {
+      "name": "浙江树人学院",
+      "code": "11842",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 56
+    },
+    {
+      "name": "浙江越秀外国语学院",
+      "code": "12792",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 70
+    },
+    {
+      "name": "宁波大学",
+      "code": "11646",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 41
+    },
+    {
+      "name": "浙江传媒学院",
+      "code": "11647",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 64
+    },
+    {
+      "name": "宁波财经学院",
+      "code": "13001",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 51
+    },
+    {
+      "name": "浙大城市学院",
+      "code": "13021",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 38
+    },
+    {
+      "name": "浙大宁波理工学院",
+      "code": "13022",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "浙江广厦建设职业技术大学",
+      "code": "13029",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 57
+    },
+    {
+      "name": "杭州医学院",
+      "code": "13023",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 30
+    },
+    {
+      "name": "浙江工业大学之江学院",
+      "code": "13275",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 24
+    },
+    {
+      "name": "浙江师范大学行知学院",
+      "code": "13276",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "宁波大学科学技术学院",
+      "code": "13277",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 43
+    },
+    {
+      "name": "杭州电子科技大学信息工程学院",
+      "code": "13279",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "浙江理工大学科技与艺术学院",
+      "code": "13280",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "浙江农林大学暨阳学院",
+      "code": "13283",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "温州医科大学仁济学院",
+      "code": "13284",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "浙江中医药大学滨江学院",
+      "code": "13285",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "杭州师范大学钱江学院",
+      "code": "13286",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖州学院",
+      "code": "13287",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "温州理工学院",
+      "code": "13289",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "绍兴理工学院",
+      "code": "13288",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "浙江工商大学杭州商学院",
+      "code": "13290",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 39
+    },
+    {
+      "name": "嘉兴南湖学院",
+      "code": "13291",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "中国计量大学现代科技学院",
+      "code": "13292",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "浙江财经大学东方学院",
+      "code": "13294",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 43
+    },
+    {
+      "name": "同济大学浙江学院",
+      "code": "14206",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "温州商学院",
+      "code": "13637",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 57
+    },
+    {
+      "name": "浙江音乐学院",
+      "code": "14535",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "上海财经大学浙江学院",
+      "code": "14207",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "浙江外国语学院",
+      "code": "14275",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 39
+    },
+    {
+      "name": "金华职业技术大学",
+      "code": "12061",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 40
+    },
+    {
+      "name": "西湖大学",
+      "code": "14626",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "浙江药科职业大学",
+      "code": "16207",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "温州肯恩大学",
+      "code": "16405",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "宁波诺丁汉大学",
+      "code": "16301",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "浙江机电职业技术大学",
+      "code": "12861",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 32
+    },
+    {
+      "name": "宁波职业技术大学",
+      "code": "10863",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "宁波东方理工大学",
+      "code": "14943",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "杭州职业技术大学",
+      "code": "12872",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "安徽工业大学",
+      "code": "10360",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 52
+    },
+    {
+      "name": "安徽理工大学",
+      "code": "10361",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 51
+    },
+    {
+      "name": "安徽工程大学",
+      "code": "10363",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 28
+    },
+    {
+      "name": "安徽农业大学",
+      "code": "10364",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 39
+    },
+    {
+      "name": "安徽医科大学",
+      "code": "10366",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "蚌埠医科大学",
+      "code": "10367",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 3
+    },
+    {
+      "name": "皖南医学院",
+      "code": "10368",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "安徽师范大学",
+      "code": "10370",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 43
+    },
+    {
+      "name": "安徽中医药大学",
+      "code": "10369",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "阜阳师范大学",
+      "code": "10371",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "淮北师范大学",
+      "code": "10373",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 35
+    },
+    {
+      "name": "安庆师范大学",
+      "code": "10372",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "黄山学院",
+      "code": "10375",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "滁州学院",
+      "code": "10377",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 6
+    },
+    {
+      "name": "皖西学院",
+      "code": "10376",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 3
+    },
+    {
+      "name": "安徽财经大学",
+      "code": "10378",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 41
+    },
+    {
+      "name": "宿州学院",
+      "code": "10379",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 6
+    },
+    {
+      "name": "巢湖学院",
+      "code": "10380",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "淮南师范学院",
+      "code": "10381",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 32
+    },
+    {
+      "name": "铜陵学院",
+      "code": "10383",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "安徽建筑大学",
+      "code": "10878",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 43
+    },
+    {
+      "name": "安徽科技学院",
+      "code": "10879",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "安徽三联学院",
+      "code": "10959",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "合肥大学",
+      "code": "11059",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 17
+    },
+    {
+      "name": "蚌埠学院",
+      "code": "11305",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "池州学院",
+      "code": "11306",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 19
+    },
+    {
+      "name": "安徽新华学院",
+      "code": "12216",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "安徽文达信息工程学院",
+      "code": "12810",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 14
+    },
+    {
+      "name": "亳州学院",
+      "code": "12926",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 14
+    },
+    {
+      "name": "安徽外国语学院",
+      "code": "13065",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "蚌埠工商学院",
+      "code": "13611",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "合肥理工学院",
+      "code": "13612",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "安徽信息工程学院",
+      "code": "13613",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "马鞍山学院",
+      "code": "13614",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "合肥城市学院",
+      "code": "13615",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "合肥经济学院",
+      "code": "13616",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "芜湖学院",
+      "code": "13617",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "安徽医科大学临床医学院",
+      "code": "13618",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "阜阳理工学院",
+      "code": "13619",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "淮北理工学院",
+      "code": "13620",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "合肥师范学院",
+      "code": "14098",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "安徽艺术学院",
+      "code": "14682",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 8
+    },
+    {
+      "name": "皖江工学院",
+      "code": "14203",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "安徽公安学院",
+      "code": "14840",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "安徽职业技术大学",
+      "code": "10869",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "芜湖职业技术大学",
+      "code": "11061",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "安徽第二医学院",
+      "code": "12925",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "华侨大学",
+      "code": "10385",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 68
+    },
+    {
+      "name": "福建理工大学",
+      "code": "10388",
+      "level": "本科",
+      "scoreRows": 60,
+      "planRows": 67
+    },
+    {
+      "name": "福建农林大学",
+      "code": "10389",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 50
+    },
+    {
+      "name": "集美大学",
+      "code": "10390",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 59
+    },
+    {
+      "name": "福建医科大学",
+      "code": "10392",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "福建中医药大学",
+      "code": "10393",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "福建师范大学",
+      "code": "10394",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 44
+    },
+    {
+      "name": "闽江学院",
+      "code": "10395",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 22
+    },
+    {
+      "name": "武夷学院",
+      "code": "10397",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 45
+    },
+    {
+      "name": "宁德师范学院",
+      "code": "10398",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 32
+    },
+    {
+      "name": "闽南师范大学",
+      "code": "10402",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 62
+    },
+    {
+      "name": "泉州师范学院",
+      "code": "10399",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 53
+    },
+    {
+      "name": "厦门理工学院",
+      "code": "11062",
+      "level": "本科",
+      "scoreRows": 60,
+      "planRows": 68
+    },
+    {
+      "name": "三明学院",
+      "code": "11311",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 53
+    },
+    {
+      "name": "龙岩学院",
+      "code": "11312",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 50
+    },
+    {
+      "name": "福建商学院",
+      "code": "11313",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 63
+    },
+    {
+      "name": "福建警察学院",
+      "code": "11495",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "莆田学院",
+      "code": "11498",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 36
+    },
+    {
+      "name": "仰恩大学",
+      "code": "11784",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "厦门医学院",
+      "code": "12631",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "厦门华厦学院",
+      "code": "12709",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "闽南理工学院",
+      "code": "12710",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 38
+    },
+    {
+      "name": "泉州职业技术大学",
+      "code": "12928",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "闽南科技学院",
+      "code": "12992",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "福州工商学院",
+      "code": "12993",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "厦门工学院",
+      "code": "13115",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 44
+    },
+    {
+      "name": "阳光学院",
+      "code": "13468",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 37
+    },
+    {
+      "name": "厦门大学嘉庚学院",
+      "code": "13469",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 58
+    },
+    {
+      "name": "福州大学至诚学院",
+      "code": "13470",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 31
+    },
+    {
+      "name": "集美大学诚毅学院",
+      "code": "13471",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 30
+    },
+    {
+      "name": "福建师范大学协和学院",
+      "code": "13472",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 30
+    },
+    {
+      "name": "福州外语外贸学院",
+      "code": "13762",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 61
+    },
+    {
+      "name": "福建江夏学院",
+      "code": "13763",
+      "level": "本科",
+      "scoreRows": 59,
+      "planRows": 63
+    },
+    {
+      "name": "泉州信息工程学院",
+      "code": "13766",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 36
+    },
+    {
+      "name": "福州理工学院",
+      "code": "13773",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "福建农林大学金山学院",
+      "code": "14046",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 27
+    },
+    {
+      "name": "福建技术师范学院",
+      "code": "14683",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 48
+    },
+    {
+      "name": "福建福耀科技大学",
+      "code": "14896",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "黎明职业大学",
+      "code": "11317",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 50
+    },
+    {
+      "name": "华东交通大学",
+      "code": "10404",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 63
+    },
+    {
+      "name": "南昌航空大学",
+      "code": "10406",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 58
+    },
+    {
+      "name": "东华理工大学",
+      "code": "10405",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 33
+    },
+    {
+      "name": "江西理工大学",
+      "code": "10407",
+      "level": "本科",
+      "scoreRows": 55,
+      "planRows": 59
+    },
+    {
+      "name": "景德镇陶瓷大学",
+      "code": "10408",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 53
+    },
+    {
+      "name": "江西农业大学",
+      "code": "10410",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 53
+    },
+    {
+      "name": "江西中医药大学",
+      "code": "10412",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 33
+    },
+    {
+      "name": "赣南医科大学",
+      "code": "10413",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "江西师范大学",
+      "code": "10414",
+      "level": "本科",
+      "scoreRows": 57,
+      "planRows": 68
+    },
+    {
+      "name": "上饶师范学院",
+      "code": "10416",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 17
+    },
+    {
+      "name": "宜春学院",
+      "code": "10417",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 41
+    },
+    {
+      "name": "赣南师范大学",
+      "code": "10418",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 53
+    },
+    {
+      "name": "井冈山大学",
+      "code": "10419",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 23
+    },
+    {
+      "name": "江西财经大学",
+      "code": "10421",
+      "level": "本科",
+      "scoreRows": 58,
+      "planRows": 67
+    },
+    {
+      "name": "江西科技学院",
+      "code": "10846",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "景德镇学院",
+      "code": "10894",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 8
+    },
+    {
+      "name": "萍乡学院",
+      "code": "10895",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 9
+    },
+    {
+      "name": "江西科技师范大学",
+      "code": "11318",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 45
+    },
+    {
+      "name": "江西水利电力大学",
+      "code": "11319",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 42
+    },
+    {
+      "name": "江西警察学院",
+      "code": "11504",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "新余学院",
+      "code": "11508",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 16
+    },
+    {
+      "name": "九江学院",
+      "code": "11843",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 32
+    },
+    {
+      "name": "江西工程学院",
+      "code": "12766",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "南昌理工学院",
+      "code": "12795",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 65
+    },
+    {
+      "name": "江西应用科技学院",
+      "code": "12938",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 9
+    },
+    {
+      "name": "江西服装学院",
+      "code": "13418",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 26
+    },
+    {
+      "name": "南昌职业大学",
+      "code": "13420",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 39
+    },
+    {
+      "name": "南昌工学院",
+      "code": "13421",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 48
+    },
+    {
+      "name": "南昌大学科学技术学院",
+      "code": "13429",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 10
+    },
+    {
+      "name": "南昌大学共青学院",
+      "code": "13430",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 10
+    },
+    {
+      "name": "南昌交通学院",
+      "code": "13431",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 33
+    },
+    {
+      "name": "赣东学院",
+      "code": "13432",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 19
+    },
+    {
+      "name": "南昌航空大学科技学院",
+      "code": "13433",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 37
+    },
+    {
+      "name": "赣南科技学院",
+      "code": "13434",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 25
+    },
+    {
+      "name": "景德镇艺术职业大学",
+      "code": "13435",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 17
+    },
+    {
+      "name": "江西农业大学南昌商学院",
+      "code": "13436",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 18
+    },
+    {
+      "name": "南昌医学院",
+      "code": "13437",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "赣南师范大学科技学院",
+      "code": "13439",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 15
+    },
+    {
+      "name": "江西师范大学科学技术学院",
+      "code": "13438",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 19
+    },
+    {
+      "name": "南昌应用技术师范学院",
+      "code": "13440",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 23
+    },
+    {
+      "name": "江西财经大学现代经济管理学院",
+      "code": "13441",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "豫章师范学院",
+      "code": "13774",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 9
+    },
+    {
+      "name": "江西软件职业技术大学",
+      "code": "13776",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 23
+    },
+    {
+      "name": "江西飞行学院",
+      "code": "14839",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 34
+    },
+    {
+      "name": "南昌师范学院",
+      "code": "14437",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 16
+    },
+    {
+      "name": "江西职业技术大学",
+      "code": "11785",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "抚州医药学院",
+      "code": "13775",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 12
+    },
+    {
+      "name": "九江科技职业大学",
+      "code": "14403",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 76
+    },
+    {
+      "name": "山东科技大学",
+      "code": "10424",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 33
+    },
+    {
+      "name": "青岛科技大学",
+      "code": "10426",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 24
+    },
+    {
+      "name": "济南大学",
+      "code": "10427",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 60
+    },
+    {
+      "name": "青岛理工大学",
+      "code": "10429",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 62
+    },
+    {
+      "name": "山东建筑大学",
+      "code": "10430",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 33
+    },
+    {
+      "name": "齐鲁工业大学",
+      "code": "10431",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 22
+    },
+    {
+      "name": "山东理工大学",
+      "code": "10433",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 31
+    },
+    {
+      "name": "山东农业大学",
+      "code": "10434",
+      "level": "本科",
+      "scoreRows": 47,
+      "planRows": 47
+    },
+    {
+      "name": "青岛农业大学",
+      "code": "10435",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "山东第二医科大学",
+      "code": "10438",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "滨州医学院",
+      "code": "10440",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "山东第一医科大学",
+      "code": "10439",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "山东中医药大学",
+      "code": "10441",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "山东师范大学",
+      "code": "10445",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 39
+    },
+    {
+      "name": "济宁医学院",
+      "code": "10443",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "曲阜师范大学",
+      "code": "10446",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 31
+    },
+    {
+      "name": "聊城大学",
+      "code": "10447",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "德州学院",
+      "code": "10448",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "山东航空学院",
+      "code": "10449",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "鲁东大学",
+      "code": "10451",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 21
+    },
+    {
+      "name": "临沂大学",
+      "code": "10452",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 18
+    },
+    {
+      "name": "泰山学院",
+      "code": "10453",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "济宁学院",
+      "code": "10454",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "菏泽学院",
+      "code": "10455",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 8
+    },
+    {
+      "name": "山东财经大学",
+      "code": "10456",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 35
+    },
+    {
+      "name": "山东体育学院",
+      "code": "10457",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山东艺术学院",
+      "code": "10458",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 34
+    },
+    {
+      "name": "齐鲁医药学院",
+      "code": "10825",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 41
+    },
+    {
+      "name": "青岛滨海学院",
+      "code": "10868",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "枣庄学院",
+      "code": "10904",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "山东工艺美术学院",
+      "code": "10908",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 14
+    },
+    {
+      "name": "青岛大学",
+      "code": "11065",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 38
+    },
+    {
+      "name": "烟台大学",
+      "code": "11066",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 21
+    },
+    {
+      "name": "潍坊学院",
+      "code": "11067",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 23
+    },
+    {
+      "name": "山东警察学院",
+      "code": "11324",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山东交通学院",
+      "code": "11510",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 28
+    },
+    {
+      "name": "山东工商学院",
+      "code": "11688",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 54
+    },
+    {
+      "name": "山东女子学院",
+      "code": "12331",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "烟台南山学院",
+      "code": "12332",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 68
+    },
+    {
+      "name": "潍坊科技学院",
+      "code": "12843",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 24
+    },
+    {
+      "name": "山东英才学院",
+      "code": "13006",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 38
+    },
+    {
+      "name": "青岛恒星科技学院",
+      "code": "13015",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 44
+    },
+    {
+      "name": "青岛黄海学院",
+      "code": "13320",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 33
+    },
+    {
+      "name": "山东现代学院",
+      "code": "13322",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 49
+    },
+    {
+      "name": "山东协和学院",
+      "code": "13324",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 40
+    },
+    {
+      "name": "山东工程职业技术大学",
+      "code": "13356",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 12
+    },
+    {
+      "name": "聊城大学东昌学院",
+      "code": "13373",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "烟台理工学院",
+      "code": "13359",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 15
+    },
+    {
+      "name": "山东财经大学燕山学院",
+      "code": "13383",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "青岛城市学院",
+      "code": "13378",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 30
+    },
+    {
+      "name": "潍坊理工学院",
+      "code": "13379",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 9
+    },
+    {
+      "name": "山东石油化工学院",
+      "code": "13386",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "山东外国语职业技术大学",
+      "code": "13387",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 20
+    },
+    {
+      "name": "泰山科技学院",
+      "code": "13624",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 35
+    },
+    {
+      "name": "山东外事职业大学",
+      "code": "13874",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山东华宇工学院",
+      "code": "13857",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "青岛工学院",
+      "code": "13995",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 50
+    },
+    {
+      "name": "青岛农业大学海都学院",
+      "code": "13997",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 52
+    },
+    {
+      "name": "齐鲁理工学院",
+      "code": "13998",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 24
+    },
+    {
+      "name": "山东财经大学东方学院",
+      "code": "13999",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "山东政法学院",
+      "code": "14100",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "烟台科技学院",
+      "code": "14002",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 17
+    },
+    {
+      "name": "齐鲁师范学院",
+      "code": "14276",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "青岛电影学院",
+      "code": "14327",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "山东青年政治学院",
+      "code": "14277",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 6
+    },
+    {
+      "name": "山东管理学院",
+      "code": "14438",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "淄博职业技术大学",
+      "code": "13009",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "康复大学",
+      "code": "14878",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "山东农业工程学院",
+      "code": "14439",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "武汉科技大学",
+      "code": "10488",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 38
+    },
+    {
+      "name": "长江大学",
+      "code": "10489",
+      "level": "本科",
+      "scoreRows": 72,
+      "planRows": 79
+    },
+    {
+      "name": "武汉工程大学",
+      "code": "10490",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 49
+    },
+    {
+      "name": "武汉纺织大学",
+      "code": "10495",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 45
+    },
+    {
+      "name": "武汉轻工大学",
+      "code": "10496",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 31
+    },
+    {
+      "name": "湖北工业大学",
+      "code": "10500",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 47
+    },
+    {
+      "name": "湖北中医药大学",
+      "code": "10507",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 52
+    },
+    {
+      "name": "湖北大学",
+      "code": "10512",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 47
+    },
+    {
+      "name": "湖北师范大学",
+      "code": "10513",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 42
+    },
+    {
+      "name": "黄冈师范学院",
+      "code": "10514",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 26
+    },
+    {
+      "name": "汉江师范学院",
+      "code": "10518",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 50
+    },
+    {
+      "name": "湖北民族大学",
+      "code": "10517",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 52
+    },
+    {
+      "name": "湖北文理学院",
+      "code": "10519",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 32
+    },
+    {
+      "name": "湖北美术学院",
+      "code": "10523",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 47
+    },
+    {
+      "name": "武汉体育学院",
+      "code": "10522",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 27
+    },
+    {
+      "name": "中南民族大学",
+      "code": "10524",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 63
+    },
+    {
+      "name": "湖北汽车工业学院",
+      "code": "10525",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 35
+    },
+    {
+      "name": "湖北工程学院",
+      "code": "10528",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 50
+    },
+    {
+      "name": "湖北理工学院",
+      "code": "10920",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 41
+    },
+    {
+      "name": "湖北科技学院",
+      "code": "10927",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 55
+    },
+    {
+      "name": "湖北医药学院",
+      "code": "10929",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "江汉大学",
+      "code": "11072",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 43
+    },
+    {
+      "name": "湖北警官学院",
+      "code": "11332",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "三峡大学",
+      "code": "11075",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 43
+    },
+    {
+      "name": "武汉音乐学院",
+      "code": "11524",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "荆楚理工学院",
+      "code": "11336",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 39
+    },
+    {
+      "name": "湖北经济学院",
+      "code": "11600",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 56
+    },
+    {
+      "name": "武汉商学院",
+      "code": "11654",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 29
+    },
+    {
+      "name": "武汉东湖学院",
+      "code": "11798",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 100
+    },
+    {
+      "name": "汉口学院",
+      "code": "11800",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 33
+    },
+    {
+      "name": "武昌首义学院",
+      "code": "12309",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 71
+    },
+    {
+      "name": "武昌理工学院",
+      "code": "12310",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 46
+    },
+    {
+      "name": "武汉生物工程学院",
+      "code": "12362",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 49
+    },
+    {
+      "name": "武汉晴川学院",
+      "code": "13188",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 22
+    },
+    {
+      "name": "湖北大学知行学院",
+      "code": "13234",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 23
+    },
+    {
+      "name": "武汉城市学院",
+      "code": "13235",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 36
+    },
+    {
+      "name": "三峡大学科技学院",
+      "code": "13236",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 35
+    },
+    {
+      "name": "武汉文理学院",
+      "code": "13237",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 51
+    },
+    {
+      "name": "湖北工业大学工程技术学院",
+      "code": "13238",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 23
+    },
+    {
+      "name": "武汉工程大学邮电与信息工程学院",
+      "code": "13239",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 32
+    },
+    {
+      "name": "武汉纺织大学外经贸学院",
+      "code": "13240",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 67
+    },
+    {
+      "name": "武昌工学院",
+      "code": "13241",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 12
+    },
+    {
+      "name": "武汉工商学院",
+      "code": "13242",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 37
+    },
+    {
+      "name": "荆州学院",
+      "code": "13245",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 75
+    },
+    {
+      "name": "湖北汽车工业学院科技学院",
+      "code": "13248",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "长江大学文理学院",
+      "code": "13246",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 27
+    },
+    {
+      "name": "湖北商贸学院",
+      "code": "13247",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 47
+    },
+    {
+      "name": "湖北医药学院药护学院",
+      "code": "13249",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "湖北恩施学院",
+      "code": "13250",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 43
+    },
+    {
+      "name": "湖北经济学院法商学院",
+      "code": "13251",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 16
+    },
+    {
+      "name": "武汉体育学院体育科技学院",
+      "code": "13253",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 15
+    },
+    {
+      "name": "湖北师范大学文理学院",
+      "code": "13256",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 46
+    },
+    {
+      "name": "湖北文理学院理工学院",
+      "code": "13257",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 46
+    },
+    {
+      "name": "湖北工程学院新技术学院",
+      "code": "13258",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 30
+    },
+    {
+      "name": "文华学院",
+      "code": "13262",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 51
+    },
+    {
+      "name": "武汉学院",
+      "code": "13634",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "武汉传媒学院",
+      "code": "13686",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "武汉工程科技学院",
+      "code": "13664",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 45
+    },
+    {
+      "name": "武汉华夏理工学院",
+      "code": "13666",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 20
+    },
+    {
+      "name": "武汉职业技术大学",
+      "code": "10834",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "武汉设计工程学院",
+      "code": "14035",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 36
+    },
+    {
+      "name": "湖北第二师范学院",
+      "code": "14099",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 40
+    },
+    {
+      "name": "湖北三峡航空学院",
+      "code": "14899",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 24
+    },
+    {
+      "name": "吉首大学",
+      "code": "10531",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 30
+    },
+    {
+      "name": "湘潭大学",
+      "code": "10530",
+      "level": "本科",
+      "scoreRows": 77,
+      "planRows": 83
+    },
+    {
+      "name": "湖南科技大学",
+      "code": "10534",
+      "level": "本科",
+      "scoreRows": 75,
+      "planRows": 80
+    },
+    {
+      "name": "长沙理工大学",
+      "code": "10536",
+      "level": "本科",
+      "scoreRows": 66,
+      "planRows": 70
+    },
+    {
+      "name": "湖南农业大学",
+      "code": "10537",
+      "level": "本科",
+      "scoreRows": 53,
+      "planRows": 53
+    },
+    {
+      "name": "中南林业科技大学",
+      "code": "10538",
+      "level": "本科",
+      "scoreRows": 59,
+      "planRows": 65
+    },
+    {
+      "name": "湖南理工学院",
+      "code": "10543",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "湖南中医药大学",
+      "code": "10541",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 40
+    },
+    {
+      "name": "湘南学院",
+      "code": "10545",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "衡阳师范学院",
+      "code": "10546",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 26
+    },
+    {
+      "name": "邵阳学院",
+      "code": "10547",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 17
+    },
+    {
+      "name": "怀化学院",
+      "code": "10548",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 29
+    },
+    {
+      "name": "湖南文理学院",
+      "code": "10549",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 8
+    },
+    {
+      "name": "湖南科技学院",
+      "code": "10551",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 22
+    },
+    {
+      "name": "湖南人文科技学院",
+      "code": "10553",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 9
+    },
+    {
+      "name": "湖南工商大学",
+      "code": "10554",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 29
+    },
+    {
+      "name": "南华大学",
+      "code": "10555",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 57
+    },
+    {
+      "name": "长沙医学院",
+      "code": "10823",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "长沙学院",
+      "code": "11077",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 24
+    },
+    {
+      "name": "湖南工程学院",
+      "code": "11342",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 23
+    },
+    {
+      "name": "湖南城市学院",
+      "code": "11527",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 34
+    },
+    {
+      "name": "湖南工学院",
+      "code": "11528",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "湖南警察学院",
+      "code": "11534",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南财政经济学院",
+      "code": "11532",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "湖南工业大学",
+      "code": "11535",
+      "level": "本科",
+      "scoreRows": 55,
+      "planRows": 59
+    },
+    {
+      "name": "湖南第一师范学院",
+      "code": "12034",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "湖南女子学院",
+      "code": "11538",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 28
+    },
+    {
+      "name": "湖南医药学院",
+      "code": "12214",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "湘潭大学兴湘学院",
+      "code": "12599",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南涉外经济学院",
+      "code": "12303",
+      "level": "本科",
+      "scoreRows": 52,
+      "planRows": 58
+    },
+    {
+      "name": "湖南工业大学科技学院",
+      "code": "12604",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南科技大学潇湘学院",
+      "code": "12649",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 0
+    },
+    {
+      "name": "南华大学船山学院",
+      "code": "12650",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "长沙工业学院",
+      "code": "12652",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湘潭理工学院",
+      "code": "12651",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "湖南农业大学东方科技学院",
+      "code": "12653",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 0
+    },
+    {
+      "name": "中南林业科技大学涉外学院",
+      "code": "12656",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 26
+    },
+    {
+      "name": "常德学院",
+      "code": "12657",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 9
+    },
+    {
+      "name": "岳阳学院",
+      "code": "12658",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "衡阳师范学院南岳学院",
+      "code": "12659",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南工程学院应用技术学院",
+      "code": "12660",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南中医药大学湘杏学院",
+      "code": "12661",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "长沙理工大学城南学院",
+      "code": "13635",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "张家界学院",
+      "code": "12662",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 22
+    },
+    {
+      "name": "长沙师范学院",
+      "code": "13806",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 3
+    },
+    {
+      "name": "湖南信息学院",
+      "code": "13836",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南应用技术学院",
+      "code": "13809",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "湖南交通工程学院",
+      "code": "13924",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南软件职业技术大学",
+      "code": "13925",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 17
+    },
+    {
+      "name": "长沙科技学院",
+      "code": "14900",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "湖南汽车工程职业大学",
+      "code": "13937",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 18
+    },
+    {
+      "name": "汕头大学",
+      "code": "10560",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 33
+    },
+    {
+      "name": "华南农业大学",
+      "code": "10564",
+      "level": "本科",
+      "scoreRows": 63,
+      "planRows": 64
+    },
+    {
+      "name": "广东海洋大学",
+      "code": "10566",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 22
+    },
+    {
+      "name": "广州医科大学",
+      "code": "10570",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "广东医科大学",
+      "code": "10571",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 13
+    },
+    {
+      "name": "广州中医药大学",
+      "code": "10572",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 34
+    },
+    {
+      "name": "广东药科大学",
+      "code": "10573",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "惠州学院",
+      "code": "10577",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 4
+    },
+    {
+      "name": "韶关学院",
+      "code": "10576",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 14
+    },
+    {
+      "name": "韩山师范学院",
+      "code": "10578",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "岭南师范学院",
+      "code": "10579",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 31
+    },
+    {
+      "name": "肇庆学院",
+      "code": "10580",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 11
+    },
+    {
+      "name": "嘉应学院",
+      "code": "10582",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "广州美术学院",
+      "code": "10586",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广州体育学院",
+      "code": "10585",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 8
+    },
+    {
+      "name": "星海音乐学院",
+      "code": "10587",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 71
+    },
+    {
+      "name": "广东技术师范大学",
+      "code": "10588",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 3
+    },
+    {
+      "name": "深圳大学",
+      "code": "10590",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 34
+    },
+    {
+      "name": "广东财经大学",
+      "code": "10592",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 8
+    },
+    {
+      "name": "广东白云学院",
+      "code": "10822",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 13
+    },
+    {
+      "name": "广州大学",
+      "code": "11078",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "广州航海学院",
+      "code": "11106",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 4
+    },
+    {
+      "name": "仲恺农业工程学院",
+      "code": "11347",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广东警官学院",
+      "code": "11110",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "五邑大学",
+      "code": "11349",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "广东金融学院",
+      "code": "11540",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "电子科技大学中山学院",
+      "code": "11545",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 20
+    },
+    {
+      "name": "广东石油化工学院",
+      "code": "11656",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 24
+    },
+    {
+      "name": "东莞理工学院",
+      "code": "11819",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "广东工业大学",
+      "code": "11845",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 30
+    },
+    {
+      "name": "广东外语外贸大学",
+      "code": "11846",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "佛山大学",
+      "code": "11847",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "广东培正学院",
+      "code": "12059",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "南方医科大学",
+      "code": "12121",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 27
+    },
+    {
+      "name": "广东东软学院",
+      "code": "12574",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "广州城市理工学院",
+      "code": "12617",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 48
+    },
+    {
+      "name": "广州软件学院",
+      "code": "12618",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 10
+    },
+    {
+      "name": "广东外语外贸大学南国商学院",
+      "code": "12620",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 10
+    },
+    {
+      "name": "广州南方学院",
+      "code": "12619",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "广州华商学院",
+      "code": "12621",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "华南农业大学珠江学院",
+      "code": "12623",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 29
+    },
+    {
+      "name": "湛江科技学院",
+      "code": "12622",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 10
+    },
+    {
+      "name": "广州理工学院",
+      "code": "12668",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 33
+    },
+    {
+      "name": "北京师范大学珠海分校",
+      "code": "13177",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广州华立学院",
+      "code": "13656",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 21
+    },
+    {
+      "name": "广州应用科技学院",
+      "code": "13657",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广州商学院",
+      "code": "13667",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "北京理工大学珠海学院",
+      "code": "13675",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "珠海科技学院",
+      "code": "13684",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 47
+    },
+    {
+      "name": "广州科技职业技术大学",
+      "code": "13717",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广州工商学院",
+      "code": "13714",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 12
+    },
+    {
+      "name": "广东科技学院",
+      "code": "13719",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 22
+    },
+    {
+      "name": "广东理工学院",
+      "code": "13720",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 42
+    },
+    {
+      "name": "广东工商职业技术大学",
+      "code": "13721",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 9
+    },
+    {
+      "name": "东莞城市学院",
+      "code": "13844",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 24
+    },
+    {
+      "name": "广州新华学院",
+      "code": "13902",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 48
+    },
+    {
+      "name": "广东第二师范学院",
+      "code": "14278",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "南方科技大学",
+      "code": "14325",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "深圳技术大学",
+      "code": "14655",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 23
+    },
+    {
+      "name": "北京师范大学-香港浸会大学联合国际学院",
+      "code": "16401",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 22
+    },
+    {
+      "name": "香港科技大学（广州）",
+      "code": "16412",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "香港中文大学（深圳）",
+      "code": "16407",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广东以色列理工学院",
+      "code": "16410",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "深圳北理莫斯科大学",
+      "code": "16409",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 21
+    },
+    {
+      "name": "香港城市大学（东莞）",
+      "code": "14851",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 10
+    },
+    {
+      "name": "深圳职业技术大学",
+      "code": "11113",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 25
+    },
+    {
+      "name": "深圳理工大学",
+      "code": "14880",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "肇庆医学院",
+      "code": "13810",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "顺德职业技术大学",
+      "code": "10831",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广东轻工职业技术大学",
+      "code": "10833",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 27
+    },
+    {
+      "name": "深圳信息职业技术大学",
+      "code": "12957",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广州职业技术大学",
+      "code": "12046",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "大湾区大学",
+      "code": "14942",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "桂林电子科技大学",
+      "code": "10595",
+      "level": "本科",
+      "scoreRows": 46,
+      "planRows": 52
+    },
+    {
+      "name": "广西科技大学",
+      "code": "10594",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 14
+    },
+    {
+      "name": "桂林理工大学",
+      "code": "10596",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 78
+    },
+    {
+      "name": "右江民族医学院",
+      "code": "10599",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "广西医科大学",
+      "code": "10598",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "广西中医药大学",
+      "code": "10600",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "桂林医科大学",
+      "code": "10601",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "广西师范大学",
+      "code": "10602",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 48
+    },
+    {
+      "name": "南宁师范大学",
+      "code": "10603",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 14
+    },
+    {
+      "name": "广西民族师范学院",
+      "code": "10604",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "河池学院",
+      "code": "10605",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 9
+    },
+    {
+      "name": "玉林师范学院",
+      "code": "10606",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 11
+    },
+    {
+      "name": "广西艺术学院",
+      "code": "10607",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 49
+    },
+    {
+      "name": "广西民族大学",
+      "code": "10608",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 47
+    },
+    {
+      "name": "百色学院",
+      "code": "10609",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 28
+    },
+    {
+      "name": "梧州学院",
+      "code": "11354",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 22
+    },
+    {
+      "name": "广西科技师范学院",
+      "code": "11546",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 30
+    },
+    {
+      "name": "南宁学院",
+      "code": "11549",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 39
+    },
+    {
+      "name": "广西财经学院",
+      "code": "11548",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 16
+    },
+    {
+      "name": "北部湾大学",
+      "code": "11607",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 20
+    },
+    {
+      "name": "桂林旅游学院",
+      "code": "11837",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 28
+    },
+    {
+      "name": "桂林航天工业学院",
+      "code": "11825",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 39
+    },
+    {
+      "name": "广西警察学院",
+      "code": "13520",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "贺州学院",
+      "code": "11838",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 22
+    },
+    {
+      "name": "北海艺术设计学院",
+      "code": "13524",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 32
+    },
+    {
+      "name": "广西农业职业技术大学",
+      "code": "16205",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 9
+    },
+    {
+      "name": "柳州工学院",
+      "code": "13639",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "广西民族大学相思湖学院",
+      "code": "13640",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 28
+    },
+    {
+      "name": "桂林学院",
+      "code": "13641",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 27
+    },
+    {
+      "name": "南宁师范大学师园学院",
+      "code": "13642",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "广西中医药大学赛恩斯新医药学院",
+      "code": "13643",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 13
+    },
+    {
+      "name": "桂林信息科技学院",
+      "code": "13644",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 31
+    },
+    {
+      "name": "南宁理工学院",
+      "code": "13645",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 50
+    },
+    {
+      "name": "广西外国语学院",
+      "code": "13830",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 79
+    },
+    {
+      "name": "北京航空航天大学北海学院",
+      "code": "13890",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广西职业师范学院",
+      "code": "14684",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "广西城市职业大学",
+      "code": "13920",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 13
+    },
+    {
+      "name": "南宁职业技术大学",
+      "code": "11355",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "柳州职业技术大学",
+      "code": "12104",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "海南热带海洋学院",
+      "code": "11100",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 51
+    },
+    {
+      "name": "桂林师范学院",
+      "code": "11671",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 20
+    },
+    {
+      "name": "海南师范大学",
+      "code": "11658",
+      "level": "本科",
+      "scoreRows": 57,
+      "planRows": 79
+    },
+    {
+      "name": "海口经济学院",
+      "code": "12308",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 150
+    },
+    {
+      "name": "海南医科大学",
+      "code": "11810",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "琼台师范学院",
+      "code": "13811",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 32
+    },
+    {
+      "name": "三亚学院",
+      "code": "13892",
+      "level": "本科",
+      "scoreRows": 73,
+      "planRows": 89
+    },
+    {
+      "name": "海南科技职业大学",
+      "code": "14172",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 119
+    },
+    {
+      "name": "海南比勒费尔德应用科学大学",
+      "code": "14829",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "海南洛桑旅游大学",
+      "code": "14948",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "海南警察学院",
+      "code": "14944",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "重庆邮电大学",
+      "code": "10617",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "重庆医科大学",
+      "code": "10631",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "重庆交通大学",
+      "code": "10618",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 46
+    },
+    {
+      "name": "重庆师范大学",
+      "code": "10637",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 41
+    },
+    {
+      "name": "重庆三峡学院",
+      "code": "10643",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 36
+    },
+    {
+      "name": "重庆文理学院",
+      "code": "10642",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "长江师范学院",
+      "code": "10647",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "西南政法大学",
+      "code": "10652",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 27
+    },
+    {
+      "name": "四川外国语大学",
+      "code": "10650",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 41
+    },
+    {
+      "name": "四川美术学院",
+      "code": "10655",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 30
+    },
+    {
+      "name": "重庆理工大学",
+      "code": "11660",
+      "level": "本科",
+      "scoreRows": 54,
+      "planRows": 54
+    },
+    {
+      "name": "重庆科技大学",
+      "code": "11551",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "重庆工商大学",
+      "code": "11799",
+      "level": "本科",
+      "scoreRows": 56,
+      "planRows": 62
+    },
+    {
+      "name": "重庆工程学院",
+      "code": "12608",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 18
+    },
+    {
+      "name": "重庆机电职业技术大学",
+      "code": "12607",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 14
+    },
+    {
+      "name": "重庆警察学院",
+      "code": "12757",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "重庆城市科技学院",
+      "code": "12616",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 49
+    },
+    {
+      "name": "重庆人文科技学院",
+      "code": "13548",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 18
+    },
+    {
+      "name": "重庆外语外事学院",
+      "code": "13588",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 39
+    },
+    {
+      "name": "重庆对外经贸学院",
+      "code": "13589",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "重庆财经学院",
+      "code": "13590",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 29
+    },
+    {
+      "name": "重庆工商大学派斯学院",
+      "code": "13591",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "重庆移通学院",
+      "code": "13627",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 42
+    },
+    {
+      "name": "重庆第二师范学院",
+      "code": "14388",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "重庆中医药学院",
+      "code": "14830",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 10
+    },
+    {
+      "name": "重庆电子科技职业大学",
+      "code": "12609",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 10
+    },
+    {
+      "name": "重庆工业职业技术大学",
+      "code": "12215",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 13
+    },
+    {
+      "name": "西南石油大学",
+      "code": "10615",
+      "level": "本科",
+      "scoreRows": 57,
+      "planRows": 61
+    },
+    {
+      "name": "成都理工大学",
+      "code": "10616",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 57
+    },
+    {
+      "name": "西南科技大学",
+      "code": "10619",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 32
+    },
+    {
+      "name": "成都信息工程大学",
+      "code": "10621",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 48
+    },
+    {
+      "name": "四川轻化工大学",
+      "code": "10622",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 34
+    },
+    {
+      "name": "西华大学",
+      "code": "10623",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 35
+    },
+    {
+      "name": "中国民用航空飞行学院",
+      "code": "10624",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 49
+    },
+    {
+      "name": "西昌学院",
+      "code": "10628",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 12
+    },
+    {
+      "name": "西南医科大学",
+      "code": "10632",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "成都中医药大学",
+      "code": "10633",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 30
+    },
+    {
+      "name": "川北医学院",
+      "code": "10634",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "四川师范大学",
+      "code": "10636",
+      "level": "本科",
+      "scoreRows": 32,
+      "planRows": 44
+    },
+    {
+      "name": "西华师范大学",
+      "code": "10638",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 23
+    },
+    {
+      "name": "绵阳师范学院",
+      "code": "10639",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 13
+    },
+    {
+      "name": "内江师范学院",
+      "code": "10640",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 52
+    },
+    {
+      "name": "宜宾学院",
+      "code": "10641",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "四川文理学院",
+      "code": "10644",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 21
+    },
+    {
+      "name": "阿坝师范学院",
+      "code": "10646",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "乐山师范学院",
+      "code": "10649",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 11
+    },
+    {
+      "name": "成都体育学院",
+      "code": "10653",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 19
+    },
+    {
+      "name": "四川音乐学院",
+      "code": "10654",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 33
+    },
+    {
+      "name": "西南民族大学",
+      "code": "10656",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 66
+    },
+    {
+      "name": "成都大学",
+      "code": "11079",
+      "level": "本科",
+      "scoreRows": 62,
+      "planRows": 68
+    },
+    {
+      "name": "成都工业学院",
+      "code": "11116",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 26
+    },
+    {
+      "name": "攀枝花学院",
+      "code": "11360",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "四川民族学院",
+      "code": "11661",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "四川旅游学院",
+      "code": "11552",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 26
+    },
+    {
+      "name": "四川警察学院",
+      "code": "12212",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "成都艺术职业大学",
+      "code": "12969",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "成都东软学院",
+      "code": "12636",
+      "level": "本科",
+      "scoreRows": 33,
+      "planRows": 66
+    },
+    {
+      "name": "电子科技大学成都学院",
+      "code": "13665",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "四川传媒学院",
+      "code": "13669",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 74
+    },
+    {
+      "name": "成都理工大学工程技术学院",
+      "code": "13668",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 9
+    },
+    {
+      "name": "成都银杏酒店管理学院",
+      "code": "13670",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "四川工商学院",
+      "code": "13672",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 20
+    },
+    {
+      "name": "成都文理学院",
+      "code": "13671",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 30
+    },
+    {
+      "name": "成都外国语学院",
+      "code": "13673",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 63
+    },
+    {
+      "name": "成都医学院",
+      "code": "13705",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "四川工业科技学院",
+      "code": "13816",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 49
+    },
+    {
+      "name": "成都锦城学院",
+      "code": "13903",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 35
+    },
+    {
+      "name": "四川大学锦江学院",
+      "code": "14039",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 16
+    },
+    {
+      "name": "西南财经大学天府学院",
+      "code": "14037",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 32
+    },
+    {
+      "name": "四川文化艺术学院",
+      "code": "14043",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 59
+    },
+    {
+      "name": "绵阳城市学院",
+      "code": "14045",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 10
+    },
+    {
+      "name": "西南交通大学希望学院",
+      "code": "14262",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "成都师范学院",
+      "code": "14389",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 9
+    },
+    {
+      "name": "四川电影电视学院",
+      "code": "14410",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 63
+    },
+    {
+      "name": "吉利学院",
+      "code": "12802",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 21
+    },
+    {
+      "name": "四川工程职业技术大学",
+      "code": "12763",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 38
+    },
+    {
+      "name": "成都航空职业技术大学",
+      "code": "12064",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 30
+    },
+    {
+      "name": "贵州医科大学",
+      "code": "10660",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "遵义医科大学",
+      "code": "10661",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 11
+    },
+    {
+      "name": "贵州中医药大学",
+      "code": "10662",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 21
+    },
+    {
+      "name": "贵州师范大学",
+      "code": "10663",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 26
+    },
+    {
+      "name": "遵义师范学院",
+      "code": "10664",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 5
+    },
+    {
+      "name": "兴义民族师范学院",
+      "code": "10666",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "铜仁学院",
+      "code": "10665",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 4
+    },
+    {
+      "name": "安顺学院",
+      "code": "10667",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 14
+    },
+    {
+      "name": "贵州工程应用技术学院",
+      "code": "10668",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "凯里学院",
+      "code": "10669",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "黔南民族师范学院",
+      "code": "10670",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 16
+    },
+    {
+      "name": "贵州财经大学",
+      "code": "10671",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "贵州民族大学",
+      "code": "10672",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 24
+    },
+    {
+      "name": "贵阳学院",
+      "code": "10976",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "六盘水师范学院",
+      "code": "10977",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 5
+    },
+    {
+      "name": "贵州商学院",
+      "code": "11731",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "贵州警察学院",
+      "code": "12107",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "贵州中医药大学时珍学院",
+      "code": "13647",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "贵州黔南经济学院",
+      "code": "13648",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 3
+    },
+    {
+      "name": "贵州黔南科技学院",
+      "code": "13649",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 4
+    },
+    {
+      "name": "贵阳人文科技学院",
+      "code": "13651",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "贵阳信息科技学院",
+      "code": "13650",
+      "level": "本科",
+      "scoreRows": 13,
+      "planRows": 14
+    },
+    {
+      "name": "贵阳康养职业大学",
+      "code": "16206",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "遵义医科大学医学与科技学院",
+      "code": "13653",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 1
+    },
+    {
+      "name": "贵州医科大学神奇民族医药学院",
+      "code": "13676",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 3
+    },
+    {
+      "name": "贵州师范学院",
+      "code": "14223",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 4
+    },
+    {
+      "name": "贵州理工学院",
+      "code": "14440",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 8
+    },
+    {
+      "name": "茅台学院",
+      "code": "14625",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 12
+    },
+    {
+      "name": "铜仁职业技术大学",
+      "code": "13055",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "贵州轻工职业大学",
+      "code": "13818",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "贵州交通职业大学",
+      "code": "12222",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 5
+    },
+    {
+      "name": "昆明理工大学",
+      "code": "10674",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 39
+    },
+    {
+      "name": "云南农业大学",
+      "code": "10676",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 40
+    },
+    {
+      "name": "西南林业大学",
+      "code": "10677",
+      "level": "本科",
+      "scoreRows": 38,
+      "planRows": 41
+    },
+    {
+      "name": "昆明医科大学",
+      "code": "10678",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "云南中医药大学",
+      "code": "10680",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "大理大学",
+      "code": "10679",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 30
+    },
+    {
+      "name": "云南师范大学",
+      "code": "10681",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 32
+    },
+    {
+      "name": "昭通学院",
+      "code": "10683",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 3
+    },
+    {
+      "name": "曲靖师范学院",
+      "code": "10684",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 33
+    },
+    {
+      "name": "普洱学院",
+      "code": "10685",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "保山学院",
+      "code": "10686",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 4
+    },
+    {
+      "name": "红河学院",
+      "code": "10687",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 29
+    },
+    {
+      "name": "云南财经大学",
+      "code": "10689",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 41
+    },
+    {
+      "name": "云南艺术学院",
+      "code": "10690",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 41
+    },
+    {
+      "name": "云南民族大学",
+      "code": "10691",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 10
+    },
+    {
+      "name": "玉溪师范学院",
+      "code": "11390",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 13
+    },
+    {
+      "name": "楚雄师范学院",
+      "code": "11391",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "云南警官学院",
+      "code": "11392",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "昆明学院",
+      "code": "11393",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 27
+    },
+    {
+      "name": "文山学院",
+      "code": "11556",
+      "level": "本科",
+      "scoreRows": 3,
+      "planRows": 4
+    },
+    {
+      "name": "云南经济管理学院",
+      "code": "12560",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 45
+    },
+    {
+      "name": "滇池学院",
+      "code": "13326",
+      "level": "本科",
+      "scoreRows": 27,
+      "planRows": 31
+    },
+    {
+      "name": "丽江文化旅游学院",
+      "code": "13328",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 53
+    },
+    {
+      "name": "昆明理工大学津桥学院",
+      "code": "13329",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 28
+    },
+    {
+      "name": "昆明城市学院",
+      "code": "13330",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 30
+    },
+    {
+      "name": "昆明文理学院",
+      "code": "13331",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 11
+    },
+    {
+      "name": "昆明医科大学海源学院",
+      "code": "13332",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "昆明传媒学院",
+      "code": "13333",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 19
+    },
+    {
+      "name": "云南工商学院",
+      "code": "13909",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 45
+    },
+    {
+      "name": "滇西科技师范学院",
+      "code": "14092",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 6
+    },
+    {
+      "name": "滇西应用技术大学",
+      "code": "14623",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "丽江师范学院",
+      "code": "14015",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "德宏师范学院",
+      "code": "14016",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "曲靖健康医学院",
+      "code": "14012",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "西藏民族大学",
+      "code": "10695",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 19
+    },
+    {
+      "name": "西藏农牧大学",
+      "code": "10693",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 22
+    },
+    {
+      "name": "西藏藏医药大学",
+      "code": "10696",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "拉萨师范学院",
+      "code": "12481",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "西安理工大学",
+      "code": "10700",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 36
+    },
+    {
+      "name": "西安工业大学",
+      "code": "10702",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 40
+    },
+    {
+      "name": "西安建筑科技大学",
+      "code": "10703",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 35
+    },
+    {
+      "name": "西安科技大学",
+      "code": "10704",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 24
+    },
+    {
+      "name": "西安石油大学",
+      "code": "10705",
+      "level": "本科",
+      "scoreRows": 45,
+      "planRows": 48
+    },
+    {
+      "name": "陕西科技大学",
+      "code": "10708",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 36
+    },
+    {
+      "name": "西安工程大学",
+      "code": "10709",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 38
+    },
+    {
+      "name": "陕西中医药大学",
+      "code": "10716",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "延安大学",
+      "code": "10719",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 24
+    },
+    {
+      "name": "陕西理工大学",
+      "code": "10720",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "宝鸡文理学院",
+      "code": "10721",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "咸阳师范学院",
+      "code": "10722",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 15
+    },
+    {
+      "name": "渭南师范学院",
+      "code": "10723",
+      "level": "本科",
+      "scoreRows": 20,
+      "planRows": 32
+    },
+    {
+      "name": "西安外国语大学",
+      "code": "10724",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 34
+    },
+    {
+      "name": "西北政法大学",
+      "code": "10726",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 29
+    },
+    {
+      "name": "西安音乐学院",
+      "code": "10728",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "西安美术学院",
+      "code": "10729",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "西安体育学院",
+      "code": "10727",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 10
+    },
+    {
+      "name": "西安文理学院",
+      "code": "11080",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 11
+    },
+    {
+      "name": "商洛学院",
+      "code": "11396",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 14
+    },
+    {
+      "name": "榆林学院",
+      "code": "11395",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 19
+    },
+    {
+      "name": "安康学院",
+      "code": "11397",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 28
+    },
+    {
+      "name": "西安培华学院",
+      "code": "11400",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 45
+    },
+    {
+      "name": "西安财经大学",
+      "code": "11560",
+      "level": "本科",
+      "scoreRows": 19,
+      "planRows": 20
+    },
+    {
+      "name": "西安邮电大学",
+      "code": "11664",
+      "level": "本科",
+      "scoreRows": 37,
+      "planRows": 40
+    },
+    {
+      "name": "西安医学院",
+      "code": "11840",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 15
+    },
+    {
+      "name": "西安航空学院",
+      "code": "11736",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 24
+    },
+    {
+      "name": "西安欧亚学院",
+      "code": "12712",
+      "level": "本科",
+      "scoreRows": 48,
+      "planRows": 56
+    },
+    {
+      "name": "西安翻译学院",
+      "code": "12714",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 36
+    },
+    {
+      "name": "西安外事学院",
+      "code": "12713",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 65
+    },
+    {
+      "name": "西京学院",
+      "code": "12715",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 25
+    },
+    {
+      "name": "陕西国际商贸学院",
+      "code": "13123",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 38
+    },
+    {
+      "name": "西安思源学院",
+      "code": "13121",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 117
+    },
+    {
+      "name": "陕西服装工程学院",
+      "code": "13125",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 65
+    },
+    {
+      "name": "西安交通大学城市学院",
+      "code": "13677",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 20
+    },
+    {
+      "name": "西安交通工程学院",
+      "code": "13569",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 66
+    },
+    {
+      "name": "西北大学现代学院",
+      "code": "13678",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 9
+    },
+    {
+      "name": "西安建筑科技大学华清学院",
+      "code": "13679",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 31
+    },
+    {
+      "name": "西安财经大学行知学院",
+      "code": "13680",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 27
+    },
+    {
+      "name": "陕西科技大学镐京学院",
+      "code": "13681",
+      "level": "本科",
+      "scoreRows": 34,
+      "planRows": 34
+    },
+    {
+      "name": "西安工商学院",
+      "code": "13682",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 52
+    },
+    {
+      "name": "延安大学西安创新学院",
+      "code": "13683",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 28
+    },
+    {
+      "name": "西安电子科技大学长安学院",
+      "code": "13685",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "西安汽车职业大学",
+      "code": "13738",
+      "level": "本科",
+      "scoreRows": 22,
+      "planRows": 77
+    },
+    {
+      "name": "西安明德理工学院",
+      "code": "13894",
+      "level": "本科",
+      "scoreRows": 26,
+      "planRows": 37
+    },
+    {
+      "name": "西安信息职业大学",
+      "code": "14030",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 108
+    },
+    {
+      "name": "长安大学兴华学院",
+      "code": "14034",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "西安理工大学高科学院",
+      "code": "14041",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "西安科技大学高新学院",
+      "code": "14042",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 22
+    },
+    {
+      "name": "陕西学前师范学院",
+      "code": "14390",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 31
+    },
+    {
+      "name": "陕西警察学院",
+      "code": "13819",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "陕西农林职业技术大学",
+      "code": "10966",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "陕西工业职业技术大学",
+      "code": "10828",
+      "level": "本科",
+      "scoreRows": 2,
+      "planRows": 2
+    },
+    {
+      "name": "西安戏剧学院",
+      "code": "14945",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "兰州理工大学",
+      "code": "10731",
+      "level": "本科",
+      "scoreRows": 36,
+      "planRows": 36
+    },
+    {
+      "name": "兰州交通大学",
+      "code": "10732",
+      "level": "本科",
+      "scoreRows": 66,
+      "planRows": 74
+    },
+    {
+      "name": "甘肃农业大学",
+      "code": "10733",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 24
+    },
+    {
+      "name": "甘肃中医药大学",
+      "code": "10735",
+      "level": "本科",
+      "scoreRows": 29,
+      "planRows": 29
+    },
+    {
+      "name": "兰州城市学院",
+      "code": "10737",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "西北师范大学",
+      "code": "10736",
+      "level": "本科",
+      "scoreRows": 44,
+      "planRows": 51
+    },
+    {
+      "name": "陇东学院",
+      "code": "10738",
+      "level": "本科",
+      "scoreRows": 30,
+      "planRows": 30
+    },
+    {
+      "name": "河西学院",
+      "code": "10740",
+      "level": "本科",
+      "scoreRows": 21,
+      "planRows": 22
+    },
+    {
+      "name": "天水师范大学",
+      "code": "10739",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 9
+    },
+    {
+      "name": "兰州财经大学",
+      "code": "10741",
+      "level": "本科",
+      "scoreRows": 61,
+      "planRows": 63
+    },
+    {
+      "name": "西北民族大学",
+      "code": "10742",
+      "level": "本科",
+      "scoreRows": 41,
+      "planRows": 59
+    },
+    {
+      "name": "甘肃政法大学",
+      "code": "11406",
+      "level": "本科",
+      "scoreRows": 39,
+      "planRows": 42
+    },
+    {
+      "name": "甘肃民族师范学院",
+      "code": "11561",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 11
+    },
+    {
+      "name": "兰州文理学院",
+      "code": "11562",
+      "level": "本科",
+      "scoreRows": 8,
+      "planRows": 8
+    },
+    {
+      "name": "兰州工业学院",
+      "code": "11807",
+      "level": "本科",
+      "scoreRows": 23,
+      "planRows": 23
+    },
+    {
+      "name": "甘肃医学院",
+      "code": "11805",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "兰州石化职业技术大学",
+      "code": "16209",
+      "level": "本科",
+      "scoreRows": 12,
+      "planRows": 38
+    },
+    {
+      "name": "兰州资源环境职业技术大学",
+      "code": "16208",
+      "level": "本科",
+      "scoreRows": 9,
+      "planRows": 20
+    },
+    {
+      "name": "兰州工商学院",
+      "code": "13511",
+      "level": "本科",
+      "scoreRows": 15,
+      "planRows": 16
+    },
+    {
+      "name": "兰州博文科技学院",
+      "code": "13514",
+      "level": "本科",
+      "scoreRows": 24,
+      "planRows": 24
+    },
+    {
+      "name": "陇南师范学院",
+      "code": "11806",
+      "level": "本科",
+      "scoreRows": 6,
+      "planRows": 6
+    },
+    {
+      "name": "兰州信息科技学院",
+      "code": "13515",
+      "level": "本科",
+      "scoreRows": 10,
+      "planRows": 12
+    },
+    {
+      "name": "甘肃林业职业技术大学",
+      "code": "12835",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "甘肃警察学院",
+      "code": "12834",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "酒泉职业技术大学",
+      "code": "12539",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 11
+    },
+    {
+      "name": "甘肃工业职业技术大学",
+      "code": "12836",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "武威职业技术大学",
+      "code": "13518",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "青海师范大学",
+      "code": "10746",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 17
+    },
+    {
+      "name": "青海大学昆仑学院",
+      "code": "13674",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "青海民族大学",
+      "code": "10748",
+      "level": "本科",
+      "scoreRows": 18,
+      "planRows": 27
+    },
+    {
+      "name": "青海理工学院",
+      "code": "14881",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "青海职业技术大学",
+      "code": "12973",
+      "level": "本科",
+      "scoreRows": 11,
+      "planRows": 11
+    },
+    {
+      "name": "宁夏医科大学",
+      "code": "10752",
+      "level": "本科",
+      "scoreRows": 25,
+      "planRows": 25
+    },
+    {
+      "name": "宁夏师范大学",
+      "code": "10753",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 20
+    },
+    {
+      "name": "北方民族大学",
+      "code": "11407",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 59
+    },
+    {
+      "name": "宁夏理工学院",
+      "code": "12544",
+      "level": "本科",
+      "scoreRows": 43,
+      "planRows": 48
+    },
+    {
+      "name": "宁夏大学新华学院",
+      "code": "13325",
+      "level": "本科",
+      "scoreRows": 7,
+      "planRows": 7
+    },
+    {
+      "name": "银川能源学院",
+      "code": "13820",
+      "level": "本科",
+      "scoreRows": 17,
+      "planRows": 17
+    },
+    {
+      "name": "宁夏职业技术大学",
+      "code": "13086",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "银川科技学院",
+      "code": "14200",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 83
+    },
+    {
+      "name": "宁夏工商职业技术大学",
+      "code": "13087",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "塔里木大学",
+      "code": "10757",
+      "level": "本科",
+      "scoreRows": 80,
+      "planRows": 83
+    },
+    {
+      "name": "新疆农业大学",
+      "code": "10758",
+      "level": "本科",
+      "scoreRows": 66,
+      "planRows": 66
+    },
+    {
+      "name": "新疆医科大学",
+      "code": "10760",
+      "level": "本科",
+      "scoreRows": 28,
+      "planRows": 28
+    },
+    {
+      "name": "新疆师范大学",
+      "code": "10762",
+      "level": "本科",
+      "scoreRows": 67,
+      "planRows": 92
+    },
+    {
+      "name": "喀什大学",
+      "code": "10763",
+      "level": "本科",
+      "scoreRows": 82,
+      "planRows": 101
+    },
+    {
+      "name": "伊犁师范大学",
+      "code": "10764",
+      "level": "本科",
+      "scoreRows": 65,
+      "planRows": 84
+    },
+    {
+      "name": "新疆财经大学",
+      "code": "10766",
+      "level": "本科",
+      "scoreRows": 58,
+      "planRows": 58
+    },
+    {
+      "name": "新疆艺术学院",
+      "code": "10768",
+      "level": "本科",
+      "scoreRows": 1,
+      "planRows": 34
+    },
+    {
+      "name": "新疆工程学院",
+      "code": "10994",
+      "level": "本科",
+      "scoreRows": 35,
+      "planRows": 36
+    },
+    {
+      "name": "昌吉学院",
+      "code": "10997",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 46
+    },
+    {
+      "name": "新疆警察学院",
+      "code": "12734",
+      "level": "本科",
+      "scoreRows": 4,
+      "planRows": 9
+    },
+    {
+      "name": "新疆理工学院",
+      "code": "13558",
+      "level": "本科",
+      "scoreRows": 50,
+      "planRows": 50
+    },
+    {
+      "name": "新疆农业大学科学技术学院",
+      "code": "13559",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "新疆第二医学院",
+      "code": "13560",
+      "level": "本科",
+      "scoreRows": 14,
+      "planRows": 14
+    },
+    {
+      "name": "新疆科技学院",
+      "code": "13561",
+      "level": "本科",
+      "scoreRows": 42,
+      "planRows": 42
+    },
+    {
+      "name": "新疆政法学院",
+      "code": "13628",
+      "level": "本科",
+      "scoreRows": 49,
+      "planRows": 53
+    },
+    {
+      "name": "新疆天山职业技术大学",
+      "code": "13727",
+      "level": "本科",
+      "scoreRows": 51,
+      "planRows": 67
+    },
+    {
+      "name": "新疆和田学院",
+      "code": "10765",
+      "level": "本科",
+      "scoreRows": 31,
+      "planRows": 33
+    },
+    {
+      "name": "新疆农业职业技术大学",
+      "code": "10995",
+      "level": "本科",
+      "scoreRows": 83,
+      "planRows": 71
+    },
+    {
+      "name": "新疆工业学院",
+      "code": "14897",
+      "level": "本科",
+      "scoreRows": 16,
+      "planRows": 16
+    },
+    {
+      "name": "乌鲁木齐职业大学",
+      "code": "11565",
+      "level": "本科",
+      "scoreRows": 40,
+      "planRows": 46
+    },
+    {
+      "name": "新疆交通职业技术大学",
+      "code": "13926",
+      "level": "本科",
+      "scoreRows": 5,
+      "planRows": 45
+    },
+    {
+      "name": "塔里木理工学院",
+      "code": "14946",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    },
+    {
+      "name": "新疆理工职业大学",
+      "code": "14947",
+      "level": "本科",
+      "scoreRows": 0,
+      "planRows": 0
+    }
+  ],
+  "failed": []
+}

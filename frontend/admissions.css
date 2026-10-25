@@ -17,6 +17,8 @@
 #admissions-errors { color: #a43333; }
 @media (max-width: 600px) { .admissions-choice { grid-template-columns: 1fr; } .admissions-wrap .dialog-footer { display: flex; flex-direction: column; gap: 12px; } }
 .admissions-coverage { grid-column: 1 / -1; font-size: 12px; color: #536b7b; margin: 0; }
+.admissions-evidence { grid-column: 1 / -1; font-size: 12px; color: #536b7b; }
+.admissions-evidence p { margin: 4px 0; }
 .university-picker { margin: 24px 0; }
 .university-picker summary { cursor: pointer; font-weight: 700; color: #294f68; }
 .university-filters { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 14px; margin: 20px 0; }

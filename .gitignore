@@ -31,3 +31,6 @@ desktop.ini
 *.mflac
 *.qmc*
 *.zip
+
+# Public admissions import cache (rebuild locally)
+work/admissions-import/
