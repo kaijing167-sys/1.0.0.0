@@ -4,7 +4,7 @@ const HENAN_2025_ADMISSIONS = {
   year:2025,version:'2025-ordinary-v1',
   policy:'https://www.haeea.cn/attach/file/20250428/20250428150241_6941_3c9d9016.pdf',
   schools:[
-    {name:'河南城建学院',source:'https://zs.huuc.edu.cn/info/1179/4748.htm',groups:[
+    {name:'河南城建学院',completeOrdinaryCatalog:true,source:'https://zs.huuc.edu.cn/info/1179/4748.htm',groups:[
       {category:'history',group:'101',requires:[],programs:[['法学',537],['财务管理',529],['英语',527],['风景园林',526],['建筑学',526],['旅游管理',526],['城乡规划',526],['土地资源管理',526],['城市管理',525]]},
       {category:'physics',group:'102',requires:[],programs:[['法学',503],['财务管理',494],['英语',490],['建筑学',488],['金融数学',486],['工程造价',482],['工程管理',482],['工程审计',482]]},
       {category:'physics',group:'103',requires:['chemistry'],programs:[['电气工程及其自动化',519],['自动化',508],['电子信息工程',507],['智能电网信息工程',505],['能源与动力工程',504],['新能源科学与工程',503],['建筑电气与智能化',498],['应用物理学',497],['水文与水资源工程',497],['交通工程',497],['安全工程',497],['化学工程与工艺',497],['测绘工程',497],['生物工程',497],['城市地下空间工程',497],['建筑环境与能源应用工程',497]]},

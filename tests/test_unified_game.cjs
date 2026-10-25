@@ -7,7 +7,7 @@ function harness(){
  const elements=new Map(),storage=new Map(),listeners={};
  const el=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'测试',hidden:true,classList:{add(){},remove(){},toggle(){}},addEventListener(){}});return elements.get(id)};
  const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController});
- for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','henan-2025-data.js','gaokao.js','admissions-data.js','admissions.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
+ for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','henan-2025-data.js','gaokao.js','admissions-data.js','university-catalog.js','admissions.js','university-browser.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
    let source=fs.readFileSync(path.join(__dirname,'../frontend',name),'utf8');
    if(name==='game.js')source=source.slice(0,source.lastIndexOf('initializeMusicLibrary().then'));
    vm.runInContext(source,context,{filename:name});
@@ -15,6 +15,65 @@ function harness(){
  vm.runInContext('settings.musicEnabled=false;settings.eventMusic=false',context);
  return {run:s=>vm.runInContext(s,context),el,storage,click(dataset){const button={dataset,disabled:false,hasAttribute:()=>false,getAttribute:()=>null};for(const fn of listeners.click)fn({target:{closest:()=>button}})}};
 }
+
+test('personal good-news score page renders exactly six subjects and no other student names',()=>{
+ for(const id of ['hu-yy','zhang-z','hu-zx','hao-kj']){
+  const h=harness();h.run(`campusDraft('${id}');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'))`);
+  const html=h.el('#game-root').innerHTML;
+  assert.match(html,/<h1>喜报<\/h1>/);assert.match(html,/celebration-screen/);
+  assert.match(html,/我的高考成绩单/);assert.equal((html.match(/<dt>/g)||[]).length,6);
+  assert.doesNotMatch(html,/全校|全校高考成绩表|<table/);
+  const others=h.run(`characterCatalog.filter(c=>c.id!=='${id}').map(c=>c.name).join('|')`);
+  assert.doesNotMatch(html,new RegExp(others));
+  h.run('game=loadGame();render()');assert.doesNotMatch(h.el('#game-root').innerHTML,new RegExp(others));
+ }
+});
+
+test('university directory covers every 985 and 211 root, all civil undergraduate schools and selected junior colleges',()=>{
+ const h=harness();
+ assert.equal(h.run('UNIVERSITY_CATALOG.schools.length'),1388);
+ assert.equal(h.run('universityMatches("985").length'),39);
+ assert.equal(h.run('universityMatches("211").length'),115);
+ assert.equal(h.run('universityMatches("junior").length'),20);
+ assert.equal(h.run('UNIVERSITY_CATALOG.schools.filter(s=>s.level==="本科"&&!s.special).length'),1365);
+ assert.equal(h.run('new Set(UNIVERSITY_CATALOG.schools.map(s=>s.code)).size'),1388);
+ assert.equal(h.run('universityProfile("中国矿业大学徐海学院").elite211'),false);
+ assert.equal(h.run('universityProfile("国防科学技术大学").elite985'),true);
+ assert.equal(h.run('universityProfile("北京师范大学（北京校区）").name'),'北京师范大学');
+ assert.equal(h.run('universityMatches("985","清华")[0].name'),'清华大学');
+ assert.equal(h.run('universityMatches("junior","郑州铁路")[0].name'),'郑州铁路职业技术学院');
+ assert.equal(h.run('universityMatches("ordinary","清华").length'),0);
+ assert.match(h.run('universityCoverage("清华大学","physics")'),/数据待补充/);
+ assert.match(h.run('universityCoverage("河南城建学院","physics")'),/已核实/);
+});
+
+test('school picker fills the selected choice and clears mismatched majors and stale outcomes',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));openAdmissions();universityBrowser.target=3;game.admissions.result={status:'admitted'};game.admissions.choices[3]={school:'东华大学',major:'计算机类'}");
+ h.run('fillUniversity(universityProfile("清华大学").code)');
+ assert.equal(h.run('game.admissions.choices[3].school'),'清华大学');
+ assert.equal(h.run('game.admissions.choices[3].major'),'');
+ assert.equal(h.run('game.admissions.result'),undefined);
+ assert.equal(h.el('#admissions-school-3').value,'清华大学');
+ assert.match(h.el('#admissions-coverage-3').textContent,/数据待补充/);
+ h.run("universityBrowser.tier='985';universityBrowser.page=1;refreshUniversityResults()");
+ assert.match(h.el('#university-results').innerHTML,/第 2 \/ 2 页/);
+ const rows=h.run(`evaluateAdmissions(admissionsPlayer(),[{school:'清华大学',major:'计算机科学与技术'},...Array.from({length:4},()=>({school:'',major:''}))])`);
+ assert.equal(rows.status,'pending');assert.equal(rows.admitted,null);
+});
+
+test('only successful simulated admission gets a celebration, on its own final page',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));openAdmissions()");
+ for(let i=0;i<5;i++){h.el('#admissions-school-'+i).value='';h.el('#admissions-major-'+i).value='';}
+ h.el('#admissions-school-0').value='东华大学';h.el('#admissions-major-0').value='计算机类';
+ h.run('submitAdmissions()');assert.equal(h.run('game.postExamPage'),'admission-result');
+ assert.match(h.el('#game-root').innerHTML,/admission-banner/);assert.match(h.el('#game-root').innerHTML,/喜报/);
+ assert.doesNotMatch(h.el('#game-root').innerHTML,/<form/);
+ h.run('game=loadGame();render()');assert.match(h.el('#game-root').innerHTML,/admission-banner/);
+ h.run("game.admissions.choices[0]={school:'清华大学',major:'计算机科学与技术'};renderAdmissionsResult()");
+ assert.match(h.el('#game-root').innerHTML,/录取结果待定/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-banner|喜报/);
+ h.run("game.gaokaoReport.rows.find(p=>p.active).total=400;game.admissions.choices[0]={school:'东华大学',major:'计算机类'};renderAdmissionsResult()");
+ assert.match(h.el('#game-root').innerHTML,/本次模拟未录取/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-banner|喜报/);
+});
 
 test('score page leads to a separate five-choice page, submissions and reload keep the result',()=>{
  const h=harness();
@@ -88,7 +147,7 @@ test('gaokao uses exact six abilities for every person and saves the final table
   assert.equal(h.run('game.gaokaoReport.rows.length'),210);
   assert.ok(h.run('game.gaokaoReport.rows.every(p=>Object.keys(p.subjects).length===6&&Math.round(Object.values(p.subjects).reduce((a,b)=>a+b,0)*100)/100===p.total)'));
   assert.equal(h.run('game.gaokaoReport.rows.filter(p=>p.active).length'),1);
-  assert.match(h.el('#game-root').innerHTML,/高考成绩单/);assert.match(h.el('#game-root').innerHTML,/河南参考位次/);
+  assert.match(h.el('#game-root').innerHTML,/高考成绩单/);assert.match(h.el('#game-root').innerHTML,/河南.*参考位次/);
   const snapshot=h.run('JSON.stringify(game.gaokaoReport)');
   h.run('game=loadGame();render()');assert.equal(h.run('JSON.stringify(game.gaokaoReport)'),snapshot);
   h.run("calculateGaokao(EVENTS.find(e=>e.id==='gaokao'))");assert.equal(h.run('game.examResults.length'),1);
