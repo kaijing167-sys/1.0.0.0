@@ -31,3 +31,10 @@
 .university-badge { display: inline-block; background: #f9e8bd; color: #765220; padding: 2px 6px; border-radius: 4px; }
 .university-pagination { display: flex; justify-content: space-between; margin: 18px 0; gap: 12px; }
 @media (max-width: 600px) { .university-grid, .university-filters { grid-template-columns: 1fr; } }
+
+/* A full native selector avoids the truncated datalist suggestions on mobile. */
+.admissions-major-select-label {grid-column:1 / -1;}
+.admissions-choice select {box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:48px;border:2px solid #b7834c;border-radius:4px;padding:12px;font:inherit;font-size:16px;background:#fff8e7;color:#704532;}
+.admissions-choice select:focus-visible {outline:3px solid #d8983f;outline-offset:2px;}
+.admissions-major-select-label small {font-size:12px;line-height:1.7;color:#705d45;overflow-wrap:anywhere;}
+@media(max-width:600px){.admissions-choice input{font-size:16px}.admissions-major-select-label{gap:10px}}

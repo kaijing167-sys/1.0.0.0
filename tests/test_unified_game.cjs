@@ -16,7 +16,7 @@ function harness(){
    vm.runInContext(source,context,{filename:name});
  }
  vm.runInContext('Math.random=()=>.5;settings.musicEnabled=false;settings.eventMusic=false;HENAN_2025_ADMISSIONS.schools=__admissionsRecords.schools;HENAN_2025_ADMISSIONS.loaded=true',context);
- return {run:s=>vm.runInContext(s,context),el,storage,click(dataset){const button={dataset,disabled:false,hasAttribute:()=>false,getAttribute:()=>null};for(const fn of listeners.click)fn({target:{closest:()=>button}})}};
+ return {run:s=>vm.runInContext(s,context),el,storage,change(target){for(const fn of listeners.change)fn({target})},click(dataset){const button={dataset,disabled:false,hasAttribute:()=>false,getAttribute:()=>null};for(const fn of listeners.click)fn({target:{closest:()=>button}})}};
 }
 
 test('expanded data contains real programs for elite, ordinary and junior institutions',()=>{
@@ -425,4 +425,41 @@ test('legacy completed score snapshots stay unchanged through the new rules',()=
  const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));game.gaokaoReport.version=1;delete game.gaokaoReport.rows.find(p=>p.active).preparation;globalThis.legacy=JSON.stringify(game.gaokaoReport);persist();game=loadGame();render()");
  assert.equal(h.run('JSON.stringify(game.gaokaoReport)'),h.run('legacy'));
  assert.match(h.el('#game-root').innerHTML,/旧版已结算/);
+});
+
+
+test('new exam marks and their total retain one decimal and the score page formats old marks consistently',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'))");
+ assert.ok(h.run('game.gaokaoReport.rows.every(p=>Object.values(p.subjects).every(v=>Math.abs(v*10-Math.round(v*10))<1e-8)&&Math.abs(p.total*10-Math.round(p.total*10))<1e-8)'));
+ assert.equal(h.run('formatExamScore(646)'), '646.0');assert.equal(h.run('formatExamScore(646.56)'), '646.6');
+ h.run('admissionsPlayer().subjects.chinese=110.26;admissionsPlayer().total=646.56;game.finalScore=646.56;renderFinal()');
+ assert.match(h.el('#game-root').innerHTML,/646\.6/);assert.match(h.el('#game-root').innerHTML,/110\.3/);
+ assert.equal(h.run('admissionsPlayer().total'),646.56);
+});
+test('mobile major selector includes every recorded program, codes and thresholds without a two-item limit',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));openAdmissions();saveAdmissionsField({dataset:{admissionsIndex:'0',admissionsField:'school'},value:'郑州大学'});renderAdmissions()");
+ const count=h.run("admissionsPrograms(admissionsSchool('郑州大学'),'physics').length");assert.ok(count>2);
+ const options=h.run("admissionsMajorSelectOptions('郑州大学','physics')");
+ assert.equal((options.match(/<option /g)||[]).length,count+1);
+ assert.ok(h.run("admissionsPrograms(admissionsSchool('郑州大学'),'physics').every(p=>admissionsMajorSelectOptions('郑州大学','physics').includes(escapeHtml(p.major)))"));
+ assert.match(h.el('#game-root').innerHTML,/查看全部专业/);assert.match(h.el('#game-root').innerHTML,/上下滑动/);
+ const empty=h.run("admissionsMajorSelectOptions('未收录大学','physics')");assert.match(empty,/暂无本类别已收录专业/);
+});
+test('native mobile selection and manual input sync with the saved choice and clear stale admission outcomes',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));openAdmissions();saveAdmissionsField({dataset:{admissionsIndex:'0',admissionsField:'school'},value:'郑州大学'})");
+ const major=h.run("admissionsPrograms(admissionsSchool('郑州大学'),'physics').at(-1).major");
+ h.run("game.admissions.result={status:'admitted'}");
+ h.change({id:'admissions-major-select-0',dataset:{admissionsIndex:'0',admissionsField:'major'},value:major,matches:()=>false});
+ assert.equal(h.el('#admissions-major-0').value,major);assert.equal(h.run('game.admissions.choices[0].major'),major);assert.equal(h.run('game.admissions.result'),undefined);
+ h.run('game=loadGame()');assert.equal(h.run('game.admissions.choices[0].major'),major);
+ h.run("saveAdmissionsField({dataset:{admissionsIndex:'0',admissionsField:'major'},value:'手动输入专业'})");
+ assert.equal(h.el('#admissions-major-select-0').value,'');assert.equal(h.el('#admissions-major-0').value,'手动输入专业');
+ h.run("saveAdmissionsField({dataset:{admissionsIndex:'0',admissionsField:'school'},value:'清华大学'})");
+ assert.equal(h.run('game.admissions.choices[0].major'),'');assert.equal(h.el('#admissions-major-0').value,'');
+ assert.ok(h.el('#admissions-major-select-0').innerHTML.includes('请选择专业'));
+});
+test('admission results show the one-decimal actual mark separately from the integer lookup policy',()=>{
+ const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));admissionsPlayer().total=646.56;game.admissions={choices:[{school:'东华大学',major:'计算机类'},...Array.from({length:4},()=>({school:'',major:''}))]};renderAdmissionsResult()");
+ assert.match(h.el('#game-root').innerHTML,/实考成绩 646\.6 分/);assert.match(h.el('#game-root').innerHTML,/646\.0 分查表/);assert.match(h.el('#game-root').innerHTML,/最低分 639\.0/);
+ assert.equal(h.run('evaluateAdmissions(admissionsPlayer(),admissionsChoices()).score'),646);
 });
