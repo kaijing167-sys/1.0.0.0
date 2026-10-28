@@ -98,10 +98,10 @@ const SUBJECTS = [
 ];
 
 const ACTION_IMAGES = {
-  study: "assets/action-study-pixel.png?v=2",
-  rest: "assets/action-rest-pixel.png?v=2",
-  exercise: "assets/action-exercise-pixel.png?v=2",
-  social: "assets/action-social-pixel.png?v=2",
+  study: "assets/action-study-pixel.png?v=3",
+  rest: "assets/action-rest-pixel.png?v=3",
+  exercise: "assets/action-exercise-pixel.png?v=3",
+  social: "assets/action-social-pixel.png?v=3",
 };
 
 function localMusicSource(category,filename){
