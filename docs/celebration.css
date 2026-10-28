@@ -32,3 +32,32 @@
 .admission-good-news .admissions-offer b { display: inline-block; font-size: clamp(23px, 5vw, 34px); margin: 8px 0; }
 .admission-good-news ol { text-align: left; }
 @media (max-width: 600px) { .personal-subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .score-good-news { padding: 34px 18px 28px; } .score-good-news::before, .score-good-news::after { font-size: 23px; top: 20px; } }
+
+/* Keep result pages warm even when the pixel theme is loaded. */
+.final-screen.celebration-screen {
+  --px-navy:#7e3025; --px-night:#693027; --px-blue:#ad382a;
+  --px-paper:#fff1d3; --px-cream:#fff7e6;
+  background:radial-gradient(ellipse at 50% 0,#ffe3a0 0,#fff1d5 48%,#f6d4bb 100%);
+  color:#69362b;
+}
+.celebration-screen .final-wrap {background:#fff3d9;border-color:#a55a38;box-shadow:0 9px 0 #7a372633,inset 0 0 0 3px #fff9e8;}
+.celebration-screen p,.celebration-screen li,.celebration-screen summary {color:#704532;}
+.celebration-screen h1,.celebration-screen h2,.celebration-screen .final-fact strong {color:#a33427;}
+.celebration-screen .eyebrow {color:#b24c32;}
+.celebration-screen .score-good-news {background:radial-gradient(ellipse at 50% 0,#c84538,#a72428 75%);border-color:#e7bc69;}
+.celebration-screen .score-good-news h1 {color:#ffe3a0;text-shadow:0 4px 0 #76211f;}
+.celebration-screen .score-good-news p,.celebration-screen .score-good-news .eyebrow,.celebration-screen .score-good-news .final-score small {color:#ffe7bb;}
+.celebration-screen .score-good-news .final-score strong {color:#ffe3a0;font-size:clamp(46px,12vw,94px);overflow-wrap:anywhere;}
+.celebration-screen .final-score {justify-content:center;flex-wrap:wrap;}
+.celebration-screen .final-card {border-color:#c38b57;background:#fff9eb;box-shadow:3px 3px 0 #9c4d2526;}
+.celebration-screen .gaokao-player-summary {color:#713c27;background:#f8e7c6;}
+.celebration-screen .gaokao-rank-note,.celebration-screen .gaokao-source,.celebration-screen .final-fact span {color:#805d45;}
+.celebration-screen a,.celebration-screen a:visited {color:#9a3c23;text-decoration:underline;}
+.celebration-screen .primary-button {background:#b1312d;border-color:#8d2824;color:#fff1cc;box-shadow:0 4px 0 #7a2923;}
+.celebration-screen .ghost-button {background:#fff1d2;border-color:#b7834c;color:#7d332a;box-shadow:0 4px 0 #b7834c;}
+.celebration-screen .admission-banner {background:#ad2c2b;}
+.celebration-screen .admission-banner h2,.celebration-screen .admission-banner p {color:#fff1cb;}
+.celebration-screen .admission-banner .celebration-title {color:#ffe1a0;}
+.celebration-screen .admission-good-news .admissions-offer {color:#a02e29;}
+.personal-subjects dd span {white-space:normal;display:block;line-height:1.6;}
+@media(max-width:600px){.celebration-screen .final-score strong{font-size:clamp(42px,12vw,65px)}.celebration-screen .final-wrap{padding:20px 14px}.celebration-screen .final-card{padding:16px 12px}}

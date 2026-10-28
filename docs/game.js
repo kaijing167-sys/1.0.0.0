@@ -1162,7 +1162,7 @@ function renderFinal(){
     <main id="main" class="final-screen celebration-screen">
       <div class="final-wrap">
         <div class="celebration-streamers" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span><span>✧</span></div>
-        <header class="score-good-news"><p class="eyebrow">青春有答卷 · 努力有回响</p><h1>喜报</h1><p class="good-news-name">${escapeHtml(game.name)} · 高考出分啦</p><p>一路的坚持，终于写成今天的成绩。</p><div class="final-score"><strong>${game.finalScore}</strong><small>/ 750 分</small></div><span class="good-news-seal">青春纪念</span></header>
+        <header class="score-good-news"><p class="eyebrow">青春有答卷 · 努力有回响</p><h1>喜报</h1><p class="good-news-name">${escapeHtml(game.name)} · 高考出分啦</p><p>一路的坚持，终于写成今天的成绩。</p><div class="final-score"><strong>${formatExamScore(game.finalScore)}</strong><small>/ 750 分</small></div><span class="good-news-seal">青春纪念</span></header>
         ${gaokaoResultsTable(game.gaokaoReport)}
         <div class="final-grid">
           <section class="final-card">
