@@ -1309,18 +1309,54 @@ function studySubject(id){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   const option=studyOptions().find(item=>item[0]===id);if(!option)return;
   const label=option[1];
+  // 关闭“今天学什么”选科面板（此时尚未消耗行动点、未切换音乐）
+  closeModal(true);
+  // 进入小测：自动切换至轻快舒缓音乐，结束后由 closeModal 还原到菜单主题
+  if(settings.musicEnabled){
+    modalMusicRestorePending=true;
+    playTheme("calm",{force:true});
+  }
+  // 启动 20 秒限时课堂小测；完成后回调 settleStudy 接入原有状态系统
+  if(window.StudyMinigame){
+    window.StudyMinigame.start(label,(correct,total)=>settleStudy(id,correct,total));
+  }else{
+    settleStudy(id,0,0);
+  }
+}
+
+// 小游戏结算：接入现有“专注学习”的行动点消耗、学习收益与周末触发逻辑，不绕过状态系统。
+// correct / total 来自 study-minigame.js；正确率驱动学科成长与心情/压力浮动。
+function settleStudy(id,correct,total){
+  if(game.actionPoints<=0)return; // 安全兜底：避免重复消耗行动点
+  const option=studyOptions().find(item=>item[0]===id);if(!option)return;
+  const label=option[1];
+  const accuracy=total>0?correct/total:0;
   const modifiers=stageModifiers();
-  const before=game.subjects[id];
-  learningStudy(game,id);
+  // 1) 消耗 1 次行动点（原有状态系统）
   game.actionPoints--;
-  game.energy=clamp(game.energy-8,0,100);
-  game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
-  game.mood=clamp(game.mood-2,0,100);
-  addLog(`专注学习${label}，能力变化 ${Math.round((game.subjects[id]-before)*100)/100} 点（学习不保证立即进步，已记录复习）。`);
+  // 2) 基础学习收益：更新遗忘记忆、计入复习（原有学习模拟）
+  learningStudy(game,id);
+  const targets=game.class_id?learningTargets(game,id):[id];
+  const before=targets.reduce((sum,k)=>sum+(game.subjects[k]||0),0);
+  // 3) 正确率驱动的学科成长加成（确定性加成，叠加在基础学习之上）
+  const bonus=+(accuracy*0.8).toFixed(2);
+  for(const k of targets){
+    game.subjects[k]=Math.round(clamp((game.subjects[k]||0)+bonus,0,campusMax(k))*100)/100;
+  }
+  // 4) 心情/压力随正确率浮动：越专注越省体力、越减压、越开心
+  const energyCost=Math.round(8-accuracy*4);
+  const stressGain=Math.round((7+modifiers.stressGain)-accuracy*10);
+  const moodGain=Math.round(-2+accuracy*12);
+  game.energy=clamp(game.energy-energyCost,0,100);
+  game.stress=clamp(game.stress+stressGain,0,100);
+  game.mood=clamp(game.mood+moodGain,0,100);
+  const gained=Math.round((targets.reduce((sum,k)=>sum+(game.subjects[k]||0),0)-before)*100)/100;
+  const verdict=accuracy>=0.8?"专注而高效":accuracy>=0.5?"稳扎稳打":"有些心不在焉";
+  game.studyQuiz={subject:id,label,correct,total,day:game.day};
+  addLog(`专注学习${label}，${verdict}（课堂小测 ${correct}/${total}），能力变化 ${gained>=0?"+":""}${gained} 点（已记录复习）。`);
   persist();
-  closeModal();
   render();
-  toast(`${label} ${game.subjects[id]>=before?"+":""}${Math.round((game.subjects[id]-before)*100)/100}`);
+  toast(`${label} 小测 ${correct}/${total} · 能力 ${gained>=0?"+":""}${gained}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
