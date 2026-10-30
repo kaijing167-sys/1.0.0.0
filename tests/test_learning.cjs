@@ -5,6 +5,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 function harness(){
  const c=vm.createContext({document:{addEventListener(){}},Math:Object.create(Math)});
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'../frontend/henan-2025-data.js'),'utf8'),c);
  vm.runInContext(fs.readFileSync(path.join(__dirname,'../frontend/roster.js'),'utf8'),c);
  const run=s=>vm.runInContext(s,c);
  run(`function fixture(){return {day:993,class_id:2,subjects:{chinese:110,math:110,english:110,physics:75,chemistry:75,biology:75},attrs:{insight:70,mindset:70,stamina:70},energy:75,stress:25,mood:70}};globalThis.g=fixture();learningState(g);g.learning.seed=123`);
@@ -52,6 +53,18 @@ test('persistent RNG resumes identically from JSON and actual marks differ from 
  const h=harness();h.run('globalThis.saved=JSON.stringify(g);globalThis.x=learningExam(g,g.subjects,learningSubjects(g));globalThis.restored=JSON.parse(saved);globalThis.y=learningExam(restored,restored.subjects,learningSubjects(restored))');
  assert.equal(h.run('JSON.stringify(x)'),h.run('JSON.stringify(y)'));
  assert.ok(h.run('Object.keys(x.subjects).some(id=>x.subjects[id]!==g.subjects[id])'));
+});
+test('scores are calibrated through the Henan score table and react to body, stress and mood',()=>{
+ const h=harness();
+ assert.ok(Math.abs(h.run("learningBottomPercentile(600,'physics')")-0.9173266791582588)<1e-8);
+ assert.equal(h.run("learningScoreAtPercentile(learningBottomPercentile(600,'physics'),'physics')"),600);
+ const sample=state=>h.run(`(()=>{const candidate={...g,energy:${state[0]},stress:${state[1]},mood:${state[2]}};
+   const p={quality:.5,coverage:.5,resilience:.5,subject:{},badChance:0};
+   return learningExam(candidate,candidate.subjects,learningSubjects(candidate),()=>.5,p)})()`);
+ const healthy=sample([100,20,100]),strained=sample([20,100,20]);
+ assert.ok(healthy.calibration.percentileAfter>strained.calibration.percentileAfter);
+ assert.equal(healthy.calibration.model,'henan-percentile-v2');
+ assert.equal(Object.values(healthy.subjects).reduce((a,b)=>a+b,0),healthy.calibration.targetTotal);
 });
 test('prepared balanced candidates have higher means, fewer failures and less variance across 4000 seeded exams',()=>{
  const h=harness();const stats=h.run(`(()=>{
