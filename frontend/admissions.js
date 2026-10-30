@@ -111,10 +111,10 @@ function renderAdmissions(){
     <div class="eyebrow">出分 → 志愿填报 → 模拟录取</div><h1>把下一站，写进志愿里</h1>
     <p>${escapeHtml(player.name)} · ${escapeHtml(player.combination)} · 高考 ${formatExamScore(player.total)} 分 · 河南参考位次：${gaokaoRankText(player.rank)}</p>
     <section class="final-card"><h2>5 个志愿，按你的期待排序</h2>
-      <p>每行填写一所大学和一个专业，按第 1 至第 5 志愿依次检索。至少填写一行，其余可留空；可输入学校名称，专业可从“查看全部专业”下拉框中完整选择，手机展开后可上下滑动；也可手动填写。</p>
+      <p>每行填写一所大学和一个专业，按第 1 至第 5 志愿依次检索。至少填写一行，其余可留空；可输入学校名称，专业可从“查看全部专业”下拉框中完整选择，手机展开后可上下滑动；也可手动填写。大学列表按软科 2026 总榜顺序排列，未收录院校随后按校名排序；排名仅用于列表顺序，不影响录取。</p>
       <p class="admissions-note">这是普通本科与高职专科的五志愿简化模拟。河南 2025 年实际普通本科批设置 48 个院校专业组志愿，每组可填 6 个专业。本游戏按已公布专业最低分和选科匹配，服从调剂时，原专业未达到条件将检索同校同批次其他专业，优先同专业组，也允许跨专业组；仅选择符合选科、高于专业最低分并达到批次线的专业。不模拟真实专业组投档、计划竞争、征集降分、体检及单科限制。超过最低分且达到常规批次线按游戏规则录取；同分待定，不随机决定。</p>
-      <form id="admissions-form"><datalist id="admissions-schools">${[...new Set([...UNIVERSITY_CATALOG.schools.map(s=>s.name),...HENAN_2025_ADMISSIONS.schools.map(s=>s.name)])].map(name=>`<option value="${escapeHtml(name)}"></option>`).join('')}</datalist>
-        ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" list="admissions-schools" placeholder="输入大学名称" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><label class="admissions-adjustment-label" for="admissions-adjustment-${i}">是否服从调剂<select id="admissions-adjustment-${i}" data-admissions-index="${i}" data-admissions-field="adjustment"><option value="no"${c.adjustment?'':' selected'}>不服从调剂</option><option value="yes"${c.adjustment?' selected':''}>服从调剂</option></select><small>原专业未录取时，允许调剂到该校同批次、符合选科和分数条件的其他专业或专业组。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
+      <form id="admissions-form">
+        ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学搜索<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" placeholder="搜索大学、别名或地区，如：河南、武汉、复旦" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><div class="admissions-school-picker admissions-major-select-label"><span id="admissions-school-count-${i}">大学完整列表 · 按软科 2026 总榜排序</span><small>985 红色 · 211 黄色 · 双一流绿色；支持搜索大学、别名或地区，列表可上下滚动，点击学校选填。</small><div class="admissions-school-scroll" id="admissions-school-list-${i}" role="group" aria-label="第 ${i+1} 志愿大学列表">${admissionsSchoolListHtml('',i,c.school)}</div></div><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><label class="admissions-adjustment-label" for="admissions-adjustment-${i}">是否服从调剂<select id="admissions-adjustment-${i}" data-admissions-index="${i}" data-admissions-field="adjustment"><option value="no"${c.adjustment?'':' selected'}>不服从调剂</option><option value="yes"${c.adjustment?' selected':''}>服从调剂</option></select><small>原专业未录取时，允许调剂到该校同批次、符合选科和分数条件的其他专业或专业组。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
         <div id="admissions-errors" role="alert">${(game.admissions?.errors||[]).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}</div>
         <div class="dialog-footer"><button type="button" class="ghost-button" data-admissions-page="scores">← 返回成绩页</button><button type="submit" class="primary-button">提交志愿，查看模拟录取 →</button></div>
       </form>
@@ -123,6 +123,46 @@ function renderAdmissions(){
     ${universityPickerHtml()}
     <details class="final-card admissions-catalog"><summary>查看当前所选院校的专业、分数和位次</summary><p>本科及高职专科普通类专业数据，不使用学校最低线代替专业最低线；中外合作、专项、提前批和艺体类未纳入。不同专业组或专业代号同名的记录会分列，请使用完整提示名称。</p>${[...new Set(choices.map(c=>admissionsSchool(c.school)).filter(Boolean))].map(s=>`<h3>${escapeHtml(s.name)}</h3><p>${admissionsSourceLink(s.source,'2025 年河南录取原表')} · ${admissionsSourceLink(s.requirementsSource||s.source,'选科依据')}</p><ul>${admissionsPrograms(s,category).map(p=>`<li>${escapeHtml(p.major)} · ${p.degree==='junior'?'专科':'本科'} · ${formatExamScore(p.minScore)} 分 · 最低分参考位次 ${p.minRank?.toLocaleString()||'未公布'} · ${admissionsRequirements(p)}${p.restriction?`<br>招生备注：${escapeHtml(p.restriction)}（额外条件未模拟）`:''}</li>`).join('')}</ul>`).join('')||'<p>先填写学校，或使用“已有录取数据”筛选选填。</p>'}<p>${admissionsSourceLink(HENAN_2025_ADMISSIONS.policy,'河南省 2025 年招生工作规定')}</p></details>
   </div></main>`;
+}
+
+function admissionsSchoolDirectory(){
+  const names=new Map(),profiles=new Map();
+  for(const s of UNIVERSITY_CATALOG.schools){
+    names.set(admissionsNormalize(s.name),s);
+    for(const name of [s.name,...s.aliases||[]])profiles.set(admissionsNormalize(name),s);
+  }
+  for(const s of HENAN_2025_ADMISSIONS.schools){
+    const key=admissionsNormalize(s.name);
+    if(!names.has(key)){
+      const profile=[s.name,...s.aliases||[]].map(n=>profiles.get(admissionsNormalize(n))).find(Boolean);
+      names.set(key,{...profile,...s,province:profile?.province||'其他招生单位',city:profile?.city||''});
+    }
+  }
+  return [...names.values()];
+}
+const admissionsRankIndex=new Map(UNIVERSITY_RANKINGS.rows.map(r=>[admissionsNormalize(r.name),r]));
+const admissionsDoubleFirst=new Set(UNIVERSITY_RANKINGS.doubleFirstClass.map(admissionsNormalize));
+function admissionsSchoolRank(s){return admissionsRankIndex.get(admissionsNormalize(s.name))}
+function admissionsSchoolTags(s){
+  return (s.elite985?'<span class="school-tag school-tag-985">985</span>':'')+
+    (s.elite211?'<span class="school-tag school-tag-211">211</span>':'')+
+    (admissionsDoubleFirst.has(admissionsNormalize(s.name))?'<span class="school-tag school-tag-double">双一流</span>':'');
+}
+function admissionsSchoolMatches(query=''){
+  const key=admissionsNormalize(query).toLowerCase();
+  return admissionsSchoolDirectory().filter(s=>!key||[s.name,s.province,s.city,...s.aliases||[]].some(n=>admissionsNormalize(n).toLowerCase().includes(key)))
+    .sort((a,b)=>(admissionsSchoolRank(a)?.order??Infinity)-(admissionsSchoolRank(b)?.order??Infinity)||a.name.localeCompare(b.name,'zh-CN'));
+}
+function admissionsSchoolListHtml(query='',index=0,current=''){
+  const schools=admissionsSchoolMatches(query);
+  return '<p class="school-match-count" role="status">找到 '+schools.length+' 所大学</p>'+schools.map(s=>{
+    const rank=admissionsSchoolRank(s);
+    return '<button type="button" class="admissions-school-option'+(s.name===current?' is-selected':'')+'" data-school-pick="'+index+'" data-school-name="'+escapeHtml(s.name)+'" aria-pressed="'+(s.name===current)+'"><span class="school-option-name">'+escapeHtml(s.name)+'</span><span class="school-option-tags">'+admissionsSchoolTags(s)+'</span><small>'+escapeHtml(rank?'软科 2026 · '+rank.rank+(rank.overall!==rank.rank?'（总榜 '+rank.overall+'）':''):'未列入软科 2026 总榜')+'</small></button>';
+  }).join('')+(schools.length?'':'<p>没有找到，试试学校全称、别名或地区。</p>');
+}
+function refreshAdmissionsSchools(index){
+  const query=$('#admissions-school-'+index).value;
+  $('#admissions-school-list-'+index).innerHTML=admissionsSchoolListHtml(query,index,query);
 }
 function admissionsMajorSelectOptions(school,category,current=''){
   const programs=admissionsPrograms(admissionsSchool(school),category);
@@ -146,6 +186,7 @@ function saveAdmissionsField(target){
   game.admissions={choices};
   if(field==='school'){
     choices[index].major='';
+    refreshAdmissionsSchools(index);
     $('#admissions-major-'+index).value='';
     const programs=admissionsPrograms(admissionsSchool(target.value),admissionsPlayer().rank.category);
     $('#admissions-major-select-'+index).innerHTML=admissionsMajorSelectOptions(target.value,admissionsPlayer().rank.category);
@@ -171,5 +212,18 @@ function submitAdmissions(){
 }
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&!b.disabled&&b.dataset.admissionsPage)openAdmissions(b.dataset.admissionsPage)});
 document.addEventListener('input',e=>{if(!e.target.id?.startsWith('admissions-major-select-'))saveAdmissionsField(e.target)});
-document.addEventListener('change',e=>{if(e.target.id?.startsWith('admissions-major-select-')||e.target.dataset.admissionsField==='adjustment')saveAdmissionsField(e.target)});
+document.addEventListener('change',e=>{
+  const target=e.target;
+  if(target.id?.startsWith('admissions-major-select-')||target.dataset.admissionsField==='adjustment')saveAdmissionsField(target);
+});
 document.addEventListener('submit',e=>{if(e.target.id==='admissions-form'){e.preventDefault();submitAdmissions()}});
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-school-pick]');
+  if(!b)return;
+  const i=Number(b.dataset.schoolPick),name=b.dataset.schoolName;
+  $('#admissions-school-'+i).value=name;
+  saveAdmissionsField({dataset:{admissionsIndex:String(i),admissionsField:'school'},value:name});
+  // Keep the full ranking visible after picking a school.
+  $('#admissions-school-list-'+i).innerHTML=admissionsSchoolListHtml('',i,name);
+});
