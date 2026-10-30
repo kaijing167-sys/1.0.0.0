@@ -204,7 +204,7 @@ function learningExam(g,abilities,ids,random=()=>learningRandom(g),preparation=l
     const mean=.90+.065*p.quality+.025*prep+.01*learningClamp(g.attrs.insight/100);
     const dayState=.008*(learningHealth(g)-.5);
     const noise=centered()*(.010+.025*(1-prep));
-    subjects[id]=Math.round(learningClamp(abilities[id]*(mean+shared+shock+dayState+noise),0,campusMax(id))*10)/10;
+    subjects[id]=Math.round(learningClamp(abilities[id]*(mean+shared+shock+dayState+noise),0,campusMax(id))*2)/2;
   }
   return {subjects,preparation:p,performance:bad?'失常发挥':good?'超常发挥':'正常波动'};
 }
