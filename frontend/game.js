@@ -1060,8 +1060,24 @@ function renderLanding(){
 function customRoleKey(g){return g?.character_id||g?.custom_id||null}
 function savedCustomRoles(){return Object.values(readCharacterSaves()).filter(g=>g?.version===2&&g.custom_id&&!g.character_id)}
 function customRoleCardsHtml(){
-  return `<section class="custom-role-section"><h3>我的自定义角色</h3><p>用自己的名字开启青春，每个角色分别保存。</p><button class="primary-button custom-role-create" data-custom-create>＋ 创建自定义角色</button><div class="custom-role-grid">${savedCustomRoles().map(g=>`<article class="custom-role-card"><span class="custom-role-avatar" aria-hidden="true">${escapeHtml(Array.from(g.name)[0]||'我')}</span><h4>${escapeHtml(g.name)}</h4><p>${gradeForDay(g.day)} · 距高考 ${daysLeft(g.day)} 天</p><small>建档：${saveDate(g.createdAt)}</small><div class="custom-role-actions"><button class="primary-button" data-character-load="${escapeHtml(g.custom_id)}">继续游戏</button><button class="ghost-button" data-custom-rename="${escapeHtml(g.custom_id)}">修改名字</button><button class="ghost-button" data-character-start="${escapeHtml(g.custom_id)}">重新开始</button></div></article>`).join('')||'<p class="custom-role-empty">还没有自定义角色，点击上方按钮创建。</p>'}</div></section>`;
+  return `<section class="custom-role-section"><h3>我的自定义角色</h3><p>用自己的名字开启青春，每个角色分别保存。</p><button class="primary-button custom-role-create" data-custom-create>＋ 创建自定义角色</button><div class="custom-role-grid">${savedCustomRoles().map(g=>`<article class="custom-role-card"><span class="custom-role-avatar" aria-hidden="true">${escapeHtml(Array.from(g.name)[0]||'我')}</span><h4>${escapeHtml(g.name)}</h4><p>${gradeForDay(g.day)} · 距高考 ${daysLeft(g.day)} 天</p><small>建档：${saveDate(g.createdAt)}</small><div class="custom-role-actions"><button class="primary-button" data-character-load="${escapeHtml(g.custom_id)}">继续游戏</button><button class="ghost-button" data-custom-rename="${escapeHtml(g.custom_id)}">修改名字</button><button class="ghost-button" data-character-start="${escapeHtml(g.custom_id)}">重新开始</button><button class="ghost-button danger-button" data-custom-delete="${escapeHtml(g.custom_id)}" aria-label="删除${escapeHtml(g.name)}的自定义存档">删除存档</button></div></article>`).join('')||'<p class="custom-role-empty">还没有自定义角色，点击上方按钮创建。</p>'}</div></section>`;
 }
+
+function deleteCustomRole(id){
+  const rows=readCharacterSaves(),saved=rows[id];
+  if(!saved||saved.character_id||saved.custom_id!==id)return toast('未找到此自定义存档');
+  if(!confirm('确定删除“'+saved.name+'”及其自动保存的全部进度吗？删除后无法恢复，手动备份不受影响。'))return;
+  let active=null;try{active=JSON.parse(localStorage.getItem(SAVE_KEY));}catch{}
+  try{
+    delete rows[id];localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));
+    if((!active?.character_id&&active?.custom_id===id)||(!game?.character_id&&game?.custom_id===id))localStorage.removeItem(SAVE_KEY);
+  }catch{return toast('删除失败，浏览器存储不可用，请重试');}
+  if(game?.custom_id===id&&!game.character_id)game=null;
+  if(draft.custom_id===id)draft={name:'',attrs:{...PRESETS.balanced},preset:'balanced',stage:'high1',track:'science'};
+  if(selectedCharacter===id)selectedCharacter=null;
+  menuScreen='home';closeModal(true);render();openCharacterSaves();toast('自定义存档已删除');
+}
+
 function openCustomRoleForm(id=''){
   const saved=id?characterSave(id):null;
   openModal(`<p class="menu-kicker">我的青春 · 我来命名</p><h2>${saved?'修改角色名字':'创建自定义角色'}</h2><form id="custom-role-form" data-custom-id="${escapeHtml(saved?.custom_id||'')}"><label class="custom-role-field" for="custom-role-name">角色名字<input id="custom-role-name" name="name" maxlength="30" required autocomplete="off" placeholder="给自己取个名字（1—30字）" value="${escapeHtml(saved?.name||'')}"></label>${saved?'':`<label class="custom-role-field" for="custom-role-class">开局班级<select id="custom-role-class">${CAMPUS_CLASSES.map(c=>`<option value="${c.id}" ${c.id===4?'selected':''}>${c.id}班 · ${c.combo} · ${c.level}</option>`).join('')}</select></label><p>下一步选择起点，然后从九个能力档次中选择一档，系统将为你随机生成开局属性和学科能力。</p>`}<p id="custom-role-error" role="alert"></p><div class="dialog-footer"><button type="button" class="ghost-button" data-custom-back>返回人物与存档</button><button type="submit" class="primary-button">${saved?'保存名字':'下一步：选择起点 →'}</button></div></form>`);
@@ -2073,6 +2089,7 @@ document.addEventListener('click',event=>{
   if(b.dataset.menu==='saves')openCharacterSaves();
   if(b.hasAttribute('data-custom-create'))openCustomRoleForm();
   if(b.dataset.customRename)openCustomRoleForm(b.dataset.customRename);
+  if(b.dataset.customDelete)deleteCustomRole(b.dataset.customDelete);
   if(b.hasAttribute('data-custom-back'))openCharacterSaves();
   if(b.dataset.saveCharacter)openCharacterSaves(b.dataset.saveCharacter);
   if(b.dataset.characterStart){
