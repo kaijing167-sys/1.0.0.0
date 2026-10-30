@@ -34,7 +34,7 @@ function admissionsLoadingHtml(error=''){
   $('#game-root').innerHTML=`<main id="main" class="final-screen"><div class="final-wrap"><section class="final-card" role="status"><h1>${error?'录取数据暂未载入':'正在载入河南 2025 录取数据'}</h1><p>${escapeHtml(error||'首次进入需要下载专业数据，载入后即可使用院校与专业提示。')}</p><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button>${error?'<button class="primary-button" data-admissions-page="choices">重试加载</button>':''}</section></div></main>`;
 }
 function admissionsChoices(){
-  return Array.from({length:5},(_,i)=>({school:String(game.admissions?.choices?.[i]?.school||''),major:String(game.admissions?.choices?.[i]?.major||'')}));
+  return Array.from({length:5},(_,i)=>({school:String(game.admissions?.choices?.[i]?.school||''),major:String(game.admissions?.choices?.[i]?.major||''),adjustment:game.admissions?.choices?.[i]?.adjustment===true}));
 }
 function evaluateAdmissions(player,choices){
   const rows=choices.map((choice,index)=>({...choice,index:index+1}));
@@ -65,6 +65,16 @@ function evaluateAdmissions(player,choices){
       status='pending';stopped=true;continue;
     }
     const detail={...row,program};
+    if(row.adjustment===true&&(score<program.minScore||!program.requires.every(s=>selected.includes(s)))){
+      const candidates=admissionsPrograms(school,category).filter(p=>p!==program&&p.degree===program.degree&&p.requires.every(s=>selected.includes(s))&&score>= (p.degree==='junior'?185:category==='physics'?427:471)&&score>p.minScore);
+      candidates.sort((a,b)=>Number(b.group===program.group)-Number(a.group===program.group)||b.minScore-a.minScore||a.major.localeCompare(b.major,'zh-CN'));
+      const alternative=candidates[0];
+      if(alternative){
+        admitted={...alternative,choice:row.index,adjusted:true,requestedMajor:row.major,requestedGroup:program.group};status='admitted';stopped=true;
+        evaluated.push({...detail,program:alternative,state:'adjusted',reason:`原专业未达到录取条件；已选择服从调剂，调剂至本校${alternative.group?'专业组 '+alternative.group+' · ':''}${alternative.major}，选科符合且成绩高于专业最低分 ${formatExamScore(alternative.minScore)} 分`});
+        continue;
+      }
+    }
     if(!program.requires.every(s=>selected.includes(s))){evaluated.push({...detail,state:'ineligible',reason:'选科不符合要求：'+admissionsRequirements(program)});continue;}
     const threshold=program.minScore,control=program.degree==='junior'?185:category==='physics'?427:471;
     if(score<threshold){evaluated.push({...detail,state:'below',reason:`查表成绩 ${formatExamScore(score)} 分，未达到 2025 年该专业最低分 ${formatExamScore(threshold)} 分`});continue;}
@@ -102,9 +112,9 @@ function renderAdmissions(){
     <p>${escapeHtml(player.name)} · ${escapeHtml(player.combination)} · 高考 ${formatExamScore(player.total)} 分 · 河南参考位次：${gaokaoRankText(player.rank)}</p>
     <section class="final-card"><h2>5 个志愿，按你的期待排序</h2>
       <p>每行填写一所大学和一个专业，按第 1 至第 5 志愿依次检索。至少填写一行，其余可留空；可输入学校名称，专业可从“查看全部专业”下拉框中完整选择，手机展开后可上下滑动；也可手动填写。</p>
-      <p class="admissions-note">这是普通本科与高职专科的五志愿简化模拟。河南 2025 年实际普通本科批设置 48 个院校专业组志愿，每组可填 6 个专业。本游戏按已公布专业最低分和选科匹配，不模拟真实专业组投档、计划竞争、征集降分、调剂、体检及单科限制。超过最低分且达到常规批次线按游戏规则录取；同分待定，不随机决定。</p>
+      <p class="admissions-note">这是普通本科与高职专科的五志愿简化模拟。河南 2025 年实际普通本科批设置 48 个院校专业组志愿，每组可填 6 个专业。本游戏按已公布专业最低分和选科匹配，服从调剂时，原专业未达到条件将检索同校同批次其他专业，优先同专业组，也允许跨专业组；仅选择符合选科、高于专业最低分并达到批次线的专业。不模拟真实专业组投档、计划竞争、征集降分、体检及单科限制。超过最低分且达到常规批次线按游戏规则录取；同分待定，不随机决定。</p>
       <form id="admissions-form"><datalist id="admissions-schools">${[...new Set([...UNIVERSITY_CATALOG.schools.map(s=>s.name),...HENAN_2025_ADMISSIONS.schools.map(s=>s.name)])].map(name=>`<option value="${escapeHtml(name)}"></option>`).join('')}</datalist>
-        ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" list="admissions-schools" placeholder="输入大学名称" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
+        ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" list="admissions-schools" placeholder="输入大学名称" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><label class="admissions-adjustment-label" for="admissions-adjustment-${i}">是否服从调剂<select id="admissions-adjustment-${i}" data-admissions-index="${i}" data-admissions-field="adjustment"><option value="no"${c.adjustment?'':' selected'}>不服从调剂</option><option value="yes"${c.adjustment?' selected':''}>服从调剂</option></select><small>原专业未录取时，允许调剂到该校同批次、符合选科和分数条件的其他专业或专业组。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
         <div id="admissions-errors" role="alert">${(game.admissions?.errors||[]).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}</div>
         <div class="dialog-footer"><button type="button" class="ghost-button" data-admissions-page="scores">← 返回成绩页</button><button type="submit" class="primary-button">提交志愿，查看模拟录取 →</button></div>
       </form>
@@ -122,17 +132,17 @@ function admissionsMajorSelectOptions(school,category,current=''){
 function admissionsMajorOptions(school,category){return admissionsPrograms(admissionsSchool(school),category).map(p=>`<option value="${escapeHtml(p.major)}"></option>`).join('')}
 function admissionsResultHtml(result){
   const p=result.admitted;
-  return `<section class="final-card admissions-result ${p?'admission-good-news':''}" role="status" aria-live="polite">${p?`<header class="admission-banner"><p class="celebration-title">喜报</p><h2>模拟录取通知</h2><p>祝贺 ${escapeHtml(admissionsPlayer()?.name)}，下一站，继续闪光！</p></header>`:`<h2>${result.status==='pending'?'录取结果待定':'本次模拟未录取'}</h2>`}${p?`<p class="admissions-offer">第 ${p.choice} 志愿<br><b>${escapeHtml(p.school)}</b><br>${escapeHtml(p.major)}</p><p>2025 年该专业最低分 ${formatExamScore(p.minScore)}；本次实考成绩 ${formatExamScore(result.actualScore??result.score)} 分；录取检索按向下取整的 ${formatExamScore(result.score)} 分查表。</p>`:`<p>${result.status==='pending'?'前面志愿存在同分或缺少数据的情况，暂不能确定最终学校。请查看原因，或修改志愿后重新模拟。':'所填志愿均未达到已收录条件；可调整学校或专业后重新模拟。'}</p>`}<details><summary>查看 5 个志愿的检索结果与来源</summary><ol>${result.rows.map(r=>`<li><b>第 ${r.index} 志愿：${escapeHtml(r.school||'留空')}${r.major?' · '+escapeHtml(r.major):''}</b><p>${escapeHtml(r.reason)}</p>${r.program?admissionsProgramEvidence(r.program):''}</li>`).join('')}</ol></details><p class="admissions-note">以上是基于 2025 年专业最低分的游戏结果，不是真实录取通知。</p></section>`;
+  return `<section class="final-card admissions-result ${p?'admission-good-news':result.status==='unplaced'?'admission-unplaced':''}" role="status" aria-live="polite">${p?`<header class="admission-banner"><p class="celebration-title">喜报</p><h2>模拟录取通知</h2><p>祝贺 ${escapeHtml(admissionsPlayer()?.name)}，下一站，继续闪光！</p></header>`:`<header class="admission-empty-hero"><p class="eyebrow">${result.status==='pending'?'等待确认':'下一站，仍有可能'}</p><h2>${result.status==='pending'?'录取结果待定':'本次模拟未录取'}</h2><p>一次填报结果，不是青春的终点。</p></header>`}${p?`<p class="admissions-offer">第 ${p.choice} 志愿<br><b>${escapeHtml(p.school)}</b><br>${escapeHtml(p.major)}${p.group?`<br><small>专业组 ${escapeHtml(p.group)}</small>`:''}</p>${p.adjusted?`<p class="admissions-adjusted"><b>服从调剂 · 调剂录取</b><br>原填报：${escapeHtml(p.requestedMajor)}${p.requestedGroup?`（专业组 ${escapeHtml(p.requestedGroup)}）`:''}<br>调剂至：${escapeHtml(p.major)}${p.group?`（专业组 ${escapeHtml(p.group)}）`:''}</p>`:''}<p>2025 年该专业最低分 ${formatExamScore(p.minScore)}；本次实考成绩 ${formatExamScore(result.actualScore??result.score)} 分；录取检索按向下取整的 ${formatExamScore(result.score)} 分查表。</p>`:`<p>${result.status==='pending'?'前面志愿存在同分或缺少数据的情况，暂不能确定最终学校。请查看原因，或修改志愿后重新模拟。':'本次填报未匹配到符合录取条件的专业。查看下方逐项检索原因，调整院校与专业，或考虑服从调剂后再次模拟。'}</p>`}<details ${result.status==='unplaced'?'open':''}><summary>查看 5 个志愿的检索结果与来源</summary><ol>${result.rows.map(r=>`<li><b>第 ${r.index} 志愿：${escapeHtml(r.school||'留空')}${r.major?' · '+escapeHtml(r.major):''}${r.school?` · ${r.adjustment?'服从调剂':'不服从调剂'}`:''}</b><p>${escapeHtml(r.reason)}</p>${r.program?admissionsProgramEvidence(r.program):''}</li>`).join('')}</ol></details><p class="admissions-note">以上是基于 2025 年专业最低分的游戏结果，不是真实录取通知。</p></section>`;
 }
 function renderAdmissionsResult(){
   const choices=admissionsChoices(),result=evaluateAdmissions(admissionsPlayer(),choices);
-  $('#game-root').innerHTML=`<main id="main" class="final-screen celebration-screen"><div class="final-wrap admissions-wrap"><p class="eyebrow">我的下一站 · 模拟录取结果</p>${admissionsResultHtml(result)}<div class="dialog-footer"><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button><button class="primary-button" data-admissions-page="choices">修改志愿，重新模拟</button></div></div></main>`;
+  $('#game-root').innerHTML=`<main id="main" class="final-screen celebration-screen ${result.status==='unplaced'?'admissions-unplaced-screen':''}"><div class="final-wrap admissions-wrap"><p class="eyebrow">我的下一站 · 模拟录取结果</p>${admissionsResultHtml(result)}<div class="dialog-footer"><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button><button class="primary-button" data-admissions-page="choices">修改志愿，重新模拟</button></div></div></main>`;
 }
 function saveAdmissionsField(target){
   if(!game?.completed||target.dataset.admissionsIndex===undefined)return;
   const index=Number(target.dataset.admissionsIndex),field=target.dataset.admissionsField;
-  if(!Number.isInteger(index)||index<0||index>4||!['school','major'].includes(field))return;
-  const choices=admissionsChoices();choices[index][field]=String(target.value||'').slice(0,100);
+  if(!Number.isInteger(index)||index<0||index>4||!['school','major','adjustment'].includes(field))return;
+  const choices=admissionsChoices();choices[index][field]=field==='adjustment'?target.value==='yes':String(target.value||'').slice(0,100);
   game.admissions={choices};
   if(field==='school'){
     choices[index].major='';
@@ -154,12 +164,12 @@ function saveAdmissionsField(target){
 }
 function submitAdmissions(){
   if(!game?.completed||!admissionsPlayer())return;
-  const choices=Array.from({length:5},(_,i)=>({school:$('#admissions-school-'+i).value.trim().slice(0,100),major:$('#admissions-major-'+i).value.trim().slice(0,100)}));
+  const choices=Array.from({length:5},(_,i)=>({school:$('#admissions-school-'+i).value.trim().slice(0,100),major:$('#admissions-major-'+i).value.trim().slice(0,100),adjustment:$('#admissions-adjustment-'+i).value==='yes'}));
   const result=evaluateAdmissions(admissionsPlayer(),choices);
   game.admissions={choices,...(result.status==='invalid'?{errors:result.errors}:{result})};
   game.postExamPage=result.status==='invalid'?'choices':'admission-result';persist();render();window.scrollTo?.({top:0,behavior:'instant'});
 }
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&!b.disabled&&b.dataset.admissionsPage)openAdmissions(b.dataset.admissionsPage)});
 document.addEventListener('input',e=>{if(!e.target.id?.startsWith('admissions-major-select-'))saveAdmissionsField(e.target)});
-document.addEventListener('change',e=>{if(e.target.id?.startsWith('admissions-major-select-'))saveAdmissionsField(e.target)});
+document.addEventListener('change',e=>{if(e.target.id?.startsWith('admissions-major-select-')||e.target.dataset.admissionsField==='adjustment')saveAdmissionsField(e.target)});
 document.addEventListener('submit',e=>{if(e.target.id==='admissions-form'){e.preventDefault();submitAdmissions()}});
