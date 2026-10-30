@@ -74,3 +74,9 @@
 .school-tag.school-tag-double{background:#197344;color:#fff;}
 .admissions-school-option>small{margin-left:auto;font-size:12px;color:#705d45;}
 @media(max-width:600px){.admissions-school-scroll{max-height:280px}.admissions-school-option>small{flex-basis:100%;margin-left:0}.admissions-school-scroll .admissions-school-option{padding:12px;gap:7px;}}
+
+/* Each school list opens only on its own explicit button click. */
+.admissions-school-picker .admissions-school-panel[hidden]{display:none;}
+.admissions-school-panel{display:grid;gap:10px;min-width:0;}
+.admissions-school-panel>small{font-size:13px;line-height:1.7;}
+.admissions-school-toggle{justify-self:start;min-height:44px;}
