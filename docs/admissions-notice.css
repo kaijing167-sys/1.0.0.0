@@ -1,0 +1,21 @@
+.final-screen .final-wrap.admission-notice-wrap{max-width:920px;background:transparent;border:0;box-shadow:none;padding:12px;}
+.admission-notice.admissions-result.admission-good-news{position:relative;box-sizing:border-box;margin:0;background:linear-gradient(125deg,#fffdf4,#fbf0d8);border:2px solid #ae3d2d;border-radius:3px;padding:12px;text-align:center;box-shadow:0 14px 42px #743c2220;}
+.admission-notice-inner{padding:clamp(24px,5vw,56px);border:1px solid #c99558;outline:1px solid #e4c393;outline-offset:-7px;}
+.admission-notice .notice-kicker{font-size:10px;letter-spacing:.25em;color:#a98459;margin:0 0 24px;}
+.admission-notice .notice-school{font-family:'STKaiti','KaiTi','Noto Serif SC',serif;font-size:clamp(23px,4vw,34px);font-weight:700;color:#922f25;margin:0 0 16px;line-height:1.6;}
+.admission-notice h1{font-family:'STKaiti','KaiTi','Noto Serif SC',serif;font-size:clamp(40px,8vw,70px);font-weight:700;letter-spacing:.14em;line-height:1.5;color:#a43227;margin:8px 0 22px;padding-left:.14em;}
+.notice-rule{position:relative;max-width:420px;height:1px;margin:0 auto 36px;background:#cfac71;}
+.notice-rule span{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);padding:0 14px;background:#fdf6e6;font-size:14px;color:#bc8e4d;}
+.admission-notice .notice-letter{max-width:590px;margin:auto;font-family:'STSong','SimSun','Noto Serif SC',serif;}
+.admission-notice .notice-letter p{font-size:clamp(15px,2vw,18px);line-height:2;color:#75523b;margin:12px 0;}
+.admission-notice .notice-recipient{text-align:left;margin-bottom:28px!important;}
+.admission-notice .notice-recipient b{color:#8e3529;letter-spacing:.06em;}
+.admission-notice .notice-letter .notice-college{font-size:clamp(21px,3.4vw,29px);font-weight:700;color:#8f3025;margin:0;}
+.admission-notice .notice-letter .notice-major{display:inline-block;font-size:clamp(22px,3.8vw,31px);font-weight:700;color:#a63328;line-height:1.7;border-bottom:1px solid #d0a164;padding:0 10px 8px;margin:0 0 18px;overflow-wrap:anywhere;}
+.notice-signature{display:flex;justify-content:space-between;align-items:center;gap:24px;max-width:590px;margin:44px auto 0;text-align:left;}
+.admission-notice .notice-signature p{font-size:12px;line-height:1.9;color:#a08868;margin:0 0 10px;}
+.notice-signature b{display:block;font-family:'STKaiti','KaiTi',serif;font-size:18px;font-weight:400;color:#84533b;line-height:1.8;}
+.notice-signature small{display:block;font-size:10px;color:#af9777;letter-spacing:.14em;margin-top:20px;}
+.notice-seal{flex-shrink:0;display:grid;place-content:center;text-align:center;width:82px;height:82px;border:2px solid #ac4939;border-radius:50%;outline:1px solid #ac4939;outline-offset:-7px;transform:rotate(-12deg);font-family:'STKaiti','KaiTi',serif;font-size:22px;line-height:1.25;letter-spacing:.12em;color:#ac4939;opacity:.76;}
+.admission-notice-wrap>.dialog-footer{display:flex;justify-content:space-between;gap:14px;margin-top:24px;}
+@media(max-width:600px){.admission-notice-inner{padding:28px 18px}.admission-notice h1{font-size:39px;letter-spacing:.08em;padding-left:.08em}.admission-notice .notice-school{font-size:23px}.notice-signature{gap:14px;margin-top:30px}.notice-signature b{font-size:15px}.notice-seal{width:64px;height:64px;font-size:18px}.admission-notice-wrap>.dialog-footer{flex-direction:column}.admission-notice .notice-letter p{font-size:15px}.notice-rule{margin-bottom:28px}}
