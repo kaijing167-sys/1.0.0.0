@@ -750,7 +750,10 @@ function persist(){
   if(game){
     checkAchievements();
     localStorage.setItem(SAVE_KEY,JSON.stringify(game));
-    if(game.character_id){const rows=readCharacterSaves();rows[game.character_id]=JSON.parse(JSON.stringify(game));localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
+    if(!game.character_id&&!game.custom_id)game.custom_id='custom-'+(crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join(''));
+    localStorage.setItem(SAVE_KEY,JSON.stringify(game));
+    const roleKey=customRoleKey(game);
+    if(roleKey){const rows=readCharacterSaves();rows[roleKey]=JSON.parse(JSON.stringify(game));localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
   }
 }
 function gradeForDay(day){
@@ -1035,7 +1038,7 @@ function readCharacterSaves(){
   try{const rows=JSON.parse(localStorage.getItem(CHARACTER_SAVES_KEY)||'{}');return rows&&typeof rows==='object'&&!Array.isArray(rows)?rows:{};}catch{return {};}
 }
 function characterSave(id){
-  if(game?.character_id===id)return game;
+  if(customRoleKey(game)===id)return game;
   return readCharacterSaves()[id]||null;
 }
 function saveDate(value){
@@ -1043,6 +1046,7 @@ function saveDate(value){
   return new Date(value).toLocaleString('zh-CN',{hour12:false});
 }
 function renderLanding(){
+  if(menuScreen==='custom-attributes'){renderCustomAttributes();return;}
   const settingsButton='<button class="menu-settings" data-action="settings" aria-label="设置">⚙ <span>设置</span></button>';
   let content='';
   if(menuScreen==='stages'){
@@ -1052,12 +1056,42 @@ function renderLanding(){
   }
   $('#game-root').innerHTML=`<main class="quiet-menu pixel-menu ${menuScreen==='home'?'home-cover':''}">${settingsButton}${content}</main>`;
 }
+
+function customRoleKey(g){return g?.character_id||g?.custom_id||null}
+function savedCustomRoles(){return Object.values(readCharacterSaves()).filter(g=>g?.version===2&&g.custom_id&&!g.character_id)}
+function customRoleCardsHtml(){
+  return `<section class="custom-role-section"><h3>我的自定义角色</h3><p>用自己的名字开启青春，每个角色分别保存。</p><button class="primary-button custom-role-create" data-custom-create>＋ 创建自定义角色</button><div class="custom-role-grid">${savedCustomRoles().map(g=>`<article class="custom-role-card"><span class="custom-role-avatar" aria-hidden="true">${escapeHtml(Array.from(g.name)[0]||'我')}</span><h4>${escapeHtml(g.name)}</h4><p>${gradeForDay(g.day)} · 距高考 ${daysLeft(g.day)} 天</p><small>建档：${saveDate(g.createdAt)}</small><div class="custom-role-actions"><button class="primary-button" data-character-load="${escapeHtml(g.custom_id)}">继续游戏</button><button class="ghost-button" data-custom-rename="${escapeHtml(g.custom_id)}">修改名字</button><button class="ghost-button" data-character-start="${escapeHtml(g.custom_id)}">重新开始</button></div></article>`).join('')||'<p class="custom-role-empty">还没有自定义角色，点击上方按钮创建。</p>'}</div></section>`;
+}
+function openCustomRoleForm(id=''){
+  const saved=id?characterSave(id):null;
+  openModal(`<p class="menu-kicker">我的青春 · 我来命名</p><h2>${saved?'修改角色名字':'创建自定义角色'}</h2><form id="custom-role-form" data-custom-id="${escapeHtml(saved?.custom_id||'')}"><label class="custom-role-field" for="custom-role-name">角色名字<input id="custom-role-name" name="name" maxlength="30" required autocomplete="off" placeholder="给自己取个名字（1—30字）" value="${escapeHtml(saved?.name||'')}"></label>${saved?'':`<label class="custom-role-field" for="custom-role-class">开局班级<select id="custom-role-class">${CAMPUS_CLASSES.map(c=>`<option value="${c.id}" ${c.id===4?'selected':''}>${c.id}班 · ${c.combo} · ${c.level}</option>`).join('')}</select></label><p>下一步选择起点，然后从九个能力档次中选择一档，系统将为你随机生成开局属性和学科能力。</p>`}<p id="custom-role-error" role="alert"></p><div class="dialog-footer"><button type="button" class="ghost-button" data-custom-back>返回人物与存档</button><button type="submit" class="primary-button">${saved?'保存名字':'下一步：选择起点 →'}</button></div></form>`);
+  $('#custom-role-name')?.focus();
+}
+function submitCustomRole(form){
+  const name=$('#custom-role-name').value.trim();
+  if(!name||Array.from(name).length>30){$('#custom-role-error').textContent='请输入 1—30 字的角色名字。';return;}
+  const id=form.dataset.customId;
+  if(id){
+    const saved=characterSave(id);if(!saved)return toast('未找到此角色存档');
+    if(game?.custom_id===id){game.name=name;persist();}
+    else{const rows=readCharacterSaves();rows[id]={...saved,name};localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
+    openCharacterSaves();toast('角色名字已更新，进度保持不变');return;
+  }
+  if(game)persist();
+  const customId='custom-'+(crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join(''));
+  const classId=Number($('#custom-role-class').value);
+  if(!campusClass(classId))return toast('请选择有效班级');
+  draft={custom_id:customId,name,attrs:{...PRESETS.balanced},preset:'balanced',stage:'high1',track:campusClass(classId).subjects.includes('physics')?'science':'humanities',class_id:classId};
+  selectedCharacter=customId;menuScreen='stages';closeModal(true);render();
+}
+
 function openCharacterSaves(id=selectedCharacter||draft.character_id||characterCatalog[0].id){
+  if(game&&!game.character_id)persist();
   selectedCharacter=id;
   const c=characterCatalog.find(c=>c.id===id)||characterCatalog[0],saved=characterSave(c.id);
   let slots=[];try{slots=JSON.parse(localStorage.getItem('qinghe-journey-slots-v1')||'[]');}catch{}
   if(!Array.isArray(slots))slots=[];
-  openModal(`<p class="menu-kicker">青春存档</p><h2>选择你的故事</h2><div class="save-characters">${characterCatalog.map(p=>`<button class="save-character ${p.id===c.id?'selected':''}" data-save-character="${p.id}" aria-pressed="${p.id===c.id}"><img src="${campusPortrait(p.id)}" alt=""><b>${escapeHtml(p.name)}</b><small>${characterSave(p.id)?'已有进度':'尚未建档'}</small></button>`).join('')}</div><section class="save-profile"><h3>${escapeHtml(c.name)} <small>${escapeHtml(c.nickname||'')}</small></h3><p>${escapeHtml(c.fields['班级'])} · ${escapeHtml(c.fields['选科组合'])} · 目标 ${escapeHtml(c.fields['目标大学'])}</p><div class="save-date"><span>建档日期</span><b>${saved?saveDate(saved.createdAt):'尚未建立存档'}</b></div>${saved?`<p>当前进度：${gradeForDay(saved.day)} · 距离高考 ${daysLeft(saved.day)} 天</p><div class="profile-stats">${ATTRIBUTES.map(([key,label])=>`<div><span>${label}</span><b>${escapeHtml(saved.attrs[key])}</b></div>`).join('')}</div>`:''}<details class="profile-details"><summary>查看人物完整属性面板</summary><dl>${Object.entries(c.fields).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl></details>${saved?`<details class="profile-details"><summary>查看当前存档学科属性</summary><dl>${CAMPUS_SUBJECTS.filter(([key])=>Number.isFinite(saved.subjects[key])).map(([key,label])=>`<div><dt>${label}</dt><dd>${saved.subjects[key]}</dd></div>`).join('')}</dl></details>`:''}<div class="dialog-footer">${saved?`<button class="primary-button" data-character-load="${c.id}">继续此存档 →</button>`:''}<button class="${saved?'ghost-button':'primary-button'}" data-character-start="${c.id}">以此人物开始</button></div></section>${game&&!game.character_id?'<button class="ghost-button" data-action="resume" data-menu-close>继续原有自定义人物存档</button>':''}${slots.some(r=>!r.empty&&r.state)?`<details class="profile-details"><summary>其他进度存档槽</summary>${slots.filter(r=>!r.empty&&r.state).map(r=>`<p>${escapeHtml(r.name)} · ${saveDate(r.state.createdAt||r.createdAt)} <button class="ghost-button" data-menu-slot="${Number(r.slot)}">读取</button></p>`).join('')}</details>`:''}`);
+  openModal(`<p class="menu-kicker">青春存档</p><h2>选择你的故事</h2>${customRoleCardsHtml()}<h3>预设人物</h3><div class="save-characters">${characterCatalog.map(p=>`<button class="save-character ${p.id===c.id?'selected':''}" data-save-character="${p.id}" aria-pressed="${p.id===c.id}"><img src="${campusPortrait(p.id)}" alt=""><b>${escapeHtml(p.name)}</b><small>${characterSave(p.id)?'已有进度':'尚未建档'}</small></button>`).join('')}</div><section class="save-profile"><h3>${escapeHtml(c.name)} <small>${escapeHtml(c.nickname||'')}</small></h3><p>${escapeHtml(c.fields['班级'])} · ${escapeHtml(c.fields['选科组合'])} · 目标 ${escapeHtml(c.fields['目标大学'])}</p><div class="save-date"><span>建档日期</span><b>${saved?saveDate(saved.createdAt):'尚未建立存档'}</b></div>${saved?`<p>当前进度：${gradeForDay(saved.day)} · 距离高考 ${daysLeft(saved.day)} 天</p><div class="profile-stats">${ATTRIBUTES.map(([key,label])=>`<div><span>${label}</span><b>${escapeHtml(saved.attrs[key])}</b></div>`).join('')}</div>`:''}<details class="profile-details"><summary>查看人物完整属性面板</summary><dl>${Object.entries(c.fields).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl></details>${saved?`<details class="profile-details"><summary>查看当前存档学科属性</summary><dl>${CAMPUS_SUBJECTS.filter(([key])=>Number.isFinite(saved.subjects[key])).map(([key,label])=>`<div><dt>${label}</dt><dd>${saved.subjects[key]}</dd></div>`).join('')}</dl></details>`:''}<div class="dialog-footer">${saved?`<button class="primary-button" data-character-load="${c.id}">继续此存档 →</button>`:''}<button class="${saved?'ghost-button':'primary-button'}" data-character-start="${c.id}">以此人物开始</button></div></section>${game&&!game.character_id?'<button class="ghost-button" data-action="resume" data-menu-close>继续原有自定义人物存档</button>':''}${slots.some(r=>!r.empty&&r.state)?`<details class="profile-details"><summary>其他进度存档槽</summary>${slots.filter(r=>!r.empty&&r.state).map(r=>`<p>${escapeHtml(r.name)} · ${saveDate(r.state.createdAt||r.createdAt)} <button class="ghost-button" data-menu-slot="${Number(r.slot)}">读取</button></p>`).join('')}</details>`:''}`);
 }
 
 
@@ -1219,10 +1253,12 @@ function applyTrack(id){
 function startGame(){
   const name=$("#player-name")?.value.trim()||draft.name;
   if(!name)return toast("先给自己取一个名字");
-  if(!draft.character_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
+  if(!draft.character_id&&!draft.custom_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
+  if(draft.custom_id&&!draft.customParameters){prepareCustomAttributes(draft.stage);return;}
   draft.name=name;
   if(game)persist();
   game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
+  if(draft.custom_id){game.custom_id=draft.custom_id;applyCustomParameters(game);}
   learningState(game);
   game.createdAt=new Date().toISOString();
   menuScreen="play";
@@ -1990,6 +2026,7 @@ document.addEventListener("click",event=>{
 });
 
 document.addEventListener("submit",event=>{
+  if(event.target.id==="custom-role-form"){event.preventDefault();submitCustomRole(event.target);return;}
   if(event.target.id!=="setup-form")return;
   event.preventDefault();
   startGame();
@@ -2013,9 +2050,18 @@ document.addEventListener("keydown",event=>{
 });
 
 function prepareMenuStart(id){
-  const characterId=id||draft.character_id||game?.character_id||characterCatalog[0].id;
+  if(!id){openCharacterSaves();return;}
+  const custom=characterSave(id);
+  if(custom?.custom_id&&!custom.character_id){
+    if(!confirm('此角色已有存档，重新开始会替换它的进度，继续吗？'))return;
+    if(game)persist();
+    draft={custom_id:custom.custom_id,name:custom.name,attrs:{...PRESETS.balanced},preset:'balanced',stage:custom.stage||'high1',track:custom.track,class_id:custom.origin_class_id||custom.class_id||4};
+    selectedCharacter=custom.custom_id;menuScreen='stages';closeModal(true);render();return;
+  }
+  const characterId=id;
   if(characterSave(characterId)&&!confirm('此人物已有存档。开始新故事将替换此人物的自动存档，继续吗？'))return;
   const stage=draft.stage||'high1';
+  delete draft.custom_id;
   campusDraft(characterId);
   draft.stage=stage;
   menuScreen='stages';closeModal(true);render();
@@ -2025,11 +2071,14 @@ document.addEventListener('click',event=>{
   if(b.dataset.menu==='home'){if(game)persist();menuScreen='home';closeModal(true);render();}
   if(b.dataset.menu==='start')prepareMenuStart();
   if(b.dataset.menu==='saves')openCharacterSaves();
+  if(b.hasAttribute('data-custom-create'))openCustomRoleForm();
+  if(b.dataset.customRename)openCustomRoleForm(b.dataset.customRename);
+  if(b.hasAttribute('data-custom-back'))openCharacterSaves();
   if(b.dataset.saveCharacter)openCharacterSaves(b.dataset.saveCharacter);
   if(b.dataset.characterStart){
     prepareMenuStart(b.dataset.characterStart);
   }
-  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;startGame();}
+  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;if(draft.custom_id)prepareCustomAttributes(draft.stage);else startGame();}
   if(b.dataset.characterLoad){
     try{game=campusValidate(JSON.parse(JSON.stringify(characterSave(b.dataset.characterLoad))));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取，请检查存档数据');}
   }
