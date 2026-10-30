@@ -80,3 +80,37 @@
 .admissions-school-panel{display:grid;gap:10px;min-width:0;}
 .admissions-school-panel>small{font-size:13px;line-height:1.7;}
 .admissions-school-toggle{justify-self:start;min-height:44px;}
+
+/* A wide, sculpted spacebar key for opening the school list. */
+.admissions-school-picker .ghost-button.admissions-school-toggle{
+  position:relative;box-sizing:border-box;justify-self:center;width:100%;max-width:760px;
+  min-height:82px;margin:8px 0 18px;padding:20px 28px 28px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid #9b734c;border-top-color:#c9a476;border-radius:14px;
+  background:linear-gradient(180deg,#fffdf3 0%,#f9efd8 65%,#eddbb9 100%);
+  color:#65462e;font-family:inherit;font-size:clamp(18px,2.4vw,23px);font-weight:700;
+  letter-spacing:.12em;line-height:1.4;text-align:center;cursor:pointer;
+  box-shadow:inset 0 3px 0 #fffef9,inset 3px 0 0 #fff7e5,inset -3px 0 0 #e8d4af,0 8px 0 #a78359,0 10px 0 #775637,0 14px 20px #67472920;
+  transform:translateY(0);transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.admissions-school-picker .admissions-school-toggle::after{
+  content:"";position:absolute;bottom:14px;left:50%;width:64px;height:5px;
+  border:solid #b79a71;border-width:0 2px 2px;border-radius:0 0 3px 3px;transform:translateX(-50%);opacity:.8;
+}
+@media(hover:hover){
+  .admissions-school-picker .admissions-school-toggle:hover{
+    background:linear-gradient(180deg,#fffef8,#fff3d5 65%,#f1dfb8);transform:translateY(-1px);
+    box-shadow:inset 0 3px 0 #fffef9,inset 3px 0 0 #fff7e5,inset -3px 0 0 #e8d4af,0 9px 0 #a78359,0 11px 0 #775637,0 16px 22px #67472926;
+  }
+}
+.admissions-school-picker .admissions-school-toggle[aria-expanded="true"],
+.admissions-school-picker .admissions-school-toggle:active{
+  transform:translateY(6px);background:linear-gradient(180deg,#f7e8c9,#efdbb2);
+  border-color:#a78359;box-shadow:inset 0 2px 4px #9b734c20,0 2px 0 #a78359,0 4px 0 #775637,0 7px 10px #67472918;
+}
+.admissions-school-picker .admissions-school-toggle:focus-visible{outline:3px solid #9a5b24;outline-offset:6px;}
+@media(max-width:600px){
+  .admissions-school-picker .ghost-button.admissions-school-toggle{min-height:74px;padding:18px 20px 26px;border-radius:12px;font-size:19px;}
+}
+@media(prefers-reduced-motion:reduce){.admissions-school-picker .admissions-school-toggle{transition:none;}}
