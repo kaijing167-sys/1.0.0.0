@@ -29,12 +29,11 @@ function universityMatches(tier='all',query=''){
 }
 function universityPickerHtml(){
   return `<details class="final-card university-picker"><summary>选学校 · 全部 985 / 211、全国本科与部分专科</summary>
-    <p>按软科 2026 总榜顺序排列，未列入院校随后按校名排序；排名不影响模拟录取。院校目录共 ${UNIVERSITY_CATALOG.schools.length} 条：985 为 39 校，211 为 115 个分列办学实体（包含 985）；本科院校目录含教育部 2025 年名单的 1365 校及 3 所军队院校，另选取 20 所专科。</p>
+    <p>按院校排名顺序排列，未列入院校随后按校名排序；排名不影响模拟录取。院校目录共 ${UNIVERSITY_CATALOG.schools.length} 条：985 为 39 校，211 为 115 个分列办学实体（包含 985）；本科院校目录含院校名单的 1365 校及 3 所军队院校，另选取 20 所专科。</p>
     <p class="admissions-note">已接入 ${HENAN_2025_ADMISSIONS.stats.institutions} 所院校、${HENAN_2025_ADMISSIONS.stats.admissionUnits} 个招生单位（含校区、医学部等）的 ${HENAN_2025_ADMISSIONS.stats.programs} 条专业录取数据，其中本科 ${HENAN_2025_ADMISSIONS.stats.undergraduate} 条、专科 ${HENAN_2025_ADMISSIONS.stats.junior} 条。录取数据覆盖 38 所非军队 985 和 111 个 211 办学实体。可筛选“已有录取数据”选填；未公布分数或无法匹配选科的专业不推算。军队招生和艺术统考额外条件未模拟。</p>
     <div class="university-filters"><label for="university-tier">院校层次<select id="university-tier">${[['all','全部院校'],['985','985（含 211）'],['211','211（含 985）'],['double','双一流'],['ordinary','普通本科'],['junior','部分专科'],['verified','已有录取数据']].map(([id,label])=>`<option value="${id}" ${universityBrowser.tier===id?'selected':''}>${label}</option>`).join('')}</select></label><label for="university-query">搜索学校或地区<input type="search" id="university-query" value="${escapeHtml(universityBrowser.query)}" placeholder="如：郑州、清华、北京"></label><label for="university-target">填入哪个志愿<select id="university-target">${Array.from({length:5},(_,i)=>`<option value="${i}" ${universityBrowser.target===i?'selected':''}>第 ${i+1} 志愿</option>`).join('')}</select></label></div>
     <p id="university-fill-status" role="status" aria-live="polite"></p>
     <div id="university-results">${universityResultsHtml()}</div>
-    <p>${admissionsSourceLink(UNIVERSITY_CATALOG.source,'教育部 2025 年高校名单')} · ${admissionsSourceLink(UNIVERSITY_CATALOG.source985,'985 名单')} · ${admissionsSourceLink(UNIVERSITY_CATALOG.source211,'211 名单')}</p>
   </details>`;
 }
 function universityResultsHtml(){

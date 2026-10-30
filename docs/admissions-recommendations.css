@@ -1,27 +1,44 @@
-.recommendation-section{padding:clamp(18px,3vw,32px);}
-.recommendation-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
-.recommendation-heading h2{font-size:clamp(22px,3vw,32px);margin:8px 0;}
-.recommendation-heading label{display:grid;gap:8px;font-size:13px;}
-.recommendation-heading select{padding:10px 14px;min-height:44px;border:2px solid #bf9967;border-radius:8px;background:#fffaf0;color:#68452d;font:inherit;}
-.recommendation-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:24px 0;}
-.recommendation-band{min-width:0;--rec:#a45d3c;--rec-bg:#f8e8df;}
-.recommendation-match{--rec:#496e88;--rec-bg:#e9f0f5;}.recommendation-safe{--rec:#537754;--rec-bg:#ebf1e6;}
-.recommendation-band>header{padding:20px 16px;border:1px solid var(--rec);border-radius:12px;background:var(--rec-bg);margin-bottom:14px;}
-.recommendation-band>header>span{display:inline-block;padding:5px 10px;border-radius:20px;background:var(--rec);color:white;font-weight:700;}
-.recommendation-band h3{font-size:16px;margin:12px 0 8px;line-height:1.5;}.recommendation-band>header small{font-size:12px;}
-.recommendation-card{padding:18px 14px;margin:14px 0;min-width:0;overflow-wrap:anywhere;border:1px solid #d8be98;border-top:4px solid var(--rec);border-radius:10px;background:#fffcf4;}
-.recommendation-card h4{font-size:19px;line-height:1.5;margin:0 0 10px;}.recommendation-major{font-size:15px;font-weight:700;min-height:3em;}
-.recommendation-tags{display:flex;flex-wrap:wrap;gap:5px;}.recommendation-tags .school-tag{font-size:11px;line-height:1.5;border-radius:4px;padding:3px 6px;}
-.recommendation-card dl{margin:18px 0;}.recommendation-card dl>div{display:flex;justify-content:space-between;gap:10px;margin:10px 0;}.recommendation-card dt{font-size:12px;}.recommendation-card dd{margin:0;font-size:15px;font-weight:700;white-space:nowrap;}
-.recommendation-card .recommendation-condition,.recommendation-card .recommendation-sources,.recommendation-note{font-size:12px;line-height:1.8;color:#806449;}
-.recommendation-risk{font-size:12px;color:#9c3b29;}.recommendation-card button{width:100%;min-height:46px;font-size:13px;padding:10px;white-space:normal;}
-.recommendation-missing{min-height:170px;background:#faf4e8;border-style:dashed;}.recommendation-missing p{font-size:13px;line-height:1.8;}
-#recommendation-status{font-weight:700;}
-@media(max-width:850px){.recommendation-columns{grid-template-columns:1fr}.recommendation-major{min-height:0}.recommendation-card{padding:20px}.recommendation-heading label{width:100%}}
 
-/* Repeat the three coordinated category labels on every recommendation card. */
-.recommendation-band>header>span,.recommendation-card-label{display:inline-flex;align-items:center;justify-content:center;min-width:54px;padding:6px 14px;border:1px solid var(--rec);border-radius:999px;background:var(--rec);color:#fffdf7;font-size:14px;font-weight:700;line-height:1.5;letter-spacing:.08em;}
-.recommendation-card-label{margin:0 0 14px;box-shadow:0 2px 5px #533d2610;}
-.recommendation-band>header{border-color:color-mix(in srgb,var(--rec) 40%,#fffaf0);box-shadow:0 3px 10px #67482a06;}
-.recommendation-card{border-top-color:var(--rec);}
-@media(max-width:600px){.recommendation-card-label{font-size:13px;padding:5px 12px;}}
+/* Volunteer reference booklet: historical information only, with coordinated bands. */
+.final-screen .final-wrap.admissions-wrap{max-width:1280px;}
+.final-screen .recommendation-section{padding:clamp(18px,3vw,32px);background:#fffbf2;}
+.recommendation-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:22px;}
+.recommendation-heading .eyebrow{font-size:11px;letter-spacing:.15em;margin:0 0 10px;}
+.recommendation-heading h2{font-size:clamp(25px,3.4vw,38px);line-height:1.35;margin:0 0 10px;}
+.recommendation-intro{font-size:14px;margin:0;line-height:1.8;}
+.recommendation-heading label{display:grid;gap:9px;flex-shrink:0;font-size:12px;}
+.recommendation-heading select{min-width:132px;min-height:46px;padding:10px 16px;border:1px solid #bc9870;border-radius:9px;background:#fffaf0;color:#68452d;font:inherit;font-size:15px;}
+.recommendation-context{display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;padding:15px 18px;border-radius:10px;background:#f4ead6;border:1px solid #e2ceb0;font-size:12px;color:#7c6348;}
+.recommendation-context strong{font-size:24px;color:#76502d;margin:0 5px;}
+.recommendation-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:26px 0 20px;}
+.recommendation-band{min-width:0;display:flex;flex-direction:column;gap:14px;--rec:#a45d3c;--rec-bg:#f8e8df;}
+.recommendation-match{--rec:#496e88;--rec-bg:#e9f0f5;}.recommendation-safe{--rec:#537754;--rec-bg:#ebf1e6;}
+.recommendation-band>header{padding:18px;border:1px solid #d9cbb9;border-top:3px solid var(--rec);border-radius:12px;background:var(--rec-bg);}
+.recommendation-band-title{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.recommendation-band-title>span{font-size:21px;font-weight:700;color:var(--rec);letter-spacing:.1em;}
+.recommendation-band-title>small{font-size:12px;color:#766854;}
+.recommendation-band h3{font-size:13px;font-weight:400;line-height:1.7;margin:8px 0 0;}
+.recommendation-card{box-sizing:border-box;min-width:0;flex:1;display:flex;flex-direction:column;gap:0;margin:0;padding:20px;border:1px solid #e0cfb3;border-radius:12px;background:#fffdf7;overflow-wrap:anywhere;box-shadow:0 3px 9px #79532b06;}
+.recommendation-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.recommendation-card-label{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;background:var(--rec-bg);color:var(--rec);border:1px solid var(--rec);font-size:11px;font-weight:700;line-height:1.5;letter-spacing:.08em;}
+.recommendation-card-number{font-size:14px;color:#b7a58b;font-variant-numeric:tabular-nums;}
+.recommendation-card h4{font-size:20px;line-height:1.5;margin:0 0 7px;letter-spacing:0;}
+.recommendation-card .recommendation-major{font-size:13px;font-weight:500;line-height:1.7;margin:0 0 12px;min-height:2.7em;}
+.recommendation-tags{display:flex;flex-wrap:wrap;gap:5px;min-height:23px;margin-bottom:18px;}
+.recommendation-tags .school-tag{padding:2px 5px;border-radius:4px;font-size:10px;line-height:1.5;}
+.recommendation-score{padding:14px 0;border-top:1px solid #eee2cf;border-bottom:1px solid #eee2cf;display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px 8px;}
+.recommendation-score>span{font-size:11px;color:#92775a;}
+.recommendation-score strong{font-size:30px;line-height:1.2;color:var(--rec);font-variant-numeric:tabular-nums;}
+.recommendation-score strong small{font-size:11px;font-weight:400;color:#947e63;}
+.recommendation-score p{grid-column:1 / -1;font-size:11px;line-height:1.6;margin:0;color:#80664a;}
+.recommendation-card .recommendation-condition{font-size:10px;color:#937b5e;line-height:1.8;margin:12px 0 18px;}
+.recommendation-card button.ghost-button{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;margin-top:auto;padding:10px 12px;border:1px solid var(--rec);border-radius:7px;background:var(--rec-bg);color:var(--rec);box-shadow:none;font-size:12px;font-weight:700;white-space:normal;}
+.recommendation-card button.ghost-button:hover{filter:brightness(.97);}
+.recommendation-card button:focus-visible,.recommendation-heading select:focus-visible{outline:3px solid #b99462;outline-offset:3px;}
+.recommendation-missing{border-style:dashed;background:#fbf6eb;min-height:280px;justify-content:center;align-items:flex-start;}
+.recommendation-missing .recommendation-card-label{margin-bottom:20px;}
+.recommendation-missing h4{font-size:17px;}.recommendation-missing p{font-size:12px;line-height:1.9;color:#9a8467;}
+.recommendation-note{font-size:11px;line-height:1.9;margin:0;color:#9a8161;}
+#recommendation-status{font-size:13px;font-weight:700;}
+@media(max-width:1000px){.recommendation-columns{gap:12px}.recommendation-card{padding:16px}.recommendation-card h4{font-size:18px}.recommendation-score strong{font-size:26px}}
+@media(max-width:760px){.recommendation-columns{grid-template-columns:1fr;gap:28px}.recommendation-heading{flex-direction:column;gap:16px}.recommendation-heading label{width:100%;display:flex;align-items:center;justify-content:space-between}.recommendation-heading select{min-width:150px}.recommendation-context{gap:10px 16px}.recommendation-card{padding:20px}.recommendation-card .recommendation-major{min-height:0}.recommendation-missing{min-height:150px}.recommendation-card h4{font-size:21px}.recommendation-score strong{font-size:31px}}
