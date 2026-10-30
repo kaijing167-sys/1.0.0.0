@@ -1226,12 +1226,14 @@ function renderFinal(){
               <div class="final-fact"><span>成长成就</span><strong>${game.achievements.length} / ${ACHIEVEMENTS.length}</strong></div>
             </div>
           </section>
-          <section class="final-card">
+          <section class="final-card final-next-card">
             <h2>接下来</h2>
-            <p>成绩已经公布，下一页填写 5 个大学与专业志愿，查看模拟录取结果。</p>
-            <button class="primary-button" data-admissions-page="choices">下一页：志愿填报 →</button>
-            <button class="ghost-button" data-journey-slots>进度存档槽</button>
-            <button class="primary-button" data-action="new-game">重新开始新周目 →</button>
+            <p>成绩已经公布。选好下一站，让故事继续。</p>
+            <div class="final-next-actions">
+              <button type="button" class="primary-button next-action-primary" data-admissions-page="choices"><span class="next-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M5 19l4-1L20 7a2.8 2.8 0 0 0-4-4L5 14l-1 6 6-1M13 21h8"/></svg></span><span class="next-action-label"><strong>志愿填报</strong><small>选择大学与专业，奔赴下一站</small></span><span class="next-action-arrow" aria-hidden="true">→</span></button>
+              <button type="button" class="ghost-button next-action-secondary" data-journey-slots><span class="next-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12l3 3v13H4V4h1ZM8 4v6h8V4M8 20v-6h8v6"/></svg></span><span>进度存档</span></button>
+              <button type="button" class="ghost-button next-action-secondary" data-action="new-game"><span class="next-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 1-2-6"/></svg></span><span>开启新周目</span></button>
+            </div>
           </section>
         </div>
       </div>
