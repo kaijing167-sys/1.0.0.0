@@ -38,3 +38,22 @@
 .admissions-choice select:focus-visible {outline:3px solid #d8983f;outline-offset:2px;}
 .admissions-major-select-label small {font-size:12px;line-height:1.7;color:#705d45;overflow-wrap:anywhere;}
 @media(max-width:600px){.admissions-choice input{font-size:16px}.admissions-major-select-label{gap:10px}}
+
+/* Adjustment choices and a complete, responsive unplaced result screen. */
+.admissions-adjustment-label {grid-column:1 / -1;}
+.admissions-adjustment-label small {font-size:13px;line-height:1.7;color:#705d45;}
+.admissions-adjusted {padding:18px;border:2px solid #c38b57;background:#fff0cb;border-radius:10px;}
+.final-screen.admissions-unplaced-screen {box-sizing:border-box;min-height:100svh;padding:clamp(12px,3vw,36px);display:flex;align-items:stretch;}
+.admissions-unplaced-screen .final-wrap.admissions-wrap {box-sizing:border-box;width:100%;max-width:1400px;min-height:calc(100svh - 72px);margin:0 auto;display:flex;flex-direction:column;padding:clamp(16px,3vw,40px);}
+.admissions-unplaced-screen .admissions-result.admission-unplaced {flex:1;margin:12px 0 24px;padding:clamp(18px,3vw,36px);background:linear-gradient(135deg,#fff8e9,#f9e5c5);border:2px solid #c38b57;}
+.admission-unplaced .admission-empty-hero {text-align:center;padding:clamp(24px,5vw,60px) 0 24px;border-bottom:2px solid #e6c693;}
+.admissions-unplaced-screen .admission-empty-hero h2 {font-size:clamp(36px,6.5vw,80px);line-height:1.25;margin:16px 0 22px;overflow-wrap:anywhere;}
+.admission-empty-hero>p:last-child {font-size:clamp(16px,2vw,22px);}
+.admission-unplaced>p {font-size:17px;}
+.admission-unplaced details {margin-top:24px;}
+.admission-unplaced details summary {font-size:18px;font-weight:700;cursor:pointer;}
+.admission-unplaced ol {padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.admission-unplaced li {min-width:0;margin:0;padding:20px;background:#fffcf4;border:1px solid #d8b78b;border-radius:10px;overflow-wrap:anywhere;}
+.admission-unplaced li:last-child {grid-column:1 / -1;}
+.admissions-unplaced-screen .dialog-footer {margin-top:auto;display:flex;justify-content:space-between;gap:16px;}
+@media(max-width:600px){.admissions-unplaced-screen .final-wrap.admissions-wrap{min-height:calc(100svh - 24px);padding:16px 12px}.admission-unplaced ol{grid-template-columns:1fr}.admission-unplaced li{padding:16px}.admissions-unplaced-screen .admission-empty-hero h2{font-size:clamp(32px,8.5vw,48px)}}
