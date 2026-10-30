@@ -1,0 +1,12 @@
+{
+  "year": 2024,
+  "source": "https://www.gaokao.haedu.cn/",
+  "requestedSchools": 1385,
+  "rawRows": 3569,
+  "referenceRows": 2721,
+  "schools": 1245,
+  "skipped": {
+    "special": 673
+  },
+  "failed": []
+}

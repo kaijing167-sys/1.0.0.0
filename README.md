@@ -4,15 +4,24 @@
 
 ## 在线试玩
 
-**[点击进入试玩网站](https://kaijing167-sys.github.io/1.0.0.0/?v=37)**
+**[点击进入试玩网站](https://kaijing167-sys.github.io/1.0.0.0/?v=38)**
 
-试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/?v=37](https://kaijing167-sys.github.io/1.0.0.0/?v=37)
+试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/?v=38](https://kaijing167-sys.github.io/1.0.0.0/?v=38)
 
 固定试玩地址：[https://kaijing167-sys.github.io/1.0.0.0/](https://kaijing167-sys.github.io/1.0.0.0/)。上方链接带本次更新标记，便于重新加载入口页面。
 
 无需下载安装，打开浏览器即可开始游戏。源码见 [GitHub 仓库](https://github.com/kaijing167-sys/1.0.0.0)。
 
 ## 当前版本
+
+**九宫格志愿推荐（2026-10-31）**：志愿页顶部新增“冲刺／稳妥／保底”各 3 个大学与专业推荐位置，可选择第 1—5 志愿并一键选填；替换已有内容前会确认。
+
+- 2024 年院校线用于参考，2025 年专业线用于模拟录取；历史院校分数不冒充专业录取分数，也不改变原有 2025 年模拟录取算法。
+- 从官方平台核对 1385 所院校，获取 3569 条原始记录，排除特殊招生等记录后保留 1245 所院校的 2721 条普通类参考线。院校与招生单位按名称和代码准确匹配；历史类别与当前类别仅作游戏参考，不声称跨年份等值。
+- 推荐匹配当前选科、专业要求及批次线，每所学校在九格中最多出现一次。以“本人成绩减 2024 院校线”和“本人成绩减 2025 专业线”两项分差中的较小值分类：−15～9 分为冲刺，10～29 分为稳妥，30 分以上为保底；同档优先本科与接近目标分差的专业。
+- 历年试题、科类和招生计划不同，推荐不等于录取概率或承诺。冲刺项低于 2025 专业线时明确显示风险，同分仍按原规则待定。没有符合条件的数据时保留空位并解释原因，不跨档凑数。
+- 推荐标题与参考线标签不显示省份字段；院校真实名称和来源链接保留。来源见 [官方招生数据平台](https://www.gaokao.haedu.cn/)，采集汇总见 [推荐数据审计](data/recommendations-2024-audit.json)。
+
 
 **自定义存档删除更新（2026-10-31）**：在“开始游戏／存档 → 我的自定义角色”中，每张角色卡新增“删除存档”。确认后删除该角色及其自动进度；若删除的是当前角色，也会清除当前自动存档，避免下次自动保存时重新出现。其他角色和四名预设人物不受影响；手动备份保留。删除操作不可撤销。
 
@@ -244,6 +253,7 @@ uvicorn main:app --reload
 | `frontend/gaokao.js`、`henan-2025-data.js` | 个人成绩单与河南 2025 参考位次 |
 | `frontend/celebration.css` | 个人出分与模拟录取喜报样式 |
 | `frontend/university-catalog.js`、`university-browser.js` | 1388 条院校目录、筛选搜索与选填 |
+| `frontend/recommendations-2024.js`、`admissions-recommendations.js`、`admissions-recommendations.css` | 2024 院校参考线与冲刺／稳妥／保底推荐 |
 | `frontend/admissions.js`、`admissions-data.js`、`admissions.css` | 独立五志愿页面、数据加载与模拟录取 |
 | `frontend/admissions-records-2025.json.gz` | 30626 条专业最低分、选科及来源，进入志愿页按需解压 |
 | `tools/import-henan-admissions.cjs`、`tools/build-henan-admissions.cjs` | 公开数据采集、严格关联与压缩打包 |

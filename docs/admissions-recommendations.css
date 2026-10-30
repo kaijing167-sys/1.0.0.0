@@ -1,0 +1,20 @@
+.recommendation-section{padding:clamp(18px,3vw,32px);}
+.recommendation-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+.recommendation-heading h2{font-size:clamp(22px,3vw,32px);margin:8px 0;}
+.recommendation-heading label{display:grid;gap:8px;font-size:13px;}
+.recommendation-heading select{padding:10px 14px;min-height:44px;border:2px solid #bf9967;border-radius:8px;background:#fffaf0;color:#68452d;font:inherit;}
+.recommendation-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:24px 0;}
+.recommendation-band{min-width:0;--rec:#a45036;--rec-bg:#f9e6da;}
+.recommendation-match{--rec:#3d687c;--rec-bg:#e7f0f1;}.recommendation-safe{--rec:#47734c;--rec-bg:#e9efdf;}
+.recommendation-band>header{padding:20px 16px;border:1px solid var(--rec);border-radius:12px;background:var(--rec-bg);margin-bottom:14px;}
+.recommendation-band>header>span{display:inline-block;padding:5px 10px;border-radius:20px;background:var(--rec);color:white;font-weight:700;}
+.recommendation-band h3{font-size:16px;margin:12px 0 8px;line-height:1.5;}.recommendation-band>header small{font-size:12px;}
+.recommendation-card{padding:18px 14px;margin:14px 0;min-width:0;overflow-wrap:anywhere;border:1px solid #d8be98;border-top:4px solid var(--rec);border-radius:10px;background:#fffcf4;}
+.recommendation-card h4{font-size:19px;line-height:1.5;margin:0 0 10px;}.recommendation-major{font-size:15px;font-weight:700;min-height:3em;}
+.recommendation-tags{display:flex;flex-wrap:wrap;gap:5px;}.recommendation-tags .school-tag{font-size:11px;line-height:1.5;border-radius:4px;padding:3px 6px;}
+.recommendation-card dl{margin:18px 0;}.recommendation-card dl>div{display:flex;justify-content:space-between;gap:10px;margin:10px 0;}.recommendation-card dt{font-size:12px;}.recommendation-card dd{margin:0;font-size:15px;font-weight:700;white-space:nowrap;}
+.recommendation-card .recommendation-condition,.recommendation-card .recommendation-sources,.recommendation-note{font-size:12px;line-height:1.8;color:#806449;}
+.recommendation-risk{font-size:12px;color:#9c3b29;}.recommendation-card button{width:100%;min-height:46px;font-size:13px;padding:10px;white-space:normal;}
+.recommendation-missing{min-height:170px;background:#faf4e8;border-style:dashed;}.recommendation-missing p{font-size:13px;line-height:1.8;}
+#recommendation-status{font-weight:700;}
+@media(max-width:850px){.recommendation-columns{grid-template-columns:1fr}.recommendation-major{min-height:0}.recommendation-card{padding:20px}.recommendation-heading label{width:100%}}
