@@ -4,15 +4,18 @@
 
 ## 在线试玩
 
-**[点击进入试玩网站](https://kaijing167-sys.github.io/1.0.0.0/?v=38)**
+**[点击进入试玩网站](https://kaijing167-sys.github.io/1.0.0.0/?v=39)**
 
-试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/?v=38](https://kaijing167-sys.github.io/1.0.0.0/?v=38)
+试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/?v=39](https://kaijing167-sys.github.io/1.0.0.0/?v=39)
 
 固定试玩地址：[https://kaijing167-sys.github.io/1.0.0.0/](https://kaijing167-sys.github.io/1.0.0.0/)。上方链接带本次更新标记，便于重新加载入口页面。
 
 无需下载安装，打开浏览器即可开始游戏。源码见 [GitHub 仓库](https://github.com/kaijing167-sys/1.0.0.0)。
 
 ## 当前版本
+
+**推荐标签配色（2026-10-31）**：冲刺使用暖橙色、稳妥使用雾蓝色、保底使用草绿色；分栏标题与每张大学／专业推荐卡均显示同色标签，搭配浅色背景。
+
 
 **九宫格志愿推荐（2026-10-31）**：志愿页顶部新增“冲刺／稳妥／保底”各 3 个大学与专业推荐位置，可选择第 1—5 志愿并一键选填；替换已有内容前会确认。
 
