@@ -120,7 +120,7 @@ function renderAdmissions(){
       <form id="admissions-form">
         ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学搜索<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" placeholder="搜索大学、别名或地区，如：武汉、浙江、复旦" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><div class="admissions-school-picker admissions-major-select-label"><button type="button" class="ghost-button admissions-school-toggle" id="admissions-school-toggle-${i}" data-school-toggle="${i}" aria-expanded="false" aria-controls="admissions-school-panel-${i}">大学完整列表</button><div class="admissions-school-panel" id="admissions-school-panel-${i}" hidden><small>按院校排名排序；985 红色 · 211 黄色 · 双一流绿色。支持搜索大学、别名或地区，列表可上下滚动，点击学校选填。</small><div class="admissions-school-scroll" id="admissions-school-list-${i}" role="group" aria-label="第 ${i+1} 志愿大学列表"></div></div></div><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><label class="admissions-adjustment-label" for="admissions-adjustment-${i}">是否服从调剂<select id="admissions-adjustment-${i}" data-admissions-index="${i}" data-admissions-field="adjustment"><option value="no"${c.adjustment?'':' selected'}>不服从调剂</option><option value="yes"${c.adjustment?' selected':''}>服从调剂</option></select><small>原专业未录取时，允许调剂到该校同批次、符合选科和分数条件的其他专业或专业组。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
         <div id="admissions-errors" role="alert">${(game.admissions?.errors||[]).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}</div>
-        <div class="dialog-footer"><button type="button" class="ghost-button" data-admissions-page="scores">← 返回成绩页</button><button type="submit" class="primary-button">提交志愿，查看模拟录取 →</button></div>
+        <div class="dialog-footer"><button type="button" class="ghost-button" data-admissions-page="scores">← 返回成绩页</button><button type="submit" class="primary-button">提交志愿，查看成功率 →</button></div>
       </form>
     </section>
     ${result?'<button type="button" class="ghost-button" data-admissions-page="admission-result">查看上次模拟结果 →</button>':''}
@@ -188,7 +188,7 @@ function admissionsResultHtml(result){
 }
 function renderAdmissionsResult(){
   const choices=admissionsChoices(),result=evaluateAdmissions(admissionsPlayer(),choices);
-  $('#game-root').innerHTML=`<main id="main" class="final-screen celebration-screen ${result.status==='unplaced'?'admissions-unplaced-screen':''}"><div class="final-wrap admissions-wrap"><p class="eyebrow">我的下一站 · 模拟录取结果</p>${admissionsResultHtml(result)}<div class="dialog-footer"><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button><button class="primary-button" data-admissions-page="choices">修改志愿，重新模拟</button></div></div></main>`;
+  $('#game-root').innerHTML=`<main id="main" class="final-screen celebration-screen ${result.status==='unplaced'?'admissions-unplaced-screen':''}"><div class="final-wrap admissions-wrap"><p class="eyebrow">我的下一站 · 模拟录取结果</p>${admissionsResultHtml(result)}${game.admissions?.probabilities?admissionsProbabilityHtml(game.admissions.probabilities):''}<div class="dialog-footer"><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button><button class="primary-button" data-admissions-page="choices">修改志愿，重新模拟</button></div></div></main>`;
 }
 function saveAdmissionsField(target){
   if(!game?.completed||target.dataset.admissionsIndex===undefined)return;
@@ -215,13 +215,8 @@ function saveAdmissionsField(target){
   const resultNode=document.querySelector('.admissions-result');if(resultNode)resultNode.hidden=true;
   $('#admissions-errors').textContent='';persist();
 }
-function submitAdmissions(){
-  if(!game?.completed||!admissionsPlayer())return;
-  const choices=Array.from({length:5},(_,i)=>({school:$('#admissions-school-'+i).value.trim().slice(0,100),major:$('#admissions-major-'+i).value.trim().slice(0,100),adjustment:$('#admissions-adjustment-'+i).value==='yes'}));
-  const result=evaluateAdmissions(admissionsPlayer(),choices);
-  game.admissions={choices,...(result.status==='invalid'?{errors:result.errors}:{result})};
-  game.postExamPage=result.status==='invalid'?'choices':'admission-result';persist();render();window.scrollTo?.({top:0,behavior:'instant'});
-}
+function submitAdmissions(){previewAdmissionsSubmission();}
+
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&!b.disabled&&b.dataset.admissionsPage)openAdmissions(b.dataset.admissionsPage)});
 document.addEventListener('input',e=>{if(!e.target.id?.startsWith('admissions-major-select-'))saveAdmissionsField(e.target)});
 document.addEventListener('change',e=>{
