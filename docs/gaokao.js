@@ -1,5 +1,5 @@
 // Abilities are a baseline; preparation and shared/subject exam fluctuations determine scores.
-function formatExamScore(value){return Number.isFinite(value)?value.toFixed(1):'—'}
+function formatExamScore(value){return Number.isFinite(value)?String(Math.round(value*2)/2):'—'}
 function henanRank(total,category){
   const table=HENAN_2025_RANKS.categories[category];
   if(!table||!Number.isFinite(total))return null;
@@ -36,8 +36,8 @@ function buildGaokaoReport(g){
     const candidate=person.active?g:{...state,attrs:person.attrs,energy:60,stress:40,mood:60};
     const prep=person.active?preparation:{...preparation,quality:.5,resilience:.5,subject:{},badChance:.0275};
     const exam=g.completed?{subjects:{...abilities},performance:"历史成绩",preparation:null}:learningExam(candidate,abilities,selected,()=>learningRandom(g),prep);
-    const subjects=exam.subjects;
-    const total=Math.round(Object.values(subjects).reduce((sum,value)=>sum+value,0)*10)/10;
+    const subjects=Object.fromEntries(Object.entries(exam.subjects).map(([id,value])=>[id,Math.round(value*2)/2]));
+    const total=Object.values(subjects).reduce((sum,value)=>sum+value,0);
     const category=cls.subjects.includes('physics')?'physics':'history';
     return {id:person.id,name:person.name,class_id:cls.id,combination:cls.combo,active:!!person.active,abilities,performance:exam.performance,preparation:person.active&&!g.completed?preparation:undefined,subjects,total,rank:henanRank(total,category)};
   }).sort((a,b)=>b.total-a.total||a.class_id-b.class_id||a.id.localeCompare(b.id));
