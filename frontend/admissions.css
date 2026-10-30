@@ -57,3 +57,20 @@
 .admission-unplaced li:last-child {grid-column:1 / -1;}
 .admissions-unplaced-screen .dialog-footer {margin-top:auto;display:flex;justify-content:space-between;gap:16px;}
 @media(max-width:600px){.admissions-unplaced-screen .final-wrap.admissions-wrap{min-height:calc(100svh - 24px);padding:16px 12px}.admission-unplaced ol{grid-template-columns:1fr}.admission-unplaced li{padding:16px}.admissions-unplaced-screen .admission-empty-hero h2{font-size:clamp(32px,8.5vw,48px)}}
+
+/* Searchable national school list with visible, accessible category tags. */
+.admissions-school-picker{display:grid;gap:10px;min-width:0;}
+.admissions-school-picker>small{font-size:13px;line-height:1.7;}
+.admissions-school-scroll{max-height:320px;overflow-y:auto;overscroll-behavior:contain;border:2px solid #b7834c;border-radius:8px;background:#fffaf0;scrollbar-gutter:stable;}
+.school-match-count{position:sticky;top:0;margin:0;padding:10px 14px;background:#f5e5c9;border-bottom:1px solid #d8bd91;z-index:1;font-size:13px;}
+.admissions-school-scroll .admissions-school-option{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:100%;min-height:56px;padding:12px 14px;text-align:left;background:#fffaf0;color:#4e3527;border:0;border-bottom:1px solid #e8d6b7;border-radius:0;box-shadow:none;cursor:pointer;font:inherit;}
+.admissions-school-scroll .admissions-school-option:hover,.admissions-school-scroll .admissions-school-option.is-selected{background:#f8e5bb;}
+.admissions-school-option:focus-visible{outline:3px solid #b55c28;outline-offset:-3px;}
+.school-option-name{font-weight:700;}
+.school-option-tags{display:inline-flex;gap:5px;flex-wrap:wrap;}
+.admissions-school-scroll .school-tag,.university-card .school-tag{display:inline-block;padding:3px 7px;border-radius:5px;font-size:12px;font-weight:700;line-height:1.4;}
+.school-tag.school-tag-985{background:#b4232d;color:#fff;}
+.school-tag.school-tag-211{background:#ffd65c;color:#573c00;}
+.school-tag.school-tag-double{background:#197344;color:#fff;}
+.admissions-school-option>small{margin-left:auto;font-size:12px;color:#705d45;}
+@media(max-width:600px){.admissions-school-scroll{max-height:280px}.admissions-school-option>small{flex-basis:100%;margin-left:0}.admissions-school-scroll .admissions-school-option{padding:12px;gap:7px;}}
