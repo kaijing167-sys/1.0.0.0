@@ -14,7 +14,7 @@
   /* ===== 配置 ===== */
   const CX = 150, CY = 150, R = 120;     // SVG 整圆几何（圆心 + 半径）
   // 指针改为匀速绕整圆旋转；BASE_PERIOD_MS 现在表示「转一整圈」的时间（沿用原半圈周期，保持手感一致）
-  const BASE_PERIOD_MS = 4400;           // 开头最慢（再降一档 / +400ms）
+  const BASE_PERIOD_MS = 4200;           // 开头最慢（整圈比半圆行程大，整体比上一版快 200ms）
   const STEP_PERIOD_MS = 200;            // 每次提速减少的周期（指针变快 200ms）
   const SPEEDUP_EVERY = 5;               // 每完成 5 次判定提速一次
   const MIN_PERIOD_MS = 3000;            // 安全下限（实际最多到第 4 次提速→3600ms，远未触及）
