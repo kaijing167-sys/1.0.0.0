@@ -107,14 +107,19 @@
   display: block;
   width: 100%;
   height: auto;
+  shape-rendering: crispEdges;
+  image-rendering: pixelated;
 }
 
-.emg-gauge { fill: none; stroke: #34565f; stroke-width: 16; stroke-linecap: butt; }
+/* 像素圆盘：粗量条 + 上下描边，硬边不抗锯齿 */
+.emg-gauge { fill: none; stroke: #23424a; stroke-width: 18; stroke-linecap: butt; }
+.emg-rim { fill: none; stroke: #6fd3c5; stroke-width: 3; stroke-linecap: butt; opacity: 0.85; }
 .emg-zone-good { fill: none; stroke: #4ea3e0; stroke-width: 18; stroke-linecap: butt; opacity: 0.95; transition: stroke 0.15s steps(2); }
 .emg-zone-exc { fill: none; stroke: #ffd23f; stroke-width: 8; stroke-linecap: butt; transition: stroke 0.15s steps(2); }
-.emg-pointer { stroke: #eafff9; stroke-width: 4; stroke-linecap: butt; }
-.emg-tip { fill: #eafff9; }
-.emg-hub { fill: #6fd3c5; }
+/* 指针：细而清晰 + 像素方块头；去掉原先的大圆环 */
+.emg-pointer { stroke: #f2fffb; stroke-width: 3; stroke-linecap: butt; }
+.emg-head { fill: #f2fffb; stroke: #0b1626; stroke-width: 1; }
+.emg-hub { fill: #2f8f86; stroke: #0b1626; stroke-width: 2; }
 
 .emg-zone-good.hit-good { stroke: #7fd0ff; }
 .emg-zone-exc.hit-exc { stroke: #ffe27a; filter: drop-shadow(0 0 6px rgba(255, 226, 122, 0.9)); }
@@ -141,6 +146,18 @@
 .emg-fb-gold { color: #ffd23f; }
 .emg-fb-blue { color: #7fd0ff; }
 .emg-fb-red { color: #ff7a6b; }
+
+/* 成功/失败字幕（独立于中心反馈，成功专属，不与失败提示重复） */
+.emg-sub {
+  text-align: center;
+  min-height: 16px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.emg-sub-gold { color: #ffd23f; text-shadow: 1px 1px 0 #0b1626; }
+.emg-sub-blue { color: #7fd0ff; text-shadow: 1px 1px 0 #0b1626; }
 
 .emg-footer {
   display: flex;

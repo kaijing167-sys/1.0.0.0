@@ -14,10 +14,10 @@
   /* ===== 配置 ===== */
   const CX = 150, CY = 150, R = 120;     // SVG 半圆几何
   const AMP_DEG = 86;                    // 指针摆幅（±86°，留边避免越界）
-  const BASE_PERIOD_MS = 4000;           // 开头最慢（比上版再降两档 / +800ms）
+  const BASE_PERIOD_MS = 4400;           // 开头最慢（再降一档 / +400ms）
   const STEP_PERIOD_MS = 200;            // 每次提速减少的周期（指针变快 200ms）
   const SPEEDUP_EVERY = 5;               // 每完成 5 次判定提速一次
-  const MIN_PERIOD_MS = 2600;            // 安全下限（实际最多到第 4 次提速→3200ms，远未触及）
+  const MIN_PERIOD_MS = 3000;            // 安全下限（实际最多到第 4 次提速→3600ms，远未触及）
   const TOTAL_TIME_MS = 20000;           // 单局约 20 秒（以时间为结束主条件）
   const MAX_ATTEMPTS = 20;               // 最多 20 次判定（安全上限，正常先于时间结束前达不到）
   const EXCELLENT_R = 8;                 // 中心窄区（优）半径（度）
@@ -119,17 +119,20 @@
           <span class="emg-time" id="emg-time">${(TOTAL_TIME_MS / 1000).toFixed(1)}s</span>
         </div>
         <div class="emg-stage" id="emg-stage">
-          <svg viewBox="0 0 300 180" class="emg-svg" id="emg-svg" aria-hidden="true">
+          <svg viewBox="0 0 300 180" class="emg-svg" id="emg-svg" shape-rendering="crispEdges" aria-hidden="true">
             <polyline class="emg-gauge" points="${polyline(-90, 90, R)}"></polyline>
+            <polyline class="emg-rim" points="${polyline(-90, 90, R + 13)}"></polyline>
+            <polyline class="emg-rim" points="${polyline(-90, 90, R - 13)}"></polyline>
             <polyline class="emg-zone-good" id="emg-zone-good" points=""></polyline>
             <polyline class="emg-zone-exc" id="emg-zone-exc" points=""></polyline>
             <line class="emg-pointer" id="emg-pointer" x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - R}"></line>
-            <circle class="emg-tip" id="emg-tip" cx="${CX}" cy="${CY - R}" r="7"></circle>
-            <circle class="emg-hub" cx="${CX}" cy="${CY}" r="9"></circle>
+            <rect class="emg-head" id="emg-head" x="${CX - 4}" y="${CY - R - 4}" width="8" height="8"></rect>
+            <rect class="emg-hub" x="${CX - 8}" y="${CY - 8}" width="16" height="16"></rect>
           </svg>
           <div class="emg-hint" id="emg-hint">准备…</div>
         </div>
         <div class="emg-fb" id="emg-fb"></div>
+        <div class="emg-sub" id="emg-sub"></div>
       </div>`;
     document.body.appendChild(root);
     document.body.classList.add("emg-lock");
@@ -140,7 +143,8 @@
       zoneGood: root.querySelector("#emg-zone-good"),
       zoneExc: root.querySelector("#emg-zone-exc"),
       pointer: root.querySelector("#emg-pointer"),
-      tip: root.querySelector("#emg-tip"),
+      head: root.querySelector("#emg-head"),
+      sub: root.querySelector("#emg-sub"),
       att: root.querySelector("#emg-att"),
       exc: root.querySelector("#emg-exc"),
       gd: root.querySelector("#emg-gd"),
@@ -160,8 +164,8 @@
     const tip = pointOnArc(deg, R);
     ui.pointer.setAttribute("x2", tip.x.toFixed(1));
     ui.pointer.setAttribute("y2", tip.y.toFixed(1));
-    ui.tip.setAttribute("cx", tip.x.toFixed(1));
-    ui.tip.setAttribute("cy", tip.y.toFixed(1));
+    ui.head.setAttribute("x", (tip.x - 4).toFixed(1));
+    ui.head.setAttribute("y", (tip.y - 4).toFixed(1));
   }
 
   function updateTime(ui, leftMs) {
@@ -186,6 +190,16 @@
   function setFeedback(ui, text, cls) {
     ui.fb.textContent = text;
     ui.fb.className = "emg-fb " + (cls || "");
+  }
+
+  function setSubtitle(ui, text, cls) {
+    ui.sub.textContent = text;
+    ui.sub.className = "emg-sub " + (cls || "");
+  }
+
+  // 微振动反馈（移动端生效；桌面端静默失败也无妨）
+  function vibrate(ms) {
+    try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {}
   }
 
   /* ===== 动画循环 ===== */
@@ -246,9 +260,22 @@
     state.lastTrigger = now;
 
     const result = judge(state.pointerAngle, state.zone);
-    if (result === "excellent") { state.excellent++; setFeedback(state.ui, "优！正中靶心 ✦", "emg-fb-gold"); }
-    else if (result === "good") { state.good++; setFeedback(state.ui, "良！擦边命中 ✓", "emg-fb-blue"); }
-    else { state.miss++; setFeedback(state.ui, "失败，没踩准节奏", "emg-fb-red"); }
+    if (result === "excellent") {
+      state.excellent++;
+      setFeedback(state.ui, "优！", "emg-fb-gold");
+      setSubtitle(state.ui, "正中靶心 ✦", "emg-sub-gold");
+      vibrate(25);
+    } else if (result === "good") {
+      state.good++;
+      setFeedback(state.ui, "良！", "emg-fb-blue");
+      setSubtitle(state.ui, "踩准节奏 ✓", "emg-sub-blue");
+      vibrate(20);
+    } else {
+      state.miss++;
+      setFeedback(state.ui, "失败", "emg-fb-red");
+      setSubtitle(state.ui, "", "");
+      vibrate(45);
+    }
     flash(state.ui, result);
 
     state.attempts++;
