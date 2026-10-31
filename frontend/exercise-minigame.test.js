@@ -10,18 +10,18 @@ function ok(name, cond) {
   else { fail++; console.log("  FAIL  " + name); }
 }
 
-console.log("== 判定区生成合法性 ==");
+console.log("== 判定区生成合法性（整圆） ==");
 let zoneOk = true, bandOk = true, sepOk = true, prev = null;
 const N = 100000;
 for (let i = 0; i < N; i++) {
   const z = EM.generateZone(prev);
-  if (z.center < -(90 - 20) || z.center > (90 - 20)) zoneOk = false;
-  if (z.center - z.goodRadius < -90 || z.center + z.goodRadius > 90) bandOk = false;
+  if (z.center < -(180 - 20) || z.center > (180 - 20)) zoneOk = false;
+  if (z.center - z.goodRadius < -180 || z.center + z.goodRadius > 180) bandOk = false;
   if (prev != null && Math.abs(z.center - prev) < 32 - 1e-6) sepOk = false;
   prev = z.center;
 }
-ok("center 落在 [-(90-GOOD_R), 90-GOOD_R] 内（" + N + " 次）", zoneOk);
-ok("good 带不越量条边界（center±goodRadius ∈ [-90,90]）", bandOk);
+ok("center 落在 [-(180-GOOD_R), 180-GOOD_R] 内（" + N + " 次）", zoneOk);
+ok("good 带不越量条边界（center±goodRadius ∈ [-180,180]）", bandOk);
 ok("与上一轮中心间隔 >= MIN_SEPARATION(约32)", sepOk);
 
 console.log("== 命中判定边界 ==");
@@ -34,13 +34,14 @@ ok("judge(21) === miss（界外）", EM.judge(21, zone) === "miss");
 ok("judge(-15) === good（负向）", EM.judge(-15, zone) === "good");
 ok("judge(-25) === miss（负向界外）", EM.judge(-25, zone) === "miss");
 
-console.log("== 随机角度命中自洽 ==");
+console.log("== 随机角度命中自洽（整圆，含跨 ±180 环绕） ==");
 let selfOk = true;
 for (let i = 0; i < 50000; i++) {
   const z = EM.generateZone(null);
-  const a = (Math.random() * 180 - 90);
+  const a = (Math.random() * 360 - 180);
   const r = EM.judge(a, z);
-  const d = Math.abs(a - z.center);
+  const raw = Math.abs((a - z.center) % 360);
+  const d = raw > 180 ? 360 - raw : raw; // 圆周最短角距，与 judge 内部 angularDist 一致
   if (r === "excellent" && d > z.excellentRadius) selfOk = false;
   if (r === "good" && (d > z.goodRadius || d <= z.excellentRadius)) selfOk = false;
   if (r === "miss" && d <= z.goodRadius) selfOk = false;

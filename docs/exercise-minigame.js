@@ -3,8 +3,8 @@
  * 纯前端，自包含：自带全屏 overlay，不依赖 game.js，可在独立 demo 页直接试玩。
  * 由 game.js 后续通过 window.ExerciseMinigame.start(onComplete) 接入「运动锻炼」入口。
  *
- * 玩法：半圆形量条上指针按正弦曲线来回摆动；量条随机生成判定区（中心窄=优，两侧宽=良）。
- * 指针进入判定区时点击：命中中心=优(100)、命中边缘=良(60)、错失=失败(0)。
+ * 玩法：整圆量条上指针匀速旋转；判定区随机分布在整圆周上（含下半圆），中心窄=优、两侧宽=良。
+ * 指针（扫过整圆）进入判定区时点击：命中中心=优(100)、命中边缘=良(60)、错失=失败(0)。
  * 单局约 20 秒（以时间为主要结束条件，不再按次数提前结束），最多 20 次判定（安全上限）。
  * 摆速阶梯形加快：开头最慢，每完成 5 次判定提速约 200ms，有安全下限（MIN_PERIOD_MS）不会无限加快。
  */
@@ -12,8 +12,8 @@
   "use strict";
 
   /* ===== 配置 ===== */
-  const CX = 150, CY = 150, R = 120;     // SVG 半圆几何
-  const AMP_DEG = 86;                    // 指针摆幅（±86°，留边避免越界）
+  const CX = 150, CY = 150, R = 120;     // SVG 整圆几何（圆心 + 半径）
+  // 指针改为匀速绕整圆旋转；BASE_PERIOD_MS 现在表示「转一整圈」的时间（沿用原半圈周期，保持手感一致）
   const BASE_PERIOD_MS = 4400;           // 开头最慢（再降一档 / +400ms）
   const STEP_PERIOD_MS = 200;            // 每次提速减少的周期（指针变快 200ms）
   const SPEEDUP_EVERY = 5;               // 每完成 5 次判定提速一次
@@ -22,8 +22,8 @@
   const MAX_ATTEMPTS = 20;               // 最多 20 次判定（安全上限，正常先于时间结束前达不到）
   const EXCELLENT_R = 8;                 // 中心窄区（优）半径（度）
   const GOOD_R = 20;                     // 中心两侧宽区（良）半径（度）
-  const CENTER_MIN = -(90 - GOOD_R);     // 判定区中心范围下限，保证 good 带不越界
-  const CENTER_MAX = (90 - GOOD_R);      // 上限
+  const CENTER_MIN = -(180 - GOOD_R);    // 判定区中心范围下限（整圆），保证 good 带不越 ±180 边界
+  const CENTER_MAX = (180 - GOOD_R);     // 上限：判定区可落在整圆任意位置，含下半圆
   const MIN_SEPARATION = GOOD_R + 12;    // 与上一轮中心的最小间隔，避免完全重叠
   const PREROLL_MS = 800;                // 开局准备（指针摆动但不计判定）
   const FEEDBACK_MS = 320;               // 反馈动画时长
@@ -64,8 +64,14 @@
   }
 
   /* ===== 命中判定（纯函数，可单测） ===== */
+  // 圆周最短角距（处理 ±180 环绕，例如 179° 与 -179° 实际相邻）
+  function angularDist(a, b) {
+    let d = Math.abs((a - b) % 360);
+    if (d > 180) d = 360 - d;
+    return d;
+  }
   function judge(pointerAngle, zone) {
-    const d = Math.abs(pointerAngle - zone.center);
+    const d = angularDist(pointerAngle, zone.center);
     if (d <= zone.excellentRadius) return "excellent";
     if (d <= zone.goodRadius) return "good";
     return "miss";
@@ -84,7 +90,7 @@
     for (let i = 0; i < 5000; i++) {
       const z = generateZone(prev);
       if (z.center < CENTER_MIN || z.center > CENTER_MAX) zoneOk = false;
-      if (z.center - z.goodRadius < -90 || z.center + z.goodRadius > 90) bandOk = false;
+      if (z.center - z.goodRadius < -180 || z.center + z.goodRadius > 180) bandOk = false;
       if (prev != null && Math.abs(z.center - prev) < MIN_SEPARATION - 1e-6) sepOk = false;
       prev = z.center;
     }
@@ -119,10 +125,10 @@
           <span class="emg-time" id="emg-time">${(TOTAL_TIME_MS / 1000).toFixed(1)}s</span>
         </div>
         <div class="emg-stage" id="emg-stage">
-          <svg viewBox="0 0 300 180" class="emg-svg" id="emg-svg" shape-rendering="crispEdges" aria-hidden="true">
-            <polyline class="emg-gauge" points="${polyline(-90, 90, R)}"></polyline>
-            <polyline class="emg-rim" points="${polyline(-90, 90, R + 13)}"></polyline>
-            <polyline class="emg-rim" points="${polyline(-90, 90, R - 13)}"></polyline>
+          <svg viewBox="0 0 300 300" class="emg-svg" id="emg-svg" shape-rendering="crispEdges" aria-hidden="true">
+            <polyline class="emg-gauge" points="${polyline(-180, 180, R)}"></polyline>
+            <polyline class="emg-rim" points="${polyline(-180, 180, R + 13)}"></polyline>
+            <polyline class="emg-rim" points="${polyline(-180, 180, R - 13)}"></polyline>
             <polyline class="emg-zone-good" id="emg-zone-good" points=""></polyline>
             <polyline class="emg-zone-exc" id="emg-zone-exc" points=""></polyline>
             <line class="emg-pointer" id="emg-pointer" x1="${CX}" y1="${CY}" x2="${CX}" y2="${CY - R}"></line>
@@ -238,9 +244,10 @@
   function advancePointer(now) {
     const dt = clampDt(now - state.lastFrame);
     state.lastFrame = now;
-    const omega = 2 * Math.PI / (currentPeriod(state.attempts) / 1000);
-    state.phaseAngle += omega * dt;
-    const ang = AMP_DEG * Math.sin(state.phaseAngle);
+    // 匀速绕整圆旋转：period 即「转一整圈」的时间（沿用既有 dt 机制，手感与原半圆摆动一致）
+    const degPerSec = 360 / (currentPeriod(state.attempts) / 1000);
+    state.spinAngle += degPerSec * dt;
+    const ang = state.spinAngle;          // 指针角度（度），持续累加，绕整圆一周后自然回到起点
     state.pointerAngle = ang;
     updatePointer(state.ui, ang);
   }
@@ -394,7 +401,7 @@
       startTime: now,
       playBase: now + PREROLL_MS,   // 计时起点（准备结束后）
       pausedAt: null,
-      phaseAngle: 0,                // 指针相位（连续累积，避免 ready→playing 跳变）
+      spinAngle: 0,                 // 指针旋转角（度，连续累积，避免 ready→playing 跳变）
       pointerAngle: 0,
       lastFrame: now,
       zone: generateZone(null),
