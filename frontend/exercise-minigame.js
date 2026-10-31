@@ -14,8 +14,8 @@
   /* ===== 配置 ===== */
   const CX = 150, CY = 150, R = 120;     // SVG 半圆几何
   const AMP_DEG = 86;                    // 指针摆幅（±86°，留边避免越界）
-  const PERIOD_START_MS = 2800;          // 开局摆动周期（较慢，保持与开头一致的慢手感）
-  const PERIOD_MIN_MS = 2500;            // 最快摆动周期（上限：仅比开头略快一点点，之后不再加快）
+  const PERIOD_START_MS = 3200;          // 开局摆动周期（较慢，再降一档）
+  const PERIOD_MIN_MS = 2900;            // 最快摆动周期（上限：仅比开头略快一点点，之后不再加快）
   const RAMP_MS = 12000;                 // 前 12 秒逐渐加快，之后保持最快
   const OMEGA_START = 2 * Math.PI / (PERIOD_START_MS / 1000);
   const OMEGA_MAX = 2 * Math.PI / (PERIOD_MIN_MS / 1000);
