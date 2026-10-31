@@ -1,4 +1,5 @@
-/* 青禾纪事 · 运动锻炼节奏训练小游戏样式（自包含，前缀 emg-） */
+/* 青禾纪事 · 运动锻炼节奏训练（像素风 · 16-bit） */
+/* 背景取自像素美术 skill 生成的校园操场场景；UI 采用方块描边、硬阴影、扫描线复古质感 */
 
 .emg-overlay {
   position: fixed;
@@ -7,19 +8,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(17, 27, 50, 0.55);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   padding: 16px;
   box-sizing: border-box;
+  /* 像素场景背景 + 暗化压暗，让前景 HUD 更清晰 */
+  background-image:
+    linear-gradient(rgba(8, 16, 30, 0.58), rgba(8, 16, 30, 0.58)),
+    url("assets/exercise-minigame-bg.png");
+  background-size: cover, cover;
+  background-position: center, center;
+  image-rendering: pixelated;
+  font-family: "Courier New", ui-monospace, "DejaVu Sans Mono", monospace;
+}
+
+/* 复古扫描线，增强像素 CRT 质感 */
+.emg-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(rgba(0, 0, 0, 0) 0 2px, rgba(0, 0, 0, 0.10) 2px 3px);
+  mix-blend-mode: multiply;
 }
 
 .emg-card {
+  position: relative;
+  z-index: 1;
   width: min(440px, 94vw);
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 22px 22px 18px;
-  box-shadow: 0 18px 50px rgba(20, 50, 60, 0.32);
+  background: rgba(16, 26, 44, 0.86);
+  border: 4px solid #6fd3c5;
+  box-shadow: 0 0 0 4px #0b1626, 8px 8px 0 0 rgba(0, 0, 0, 0.45);
+  padding: 20px 20px 16px;
   box-sizing: border-box;
+  color: #e8f6f2;
+  image-rendering: pixelated;
   text-align: left;
 }
 
@@ -27,20 +48,20 @@
   font-size: 10px;
   letter-spacing: 3px;
   font-weight: 700;
-  color: #5d8492;
+  color: #7fe0d2;
   margin-bottom: 4px;
 }
 
 .emg-title {
-  font-size: 20px;
-  color: #2f6679;
+  font-size: 19px;
+  color: #aef0e6;
   margin: 2px 0 6px;
   font-weight: 700;
 }
 
 .emg-desc {
   font-size: 12px;
-  color: #64818b;
+  color: #9fc4c0;
   line-height: 1.6;
   margin: 0 0 12px;
 }
@@ -51,12 +72,12 @@
   align-items: center;
   flex-wrap: wrap;
   font-size: 12px;
-  color: #718a91;
+  color: #9fc4c0;
   margin-bottom: 10px;
 }
 
 .emg-meta b {
-  color: #276579;
+  color: #ffe27a;
   font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
@@ -64,8 +85,8 @@
 .emg-time {
   margin-left: auto;
   font-variant-numeric: tabular-nums;
-  color: #3c7280;
-  font-weight: 600;
+  color: #aef0e6;
+  font-weight: 700;
 }
 
 .emg-stage {
@@ -75,9 +96,11 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
   cursor: pointer;
-  border-radius: 14px;
-  background: #f3f9f8;
+  border: 3px solid #3f7d86;
+  background: rgba(8, 16, 28, 0.62);
+  box-shadow: inset 0 0 0 3px rgba(111, 211, 197, 0.25);
   padding: 8px 0 4px;
+  image-rendering: pixelated;
 }
 
 .emg-svg {
@@ -86,15 +109,15 @@
   height: auto;
 }
 
-.emg-gauge { fill: none; stroke: #dce9ea; stroke-width: 16; stroke-linecap: round; }
-.emg-zone-good { fill: none; stroke: #9cc3e0; stroke-width: 18; stroke-linecap: round; opacity: 0.95; transition: stroke 0.15s ease; }
-.emg-zone-exc { fill: none; stroke: #e8c45a; stroke-width: 8; stroke-linecap: round; transition: stroke 0.15s ease; }
-.emg-pointer { stroke: #2f6679; stroke-width: 4; stroke-linecap: round; }
-.emg-tip { fill: #2f6679; }
-.emg-hub { fill: #2f6679; }
+.emg-gauge { fill: none; stroke: #34565f; stroke-width: 16; stroke-linecap: butt; }
+.emg-zone-good { fill: none; stroke: #4ea3e0; stroke-width: 18; stroke-linecap: butt; opacity: 0.95; transition: stroke 0.15s steps(2); }
+.emg-zone-exc { fill: none; stroke: #ffd23f; stroke-width: 8; stroke-linecap: butt; transition: stroke 0.15s steps(2); }
+.emg-pointer { stroke: #eafff9; stroke-width: 4; stroke-linecap: butt; }
+.emg-tip { fill: #eafff9; }
+.emg-hub { fill: #6fd3c5; }
 
-.emg-zone-good.hit-good { stroke: #3f8eac; }
-.emg-zone-exc.hit-exc { stroke: #f0c419; filter: drop-shadow(0 0 6px rgba(240, 196, 25, 0.9)); }
+.emg-zone-good.hit-good { stroke: #7fd0ff; }
+.emg-zone-exc.hit-exc { stroke: #ffe27a; filter: drop-shadow(0 0 6px rgba(255, 226, 122, 0.9)); }
 
 .emg-hint {
   position: absolute;
@@ -103,7 +126,7 @@
   bottom: 10px;
   text-align: center;
   font-size: 11px;
-  color: #7b969d;
+  color: #bfe6e0;
   pointer-events: none;
   letter-spacing: 1px;
 }
@@ -113,11 +136,11 @@
   min-height: 20px;
   margin-top: 12px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
 }
-.emg-fb-gold { color: #b8860b; }
-.emg-fb-blue { color: #2f6f9e; }
-.emg-fb-red { color: #b5523f; }
+.emg-fb-gold { color: #ffd23f; }
+.emg-fb-blue { color: #7fd0ff; }
+.emg-fb-red { color: #ff7a6b; }
 
 .emg-footer {
   display: flex;
@@ -126,48 +149,48 @@
 }
 
 .emg-btn {
-  background: #377f98;
-  color: #fff8dc;
-  border: 0;
-  border-radius: 10px;
-  padding: 11px 26px;
+  background: #2f8f86;
+  color: #eafff9;
+  border: 3px solid #0b1626;
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.45);
+  padding: 10px 24px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   font-family: inherit;
+  letter-spacing: 1px;
 }
-.emg-btn:hover { background: #2f6f86; }
-.emg-btn:active { transform: scale(0.97); }
+.emg-btn:hover { background: #3aa79c; }
+.emg-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.45); }
 
 .emg-result { text-align: center; padding: 6px 0 4px; }
-.emg-result-num { font-family: Georgia, "Times New Roman", serif; font-size: 56px; font-weight: 400; color: #32738a; line-height: 1; }
-.emg-result-num small { font-size: 18px; color: #86a0a5; margin-left: 6px; font-family: inherit; }
-.emg-result-row { margin-top: 10px; font-size: 13px; color: #3c7280; }
-.emg-result-sub { margin-top: 8px; font-size: 13px; color: #718a91; }
+.emg-result-num { font-family: "Courier New", monospace; font-size: 56px; font-weight: 700; color: #aef0e6; line-height: 1; text-shadow: 3px 3px 0 #0b1626; }
+.emg-result-num small { font-size: 18px; color: #9fc4c0; margin-left: 6px; font-family: inherit; text-shadow: none; }
+.emg-result-row { margin-top: 10px; font-size: 13px; color: #aef0e6; }
+.emg-result-sub { margin-top: 8px; font-size: 13px; color: #9fc4c0; }
 
-/* 反馈动画 */
+/* 反馈动画（步进式，贴合像素节奏感） */
 @keyframes emgShake {
   0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-3px); }
 }
-.emg-card.shake { animation: emgShake 0.3s ease; }
+.emg-card.shake { animation: emgShake 0.3s steps(4); }
 
 @keyframes emgGoldPulse {
-  0% { box-shadow: 0 0 0 rgba(240, 196, 25, 0); }
-  50% { box-shadow: 0 0 0 4px rgba(240, 196, 25, 0.45); }
-  100% { box-shadow: 0 0 0 rgba(240, 196, 25, 0); }
+  0% { box-shadow: 0 0 0 rgba(255, 226, 122, 0), 0 0 0 4px #0b1626, 8px 8px 0 0 rgba(0, 0, 0, 0.45); }
+  50% { box-shadow: 0 0 0 5px rgba(255, 226, 122, 0.55), 0 0 0 4px #0b1626, 8px 8px 0 0 rgba(0, 0, 0, 0.45); }
+  100% { box-shadow: 0 0 0 rgba(255, 226, 122, 0), 0 0 0 4px #0b1626, 8px 8px 0 0 rgba(0, 0, 0, 0.45); }
 }
-.emg-stage.flash-gold { animation: emgGoldPulse 0.32s ease; }
+.emg-stage.flash-gold { animation: emgGoldPulse 0.32s steps(3); }
 
 @keyframes emgBluePulse {
-  0% { box-shadow: 0 0 0 rgba(63, 142, 172, 0); }
-  50% { box-shadow: 0 0 0 4px rgba(63, 142, 172, 0.4); }
-  100% { box-shadow: 0 0 0 rgba(63, 142, 172, 0); }
+  0% { box-shadow: inset 0 0 0 3px rgba(111, 211, 197, 0.25); }
+  50% { box-shadow: inset 0 0 0 6px rgba(127, 208, 255, 0.55); }
+  100% { box-shadow: inset 0 0 0 3px rgba(111, 211, 197, 0.25); }
 }
-.emg-stage.flash-blue { animation: emgBluePulse 0.32s ease; }
+.emg-stage.flash-blue { animation: emgBluePulse 0.32s steps(3); }
 
 /* 锁定页面滚动（移动端防误滑） */
 body.emg-lock { overflow: hidden; }

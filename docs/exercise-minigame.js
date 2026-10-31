@@ -13,7 +13,7 @@
   /* ===== 配置 ===== */
   const CX = 150, CY = 150, R = 120;     // SVG 半圆几何
   const AMP_DEG = 86;                    // 指针摆幅（±86°，留边避免越界）
-  const PERIOD_MS = 2400;                // 一个完整来回的周期
+  const PERIOD_MS = 2800;                // 一个完整来回的周期（较原 2400 略慢，手感更从容）
   const TOTAL_TIME_MS = 20000;           // 单局 20 秒限时
   const MAX_ATTEMPTS = 5;                // 最多 5 次判定
   const EXCELLENT_R = 8;                 // 中心窄区（优）半径（度）
