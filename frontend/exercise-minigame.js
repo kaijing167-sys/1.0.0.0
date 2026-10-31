@@ -5,7 +5,8 @@
  *
  * 玩法：半圆形量条上指针按正弦曲线来回摆动；量条随机生成判定区（中心窄=优，两侧宽=良）。
  * 指针进入判定区时点击：命中中心=优(100)、命中边缘=良(60)、错失=失败(0)。
- * 单局 20 秒 / 最多 5 次判定，结束返回 { attempts, excellent, good, miss, score, average }。
+ * 单局约 20 秒（以时间为主要结束条件，不再按次数提前结束），最多 20 次判定（安全上限）。
+ * 摆速随时间由慢渐快，但设有最快上限（PERIOD_MIN_MS），不会无限加快。
  */
 (function () {
   "use strict";
@@ -13,9 +14,14 @@
   /* ===== 配置 ===== */
   const CX = 150, CY = 150, R = 120;     // SVG 半圆几何
   const AMP_DEG = 86;                    // 指针摆幅（±86°，留边避免越界）
-  const PERIOD_MS = 2800;                // 一个完整来回的周期（较原 2400 略慢，手感更从容）
-  const TOTAL_TIME_MS = 20000;           // 单局 20 秒限时
-  const MAX_ATTEMPTS = 5;                // 最多 5 次判定
+  const PERIOD_START_MS = 2800;          // 开局摆动周期（较慢）
+  const PERIOD_MIN_MS = 1400;            // 最快摆动周期（上限，之后不再加快）
+  const RAMP_MS = 12000;                 // 前 12 秒逐渐加快，之后保持最快
+  const OMEGA_START = 2 * Math.PI / (PERIOD_START_MS / 1000);
+  const OMEGA_MAX = 2 * Math.PI / (PERIOD_MIN_MS / 1000);
+  const RAMP_S = RAMP_MS / 1000;
+  const TOTAL_TIME_MS = 20000;           // 单局约 20 秒（以时间为结束主条件）
+  const MAX_ATTEMPTS = 20;               // 最多 20 次判定（安全上限，正常先于时间结束前达不到）
   const EXCELLENT_R = 8;                 // 中心窄区（优）半径（度）
   const GOOD_R = 20;                     // 中心两侧宽区（良）半径（度）
   const CENTER_MIN = -(90 - GOOD_R);     // 判定区中心范围下限，保证 good 带不越界
@@ -190,32 +196,45 @@
     const now = performance.now();
     if (state.pausedAt != null) { state.rafId = requestAnimationFrame(frame); return; }
 
-    // 准备阶段：仅摆动指针，不计判定/计时
+    // 准备阶段：仅摆动指针，不计判定/计时（相位连续，不重置，避免开局跳变）
     if (state.phase === "ready") {
       const elapsed = now - state.startTime;
-      const ang = AMP_DEG * Math.sin(2 * Math.PI * (elapsed / PERIOD_MS));
-      updatePointer(state.ui, ang);
+      advancePointer(now);
       if (elapsed >= PREROLL_MS) {
         state.phase = "playing";
-        state.startTime = now; // 重置计时起点
         state.ui.hint.textContent = "点击屏幕 / 按空格 判定";
       }
       state.rafId = requestAnimationFrame(frame);
       return;
     }
 
-    // 进行阶段
-    const elapsed = now - state.startTime;
-    const tSec = elapsed / 1000;
-    const ang = AMP_DEG * Math.sin(2 * Math.PI * (tSec * 1000 / PERIOD_MS));
-    state.pointerAngle = ang;
-    updatePointer(state.ui, ang);
-
-    const left = Math.max(0, TOTAL_TIME_MS - elapsed);
+    // 进行阶段：摆速随进程由慢渐快（有上限），时间到则结算
+    advancePointer(now);
+    const left = Math.max(0, TOTAL_TIME_MS - (now - state.playBase));
     updateTime(state.ui, left);
     if (left <= 0) { settle(); return; }
 
     state.rafId = requestAnimationFrame(frame);
+  }
+
+  // 按当前进度推进指针相位：摆速随时间加快（smoothstep），但有最快上限
+  function advancePointer(now) {
+    const dt = clampDt(now - state.lastFrame);
+    state.lastFrame = now;
+    const playT = Math.max(0, (now - state.playBase) / 1000);
+    const p = Math.min(1, playT / RAMP_S);
+    const ease = p * p * (3 - 2 * p); // smoothstep，起步柔和
+    const omega = OMEGA_START + (OMEGA_MAX - OMEGA_START) * ease;
+    state.phaseAngle += omega * dt;
+    const ang = AMP_DEG * Math.sin(state.phaseAngle);
+    state.pointerAngle = ang;
+    updatePointer(state.ui, ang);
+  }
+
+  function clampDt(raw) {
+    if (!isFinite(raw) || raw < 0) return 0;
+    if (raw > 0.05) return 0.05; // 防止切后台/卡顿造成指针大跳变
+    return raw;
   }
 
   /* ===== 点击/触摸/空格 判定 ===== */
@@ -306,7 +325,10 @@
   function onBlur() { if (state && !state.finished && state.pausedAt == null) state.pausedAt = performance.now(); }
   function onFocus() {
     if (state && state.pausedAt != null) {
-      state.startTime += (performance.now() - state.pausedAt);
+      const delta = performance.now() - state.pausedAt;
+      state.startTime += delta;
+      state.playBase += delta;
+      state.lastFrame = performance.now();
       state.pausedAt = null;
     }
   }
@@ -320,19 +342,34 @@
   /* ===== 入口 ===== */
   function start(onComplete) {
     if (state && !state.finished) return; // 已有进行中的小游戏，忽略重复启动
+    // 预加载像素背景，避免首帧背景图“弹出”造成开局卡顿
+    const bg = new Image();
+    let launched = false;
+    const launch = function () { if (launched) return; launched = true; launchGame(onComplete); };
+    bg.onload = launch;
+    bg.onerror = launch;
+    bg.src = "assets/exercise-minigame-bg.png";
+    setTimeout(launch, 300); // 兜底：背景加载慢也直接进
+  }
+
+  function launchGame(onComplete) {
     const ui = buildOverlay();
     ui.stage.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("blur", onBlur);
     window.addEventListener("focus", onFocus);
 
+    const now = performance.now();
     state = {
       ui: ui,
       onComplete: typeof onComplete === "function" ? onComplete : null,
       phase: "ready",
-      startTime: performance.now(),
+      startTime: now,
+      playBase: now + PREROLL_MS,   // 计时起点（准备结束后）
       pausedAt: null,
+      phaseAngle: 0,                // 指针相位（连续累积，避免 ready→playing 跳变）
       pointerAngle: 0,
+      lastFrame: now,
       zone: generateZone(null),
       attempts: 0,
       excellent: 0,
