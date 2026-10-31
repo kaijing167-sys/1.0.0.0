@@ -6,7 +6,7 @@
  * 玩法：半圆形量条上指针按正弦曲线来回摆动；量条随机生成判定区（中心窄=优，两侧宽=良）。
  * 指针进入判定区时点击：命中中心=优(100)、命中边缘=良(60)、错失=失败(0)。
  * 单局约 20 秒（以时间为主要结束条件，不再按次数提前结束），最多 20 次判定（安全上限）。
- * 摆速随时间由慢渐快，但设有最快上限（PERIOD_MIN_MS），不会无限加快。
+ * 摆速阶梯形加快：开头最慢，每完成 5 次判定提速约 200ms，有安全下限（MIN_PERIOD_MS）不会无限加快。
  */
 (function () {
   "use strict";
@@ -14,12 +14,10 @@
   /* ===== 配置 ===== */
   const CX = 150, CY = 150, R = 120;     // SVG 半圆几何
   const AMP_DEG = 86;                    // 指针摆幅（±86°，留边避免越界）
-  const PERIOD_START_MS = 3200;          // 开局摆动周期（较慢，再降一档）
-  const PERIOD_MIN_MS = 2900;            // 最快摆动周期（上限：仅比开头略快一点点，之后不再加快）
-  const RAMP_MS = 12000;                 // 前 12 秒逐渐加快，之后保持最快
-  const OMEGA_START = 2 * Math.PI / (PERIOD_START_MS / 1000);
-  const OMEGA_MAX = 2 * Math.PI / (PERIOD_MIN_MS / 1000);
-  const RAMP_S = RAMP_MS / 1000;
+  const BASE_PERIOD_MS = 4000;           // 开头最慢（比上版再降两档 / +800ms）
+  const STEP_PERIOD_MS = 200;            // 每次提速减少的周期（指针变快 200ms）
+  const SPEEDUP_EVERY = 5;               // 每完成 5 次判定提速一次
+  const MIN_PERIOD_MS = 2600;            // 安全下限（实际最多到第 4 次提速→3200ms，远未触及）
   const TOTAL_TIME_MS = 20000;           // 单局约 20 秒（以时间为结束主条件）
   const MAX_ATTEMPTS = 20;               // 最多 20 次判定（安全上限，正常先于时间结束前达不到）
   const EXCELLENT_R = 8;                 // 中心窄区（优）半径（度）
@@ -217,14 +215,16 @@
     state.rafId = requestAnimationFrame(frame);
   }
 
-  // 按当前进度推进指针相位：摆速随时间加快（smoothstep），但有最快上限
+  // 按当前判定次数推进指针相位：阶梯形提速（每 SPEEDUP_EVERY 次判定快 STEP_PERIOD_MS），
+  // 相位连续累积，提速瞬间不跳变。
+  function currentPeriod(attempts) {
+    const steps = Math.floor(attempts / SPEEDUP_EVERY);
+    return Math.max(MIN_PERIOD_MS, BASE_PERIOD_MS - STEP_PERIOD_MS * steps);
+  }
   function advancePointer(now) {
     const dt = clampDt(now - state.lastFrame);
     state.lastFrame = now;
-    const playT = Math.max(0, (now - state.playBase) / 1000);
-    const p = Math.min(1, playT / RAMP_S);
-    const ease = p * p * (3 - 2 * p); // smoothstep，起步柔和
-    const omega = OMEGA_START + (OMEGA_MAX - OMEGA_START) * ease;
+    const omega = 2 * Math.PI / (currentPeriod(state.attempts) / 1000);
     state.phaseAngle += omega * dt;
     const ang = AMP_DEG * Math.sin(state.phaseAngle);
     state.pointerAngle = ang;
