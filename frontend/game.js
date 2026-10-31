@@ -1302,9 +1302,24 @@ function performAction(type){
     showSocialOptions();
     return;
   }
+  if(type==="exercise"){
+    if(game.actionPoints<=0)return toast("本周行动已经用完");
+    learningRecord(game,"exercise");
+    // 进入运动小游戏：自动切换至轻快舒缓音乐，结束后由 settleExercise 还原菜单主题
+    if(settings.musicEnabled){
+      modalMusicRestorePending=true;
+      playTheme("calm",{force:true});
+    }
+    // 启动整圆节奏小游戏；完成后回调 settleExercise 接入原有状态系统
+    if(window.ExerciseMinigame){
+      window.ExerciseMinigame.start((result)=>settleExercise(result));
+    }else{
+      settleExercise({attempts:0,excellent:0,good:0,miss:0,score:0,average:0});
+    }
+    return;
+  }
   const effects={
     rest:{energy:24,stress:-18,mood:8,text:"你放下书本，好好休息了一会儿。"},
-    exercise:{energy:7,stress:-10,mood:12,text:"运动之后，身体和心情都轻松了一点。"},
   }[type];
   if(!effects)return;
   learningRecord(game,type);
@@ -1411,6 +1426,35 @@ function settleStudy(id,correct,total){
   persist();
   render();
   toast(`${label} 小测 ${correct}/${total} · 能力 ${gained>=0?"+":""}${gained}`);
+  if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
+}
+
+// 运动小游戏结算：接入现有“运动锻炼”的行动点消耗、体力/压力/心情变化与周末触发逻辑，不绕过状态系统。
+// result 来自 exercise-minigame.js：{attempts,excellent,good,miss,score,average}；平均分驱动收益多寡。
+function settleExercise(result){
+  if(game.actionPoints<=0)return; // 安全兜底：避免重复消耗行动点
+  const avg=result&&result.average!=null?result.average:0;
+  const e=result&&result.excellent!=null?result.excellent:0;
+  const g=result&&result.good!=null?result.good:0;
+  const m=result&&result.miss!=null?result.miss:0;
+  // 1) 消耗 1 次行动点（原有状态系统）
+  game.actionPoints--;
+  // 2) 按平均分调体力/压力/心情：≥80 收益最大，60–79 普通，40–59 递减，<40 仅基础活动
+  const energyGain = avg>=80?10 : avg>=60?7 : avg>=40?4 : 1;
+  const stressDrop = avg>=80?14 : avg>=60?10 : avg>=40?6 : 2;
+  const moodGain   = avg>=80?14 : avg>=60?11 : avg>=40?7 : 3;
+  game.energy=clamp(game.energy+energyGain,0,100);
+  game.stress=clamp(game.stress-stressDrop,0,100);
+  game.mood=clamp(game.mood+moodGain,0,100);
+  if(game.stamina!=null)game.stamina=clamp(game.stamina+(avg>=60?1:0),0,100);
+  const verdict=avg>=80?"酣畅淋漓":avg>=60?"舒展筋骨":avg>=40?"勉强活动":"草草收场";
+  game.exerciseQuiz={excellent:e,good:g,miss:m,score:result&&result.score||0,average:avg,day:game.day};
+  addLog(`运动锻炼，${verdict}（节奏小游戏 优${e}/良${g}/失${m}，平均分 ${avg}），体力+${energyGain}、压力-${stressDrop}、心情+${moodGain}。`);
+  // 3) 音乐还原到菜单主题
+  if(modalMusicRestorePending){ playTheme(settings.menuMusicTheme||"calm"); modalMusicRestorePending=false; }
+  persist();
+  render();
+  toast(`运动 ${verdict} · 平均分 ${avg}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
