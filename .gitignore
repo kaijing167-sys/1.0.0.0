@@ -29,6 +29,7 @@ desktop.ini
 # User music and downloadable bundles
 frontend/music-local/
 .tmp/
+personas/
 *.mgg
 *.mflac
 *.qmc*

@@ -18,6 +18,8 @@ const DEFAULT_SETTINGS = {
   musicEnabled: true,
   eventMusic: true,
   musicVolume: 25,
+  chatMode: globalThis.QINGHE_DEFAULT_CHAT_MODE === "ai" ? "ai" : "keyword",
+  chatEndpoint: "/api/chat",
 };
 
 const ATTRIBUTES = [

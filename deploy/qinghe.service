@@ -1,0 +1,18 @@
+[Unit]
+Description=Qinghe High School Simulator backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=admin
+Group=admin
+WorkingDirectory=/opt/kaijing
+EnvironmentFile=/opt/kaijing/production.env
+ExecStart=/opt/kaijing/.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000 --proxy-headers
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

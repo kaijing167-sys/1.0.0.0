@@ -4,9 +4,9 @@
 
 ## 在线试玩
 
-**[点击进入试玩网站](https://kaijing167-sys.github.io/1.0.0.0/?v=29)**
+**服务器 AI 版：[点击进入](http://121.41.75.213/play/)**：使用同源 FastAPI 后台和服务器 Ollama，不依赖外部 API Token。
 
-试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/?v=29](https://kaijing167-sys.github.io/1.0.0.0/?v=29)
+**GitHub Pages 静态版：[点击进入](https://kaijing167-sys.github.io/1.0.0.0/?v=29)**：无需服务器即可试玩，默认使用本地关键词回复；GitHub Pages 不运行 Python 后端，因此不会连接 Ollama。
 
 无需下载安装，打开浏览器即可开始游戏。源码见 [GitHub 仓库](https://github.com/kaijing167-sys/1.0.0.0)。
 
@@ -48,7 +48,7 @@
 - **手机聊天场景**：点击“聊聊”进入全屏即时消息界面，自由输入并保存聊天记录。
 - **无需密钥即可聊天**：默认使用本地关键词自动回复，不依赖服务器或模型 API。
 
-> 当前 NPC 回复由本地规则匹配预设台词，**不是大模型 AI**，无法理解所有自由表达。AI 接口模式仅预留了前端接入能力，在线版没有内置可用的 AI 服务。
+> 默认 NPC 回复由本地规则匹配预设台词，无需模型即可使用。切换到 AI 接口后，游戏后台会调用 Ollama；三名人设提示词保存在服务端，不会发送到浏览器。
 
 ## 怎么玩
 
@@ -98,9 +98,39 @@
 
 ### AI 接口模式的边界
 
-当前仓库包含前端 AI 请求与错误处理逻辑，默认请求本机 `http://127.0.0.1:8787/api/chat`。这不是随在线网站提供的服务：GitHub Pages 不运行模型代理或后端，本地测试用的代理与私人配置不在本次发布范围内。
+当前仓库包含前端 AI 请求、FastAPI `/api/chat` 代理和 Ollama 调用逻辑。前端默认请求同源 `/api/chat`，由后台根据 `npcId` 注入李强、苏若云或林婉儿的人设，再调用本机或服务器上的 Ollama。
 
-接口请求包含 NPC ID、最近 20 条对话、角色名、年级、心情、压力、关系与近期游戏日志；服务需返回 `{"reply":"NPC 回复"}`。只有切换到 AI 模式才发送该请求。密钥不应写入前端、游戏存档或提交到 GitHub。
+接口请求包含 NPC ID、最近 20 条对话、角色名、年级、心情、压力、关系与近期游戏日志，返回 `{"reply":"NPC 回复"}`。只有切换到 AI 模式才发送该请求。
+
+后台使用以下环境变量：
+
+```text
+OLLAMA_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=qwen2.5:0.5b
+OLLAMA_TIMEOUT_SECONDS=90
+OLLAMA_NUM_CTX=4096
+CHAT_HISTORY_CHARS=2000
+NPC_PROMPT_MODE=full
+NPC_RUNTIME_DIR=./personas
+```
+
+Ollama 地址只能由后台访问，不要通过浏览器或公网直接开放 `11434`。GitHub Pages 不运行后端，因此 GitHub Pages 版本的 AI 模式需要另行配置可访问的服务，或者继续使用默认关键词模式。
+
+### 用 ex-skill 和 Ollama 整理聊天记录
+
+仓库内收录了 [ex-skill](skills/ex-skill/) 的 MIT 许可版本，并提供本地 Ollama 适配器。它不会调用付费 API：聊天记录只在本机用于生成 `persona.md`、`memory.md` 和运行时提示词。
+
+```powershell
+.\.venv\Scripts\python.exe tools\ex_skill_ollama.py `
+  --source "C:\path\to\chat.txt" `
+  --target "角色代号" `
+  --description "一句话人物描述" `
+  --slug "ex-character" `
+  --npc-id su `
+  --model qwen3.5:4b
+```
+
+示例会把个人蒸馏产物写入被 Git 忽略的 `personas/ex-character/`，并把运行时提示词写入 `personas/su/runtime_prompt.txt`。把对应目录上传到服务器 `/opt/kaijing/personas/` 后，后台下一次请求会自动读取新的人格提示词，不需要修改前端。
 
 ## 高考成绩与志愿填报
 

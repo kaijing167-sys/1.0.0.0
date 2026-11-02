@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from database import Base, engine
 from save_router import save_router
 from character_router import character_router
+from chat_router import chat_router
 
 
 @asynccontextmanager
@@ -55,6 +56,7 @@ app.include_router(ng_router)
 app.include_router(epilogue_router)
 app.include_router(save_router)
 app.include_router(character_router)
+app.include_router(chat_router)
 app.mount("/play", StaticFiles(directory=Path(__file__).parent / "frontend", html=True), name="play")
 
 
