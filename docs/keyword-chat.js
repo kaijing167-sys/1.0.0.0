@@ -51,3 +51,12 @@ function keywordReply(npcId,rows){
  const lastNpc=rows.filter(r=>r.role==='assistant').at(-1)?.content;
  return choices.find(reply=>reply!==lastNpc)||choices[rows.filter(r=>r.role==='user').length%choices.length];
 }
+const FAST_KEYWORD_TOPICS=new Set(['greeting','thanks','goodbye','happy','food']);
+function fastKeywordReply(npcId,rows){
+ const text=rows.at(-1)?.content||'';
+ const topic=KEYWORD_TOPICS.find(([,pattern])=>pattern.test(text))?.[0];
+ if(!FAST_KEYWORD_TOPICS.has(topic))return null;
+ const voice={liqiang:0,su:1,lin:2}[npcId]??0;
+ const choices=KEYWORD_REPLIES[topic][voice];
+ return choices[0];
+}

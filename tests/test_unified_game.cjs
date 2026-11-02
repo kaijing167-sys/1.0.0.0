@@ -9,7 +9,7 @@ const admissionsRecords=JSON.parse(zlib.gunzipSync(admissionsGzip));
 function harness(){
  const elements=new Map(),storage=new Map(),listeners={};
  const el=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'测试',hidden:true,classList:{add(){},remove(){},toggle(){}},addEventListener(){}});return elements.get(id)};
- const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController,Response,DecompressionStream,__admissionsRecords:admissionsRecords,__admissionsGzip:admissionsGzip});
+ const context=vm.createContext({document:{querySelector:el,addEventListener(type,fn){(listeners[type]??=[]).push(fn)},body:el('body')},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},location:{hash:'',pathname:'/1.0.0.0/',protocol:'https:'},Audio:class{pause(){} play(){return Promise.resolve()} addEventListener(){}},window:{addEventListener(){}},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},confirm:()=>true,console,URL,Blob,AbortController,Response,TextEncoder,TextDecoder,DecompressionStream,__admissionsRecords:admissionsRecords,__admissionsGzip:admissionsGzip});
  for(const name of ['characters/characters-data.js','school-roster-data.js','roster.js','henan-2025-data.js','gaokao.js','admissions-data.js','university-catalog.js','admissions.js','university-browser.js','game.js','journey-saves.js','keyword-chat.js','phone-chat.js']){
    let source=fs.readFileSync(path.join(__dirname,'../frontend',name),'utf8');
    if(name==='game.js')source=source.slice(0,source.lastIndexOf('initializeMusicLibrary().then'));
@@ -382,6 +382,26 @@ test('AI receives exact messages and game context; retry charges once, then hist
  assert.equal(h.run('game.actionPoints'),3);assert.equal(h.run('sent.messages.length'),3);
  h.run('leavePhoneChat();game=loadGame();openPhoneChat("su")');assert.equal(h.run('game.chatHistory.su.length'),4);
  h.run('leavePhoneChat();openPhoneChat("lin")');assert.equal(h.run('phoneHistory().length'),0);
+});
+test('AI mode streams partial replies and stores only the normalized final text',async()=>{
+ const h=harness();h.run("settings.chatMode='ai';campusDraft('hu-zx');startGame();openPhoneChat('su')");
+ const sse=[
+  'data: {"delta":"先缓一缓。"}\n\n',
+  'data: {"delta":"你想先说说哪一科？"}\n\n',
+  'data: {"replace":"先缓一缓。你想先说说哪一科？","reply":"先缓一缓。你想先说说哪一科？"}\n\n',
+  'data: {"done":true}\n\n'
+ ].join('');
+ h.run(`fetch=async()=>new Response(${JSON.stringify(sse)},{status:200,headers:{'Content-Type':'text/event-stream'}})`);
+ h.el('#phone-message-input').value='这次没考好';await h.run('sendPhoneMessage()');
+ assert.equal(h.run('phoneHistory().at(-1).content'),'先缓一缓。你想先说说哪一科？');
+ assert.equal(h.run('game.actionPoints'),3);
+});
+test('common low-risk topics use instant keyword replies in AI mode',async()=>{
+ const h=harness();h.run("settings.chatMode='ai';campusDraft('hu-zx');startGame();fetch=()=>{throw Error('network must not be called')};openPhoneChat('su')");
+ h.el('#phone-message-input').value='你好';await h.run('sendPhoneMessage()');
+ assert.match(h.run('phoneHistory().at(-1).content'),/在呀|我在/);
+ assert.equal(h.run('game.actionPoints'),3);
+ assert.equal(h.run("fastKeywordReply('su',[{role:'user',content:'今天数学考砸了'}])"),null);
 });
 test('late AI responses cannot change another scene or save; message markup is escaped',async()=>{
  const h=harness();h.run("settings.chatMode='ai';campusDraft('hu-zx');startGame();openPhoneChat('su');fetch=()=>new Promise(r=>globalThis.respond=r)");

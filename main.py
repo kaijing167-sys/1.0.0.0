@@ -1,5 +1,7 @@
+import asyncio
+import os
 import time
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -8,14 +10,21 @@ from fastapi.staticfiles import StaticFiles
 from database import Base, engine
 from save_router import save_router
 from character_router import character_router
-from chat_router import chat_router
+from chat_router import chat_router, warm_ollama_personas
 
 
 @asynccontextmanager
 async def lifespan(app):
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
+    warm_task = None
+    if os.getenv("OLLAMA_WARMUP_ON_STARTUP", "0") == "1":
+        warm_task = asyncio.create_task(warm_ollama_personas())
     yield
+    if warm_task:
+        warm_task.cancel()
+        with suppress(asyncio.CancelledError):
+            await warm_task
     await engine.dispose()
 
 from epilogue_sse import epilogue_router

@@ -5,11 +5,12 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Literal
+from typing import AsyncIterator, Literal
 
 import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, field_validator
+from starlette.responses import StreamingResponse
 
 from npc_personas import get_npc_persona
 
@@ -18,7 +19,8 @@ OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3.5:4b")
 OLLAMA_TIMEOUT = float(os.getenv("OLLAMA_TIMEOUT_SECONDS", "90"))
 OLLAMA_NUM_CTX = int(os.getenv("OLLAMA_NUM_CTX", "4096"))
-CHAT_HISTORY_CHARS = int(os.getenv("CHAT_HISTORY_CHARS", "2000"))
+OLLAMA_NUM_PREDICT = int(os.getenv("OLLAMA_NUM_PREDICT", "40"))
+CHAT_HISTORY_CHARS = int(os.getenv("CHAT_HISTORY_CHARS", "300"))
 
 chat_router = APIRouter(prefix="/api", tags=["NPC Chat"])
 
@@ -110,6 +112,48 @@ def normalize_reply(reply: str, max_sentences: int = 3) -> str:
     return "".join(result).strip()
 
 
+def build_ollama_payload(body: ChatRequest, stream: bool) -> dict:
+    return {
+        "model": OLLAMA_MODEL,
+        "messages": build_ollama_messages(body),
+        "stream": stream,
+        "think": False,
+        "keep_alive": "24h",
+        "options": {
+            "temperature": 0.6,
+            "top_p": 0.85,
+            "num_ctx": OLLAMA_NUM_CTX,
+            "num_predict": OLLAMA_NUM_PREDICT,
+        },
+    }
+
+
+async def warm_ollama_personas() -> None:
+    """Prime the model and its static persona prefixes after service startup."""
+    async with httpx.AsyncClient(timeout=OLLAMA_TIMEOUT) as client:
+        for npc_id in ("liqiang", "su", "lin"):
+            payload = {
+                "model": OLLAMA_MODEL,
+                "messages": [
+                    {"role": "system", "content": get_npc_persona(npc_id)},
+                    {"role": "user", "content": "你好"},
+                ],
+                "stream": False,
+                "think": False,
+                "keep_alive": "24h",
+                "options": {
+                    "temperature": 0.6,
+                    "num_ctx": OLLAMA_NUM_CTX,
+                    "num_predict": 1,
+                },
+            }
+            try:
+                response = await client.post(f"{OLLAMA_URL}/api/chat", json=payload)
+                response.raise_for_status()
+            except httpx.HTTPError:
+                continue
+
+
 @chat_router.get("/chat/health")
 async def chat_health():
     return {
@@ -121,23 +165,12 @@ async def chat_health():
 
 @chat_router.post("/chat")
 async def chat_with_npc(body: ChatRequest):
-    payload = {
-        "model": OLLAMA_MODEL,
-        "messages": build_ollama_messages(body),
-        "stream": False,
-        "think": False,
-        "keep_alive": "24h",
-        "options": {
-            "temperature": 0.6,
-            "top_p": 0.85,
-            "num_ctx": OLLAMA_NUM_CTX,
-            "num_predict": 96,
-        },
-    }
-
     try:
         async with httpx.AsyncClient(timeout=OLLAMA_TIMEOUT) as client:
-            response = await client.post(f"{OLLAMA_URL}/api/chat", json=payload)
+            response = await client.post(
+                f"{OLLAMA_URL}/api/chat",
+                json=build_ollama_payload(body, stream=False),
+            )
             response.raise_for_status()
             data = response.json()
     except httpx.TimeoutException as exc:
@@ -149,3 +182,46 @@ async def chat_with_npc(body: ChatRequest):
     if not reply:
         raise HTTPException(status_code=502, detail="模型没有返回有效回复")
     return {"reply": reply[:6000], "provider": "ollama", "model": OLLAMA_MODEL}
+
+
+async def stream_ollama_events(body: ChatRequest) -> AsyncIterator[str]:
+    full_reply = ""
+    try:
+        async with httpx.AsyncClient(timeout=OLLAMA_TIMEOUT) as client:
+            async with client.stream(
+                "POST",
+                f"{OLLAMA_URL}/api/chat",
+                json=build_ollama_payload(body, stream=True),
+            ) as response:
+                response.raise_for_status()
+                async for line in response.aiter_lines():
+                    if not line.strip():
+                        continue
+                    data = json.loads(line)
+                    delta = str((data.get("message") or {}).get("content") or "")
+                    if not delta:
+                        continue
+                    full_reply += delta
+                    yield f"data: {json.dumps({'delta': delta}, ensure_ascii=False)}\n\n"
+
+        reply = normalize_reply(full_reply)
+        if not reply:
+            raise ValueError("empty reply")
+        yield f"data: {json.dumps({'replace': reply, 'reply': reply}, ensure_ascii=False)}\n\n"
+        yield 'data: {"done":true}\n\n'
+    except httpx.TimeoutException:
+        yield 'data: {"error":"模型回复超时，请稍后重试"}\n\n'
+    except (httpx.HTTPError, ValueError, json.JSONDecodeError):
+        yield 'data: {"error":"本地模型服务暂不可用"}\n\n'
+
+
+@chat_router.post("/chat/stream")
+async def stream_chat_with_npc(body: ChatRequest):
+    return StreamingResponse(
+        stream_ollama_events(body),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

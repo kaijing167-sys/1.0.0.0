@@ -1,3 +1,5 @@
+import json
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -179,3 +181,46 @@ def test_reply_removes_role_prefix_and_parenthetical_action():
     normalized = normalize_reply(reply)
 
     assert normalized == "先喝点水吧。你想先复习哪一科？"
+
+
+def test_streaming_route_emits_deltas_and_normalized_final_reply(monkeypatch):
+    class StreamResponse:
+        def raise_for_status(self):
+            return None
+
+        async def aiter_lines(self):
+            for text in ("你还好", "吗？我听着", "呢？要不要说说？"):
+                yield '{"message":{"content":' + json.dumps(text, ensure_ascii=False) + "}}"
+
+    class StreamContext:
+        async def __aenter__(self):
+            return StreamResponse()
+
+        async def __aexit__(self, exc_type, exc, traceback):
+            return None
+
+    class StreamClient(FakeClient):
+        last_payload = None
+
+        def stream(self, method, url, json):
+            type(self).last_payload = {"method": method, "url": url, "json": json}
+            return StreamContext()
+
+    monkeypatch.setattr(chat_router.httpx, "AsyncClient", StreamClient)
+    app = FastAPI()
+    app.include_router(chat_router.chat_router)
+    client = TestClient(app)
+
+    response = client.post(
+        "/api/chat/stream",
+        json={
+            "npcId": "su",
+            "messages": [{"role": "user", "content": "在吗"}],
+        },
+    )
+
+    assert response.status_code == 200
+    assert "你还好" in response.text
+    assert '"done":true' in response.text
+    assert StreamClient.last_payload["json"]["stream"] is True
+    assert StreamClient.last_payload["json"]["options"]["num_predict"] == 40

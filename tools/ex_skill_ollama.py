@@ -162,7 +162,7 @@ def ollama_chat(
     return content
 
 
-def limit_compact_prompt(value: str, max_chars: int = 650) -> str:
+def limit_compact_prompt(value: str, max_chars: int = 300) -> str:
     value = re.sub(r"\s+", " ", value).strip()
     value = re.sub(
         r"(?:我|你)(?:不是|并非)\s*(?:AI|人工智能|助手|机器人)[。；,，]?",
@@ -225,7 +225,7 @@ def build_compact_prompt(target: str, persona: str, memory: str) -> tuple[str, s
         "你是提示词压缩器。只保留能直接影响聊天表现的信息，不虚构事实。"
         "输出一段可直接作为 system prompt 的中文文本，不使用 Markdown 标题或代码围栏。"
     )
-    user = f"""把下面的人格与关系记忆压缩成 450 到 700 个汉字。
+    user = f"""把下面的人格与关系记忆压缩成 220 到 300 个汉字。
 
 必须保留：
 - 角色名「{target}」

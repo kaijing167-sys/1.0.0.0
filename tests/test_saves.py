@@ -131,7 +131,7 @@ def test_game_page_and_scripts(client):
     assert client.get("/play/").status_code == 200
     assert 'src="game.js?v=31"' in client.get("/play/").text
     assert 'src="roster.js?v=20"' in client.get("/play/").text
-    assert 'src="phone-chat.js?v=4"' in client.get("/play/").text
+    assert 'src="phone-chat.js?v=6"' in client.get("/play/").text
     assert 'data-campus-classes' in client.get("/play/game.js").text
     assert 'location.replace' in client.get("/play/characters/").text
     assert client.get("/play/journey-saves.js").status_code == 200
