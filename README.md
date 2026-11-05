@@ -345,7 +345,7 @@ uvicorn main:app --reload
 
 ## 测试与发布
 
-前端规则、界面、统一玩法、学习概率和录取风险共 60 项测试：
+前端规则、界面、统一玩法、学习概率和录取风险共 65 项测试：
 
 ```powershell
 node --test --test-isolation=none tests/test_game_rules.cjs tests/test_game_ui.cjs tests/test_unified_game.cjs tests/test_learning.cjs
