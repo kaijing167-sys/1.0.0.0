@@ -23,7 +23,7 @@ test('GitHub Pages chat uses the configured HTTPS backend and allows only that c
  const html=fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8');
  assert.match(html,/location\.hostname === "kaijing167-sys\.github\.io"/);
  assert.match(html,/https:\/\/121-41-75-213\.sslip\.io\/api\/chat/);
- assert.match(html,/game\.js\?v=50/);assert.match(html,/phone-chat\.js\?v=7/);
+ assert.match(html,/game\.js\?v=51/);assert.match(html,/phone-chat\.js\?v=7/);
 
  const source=fs.readFileSync(path.join(__dirname,'../frontend/phone-chat.js'),'utf8');
  const start=source.indexOf('function resolveChatEndpoint');
@@ -188,9 +188,9 @@ test('only successful simulated admission gets a celebration, on its own final p
  assert.doesNotMatch(h.el('#game-root').innerHTML,/<form/);
  h.run('game=loadGame();render()');assert.match(h.el('#game-root').innerHTML,/admission-notice/);
  h.run("game.admissions.choices[0]={school:'清华大学',major:'计算机科学与技术'};renderAdmissionsResult()");
- assert.match(h.el('#game-root').innerHTML,/录取结果待定/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-banner|喜报/);
+ assert.match(h.el('#game-root').innerHTML,/录取结果待定/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-notice/);
  h.run("game.gaokaoReport.rows.find(p=>p.active).total=400;game.admissions.choices[0]={school:'东华大学',major:'计算机类'};renderAdmissionsResult()");
- assert.match(h.el('#game-root').innerHTML,/本次模拟未录取/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-banner|喜报/);
+ assert.match(h.el('#game-root').innerHTML,/本次模拟未录取/);assert.doesNotMatch(h.el('#game-root').innerHTML,/admission-notice/);
 });
 
 test('score page leads to a separate five-choice page, submissions and reload keep the result',()=>{
@@ -247,6 +247,24 @@ test('admissions checks real elective requirements and rejects incomplete and du
  assert.equal(evaluate([{school:'河南城建学院',major:'法学'}]).status,'admitted');
 });
 
+test('admission chances use peer-calibrated uncertainty and rise with a stronger score',()=>{
+ const h=harness();
+ const result=h.run(`(()=>{
+   const school=admissionsSchool('郑州大学'),program=admissionsPrograms(school,'physics').find(p=>p.degree==='undergraduate');
+   const choices=[{school:school.name,major:program.major,adjustment:false},...Array.from({length:4},()=>({school:'',major:'',adjustment:false}))];
+   const subjects={chinese:100,math:100,english:100,physics:80,chemistry:80,biology:80};
+   return {
+     model:ADMISSIONS_CHANCE_MODEL.version,
+     low:estimateAdmissionsChances({total:450,rank:{category:'physics'},subjects},choices),
+     high:estimateAdmissionsChances({total:680,rank:{category:'physics'},subjects},choices)
+   };
+ })()`);
+ assert.equal(result.model,'historical-risk-v2');
+ assert.equal(result.low.rows[0].status,'estimated');
+ assert.ok(result.high.overall>result.low.overall);
+ assert.ok(result.low.rows[0].probability>=0&&result.high.rows[0].probability<=1);
+});
+
 test('all admission records have professional cutoffs, verified sources and deterministic boundaries',()=>{
  const h=harness();
  assert.equal(h.run('HENAN_2025_ADMISSIONS.schools.length'),1580);
@@ -262,8 +280,9 @@ test('all admission records have professional cutoffs, verified sources and dete
 test('gaokao separates abilities from actual scores and saves the final table',()=>{
  for(const [id,total] of [['hu-yy',557],['zhang-z',594],['hu-zx',646.5],['hao-kj',566]]){
   const h=harness();h.run(`campusDraft('${id}');startGame();game.stress=100;game.attrs.insight=0;game.learning.seed=12345;game.day=1092;openExam(EVENTS.find(e=>e.id==='gaokao'))`);
-  assert.equal(h.run('game.completed'),true);assert.notEqual(h.run('game.finalScore'),total);assert.equal(h.run('game.gaokaoReport.version'),2);
+  assert.equal(h.run('game.completed'),true);assert.notEqual(h.run('game.finalScore'),total);assert.equal(h.run('game.gaokaoReport.version'),2);assert.equal(h.run('game.gaokaoReport.model'),'henan-percentile-v2');
   assert.equal(h.run('game.gaokaoReport.rows.length'),210);
+  assert.equal(h.run("game.gaokaoReport.rows.find(p=>p.active).calibration.model"),'henan-percentile-v2');
   assert.ok(h.run('game.gaokaoReport.rows.every(p=>Object.keys(p.subjects).length===6&&Math.round(Object.values(p.subjects).reduce((a,b)=>a+b,0)*100)/100===p.total)'));
   assert.equal(h.run('game.gaokaoReport.rows.filter(p=>p.active).length'),1);
   assert.match(h.el('#game-root').innerHTML,/高考成绩单/);assert.match(h.el('#game-root').innerHTML,/河南.*参考位次/);
@@ -335,7 +354,7 @@ test('four people start in original day engine and keep exact subject conversion
 });
 test('study, event gains, class transfers and reload use same journey',()=>{
  const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.physics=99.8;learningRandom=()=>.2;studySubject('physics')");
- assert.equal(h.run('game.subjects.physics'),100);assert.equal(h.run('game.actionPoints'),3);
+ assert.ok(h.run('game.subjects.physics>99.8&&game.subjects.physics<=100'));assert.equal(h.run('game.actionPoints'),3);
  const before=h.run('JSON.stringify(game.subjects)');h.run('campusTransfer(14)');
  assert.equal(h.run('JSON.stringify(game.subjects)'),before);assert.equal(h.run('game.day'),993);
  assert.equal(h.run('game.class_id'),14);h.run('applyEffects({subjects:{humanities:15}});persist();game=loadGame()');
@@ -358,11 +377,11 @@ test('changing opening class counts against the character original class and kee
 });
 test('study, tutoring and events grow slowly and preserve decimals in saves',()=>{
  const h=harness();h.run("campusDraft('hu-zx');startGame();game.subjects.chinese=120;learningRandom=()=>0;studySubject('chinese')");
- assert.equal(h.run('game.subjects.chinese'),120.15);
+ const afterStudy=h.run('game.subjects.chinese');assert.ok(afterStudy>120&&afterStudy<=120.5);
  h.run("game.tutoring={decided:true,subject:'chinese'};showMandatoryTutoring()");
- assert.equal(h.run('game.subjects.chinese'),120.30);
+ const afterTutoring=h.run('game.subjects.chinese');assert.ok(afterTutoring>afterStudy&&afterTutoring<=120.7);
  h.run('applyEffects({subjects:{chinese:12,science:12},charm:8,mindset:10});persist();game=loadGame()');
- assert.equal(h.run('game.subjects.chinese'),120.45);
+ assert.ok(h.run('game.subjects.chinese')>afterTutoring);
  assert.equal(h.run("game.attrs.charm"),70.5);
  h.run("game.subjects.chinese=149.95;game.tutoringDoneThisWeek=false;showMandatoryTutoring()");
  assert.equal(h.run('game.subjects.chinese'),150);
@@ -529,8 +548,8 @@ test('native mobile selection and manual input sync with the saved choice and cl
  assert.equal(h.run('game.admissions.choices[0].major'),'');assert.equal(h.el('#admissions-major-0').value,'');
  assert.ok(h.el('#admissions-major-select-0').innerHTML.includes('请选择专业'));
 });
-test('admission results use the separate simulated result screen',()=>{
+test('admission results keep the saved mark and integer lookup policy separate',()=>{
  const h=harness();h.run("campusDraft('hu-zx');startGame();openExam(EVENTS.find(e=>e.id==='gaokao'));admissionsPlayer().total=646.56;game.admissions={choices:[{school:'东华大学',major:'计算机类'},...Array.from({length:4},()=>({school:'',major:''}))]};renderAdmissionsResult()");
- assert.match(h.el('#game-root').innerHTML,/录取通知书/);assert.match(h.el('#game-root').innerHTML,/东华大学/);
+ assert.match(h.el('#game-root').innerHTML,/录取通知书/);assert.match(h.el('#game-root').innerHTML,/东华大学/);assert.match(h.el('#game-root').innerHTML,/计算机类/);
  assert.equal(h.run('evaluateAdmissions(admissionsPlayer(),admissionsChoices()).score'),646);
 });

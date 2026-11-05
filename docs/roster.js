@@ -122,6 +122,68 @@ function learningRandom(g){
 function learningHealth(g){
   return learningClamp(.4*learningClamp(g.energy/100)+.4*(1-learningClamp(g.stress/100))+.2*learningClamp(g.mood/100));
 }
+function learningStatus(g){
+  const energy=learningClamp(Number(g.energy)/100),stress=learningClamp(Number(g.stress)/100),mood=learningClamp(Number(g.mood)/100);
+  const staminaFactor=.84+.16*energy,moodFactor=.86+.14*mood;
+  const pressureFactor=stress<=.4?1+.06*(stress/.4):1.06-.30*Math.pow((stress-.4)/.6,1.5);
+  return {
+    energy,stress,mood,
+    staminaFactor,moodFactor,pressureFactor,
+    composite:learningClamp(staminaFactor*moodFactor*pressureFactor/1.10,.72,1.10),
+    shift:.16*(energy-.5)+.14*(mood-.5)+.06*Math.min(stress/.4,1)-.45*Math.pow(Math.max(0,(stress-.4)/.6),1.5)
+  };
+}
+function learningRankCategory(ids){return ids.includes('physics')?'physics':ids.includes('history')?'history':null}
+function learningRankRows(category){
+  return typeof HENAN_2025_RANKS!=='undefined'?HENAN_2025_RANKS.categories?.[category]?.rows||null:null;
+}
+function learningBottomPercentile(points,category){
+  const rows=learningRankRows(category);
+  if(!rows?.length||!Number.isFinite(points))return null;
+  const total=rows[rows.length-1][1],score=Math.floor(points);
+  if(score>=rows[0][0])return 1-rows[0][1]/total;
+  if(score<rows[rows.length-1][0])return 0;
+  let cumulative=total;
+  for(const [rowScore,rowCumulative] of rows){
+    if(rowScore<=score){cumulative=rowCumulative;break;}
+  }
+  return learningClamp(1-cumulative/total);
+}
+function learningScoreAtPercentile(percentile,category){
+  const rows=learningRankRows(category);
+  if(!rows?.length)return null;
+  const total=rows[rows.length-1][1],p=learningClamp(percentile,1/(2*total),1-1/(2*total));
+  const target=(1-p)*total;
+  for(const [score,cumulative] of rows)if(cumulative+1e-7>=target)return score;
+  return rows[rows.length-1][0];
+}
+function learningLogit(p){return Math.log(p/(1-p))}
+function learningSigmoid(x){return 1/(1+Math.exp(-x))}
+function learningAllocateScores(raw,target,ids){
+  const totalMax=ids.reduce((sum,id)=>sum+campusMax(id),0),total=learningClamp(Number(target)||0,0,totalMax);
+  const weights=ids.map(id=>Math.max(0,Number(raw[id])||0)),weightSum=weights.reduce((a,b)=>a+b,0);
+  if(weightSum<=0)return Object.fromEntries(ids.map(id=>[id,0]));
+  let lo=0,hi=Math.max(...ids.map((id,i)=>weights[i]?campusMax(id)/weights[i]:0));
+  for(let pass=0;pass<48;pass++){
+    const scale=(lo+hi)/2;
+    const fit=ids.reduce((sum,id,i)=>sum+Math.min(campusMax(id),weights[i]*scale),0);
+    if(fit<total)lo=scale;else hi=scale;
+  }
+  const scale=(lo+hi)/2;
+  const result=Object.fromEntries(ids.map((id,i)=>[id,Math.round(Math.min(campusMax(id),weights[i]*scale)*2)/2]));
+  let remaining=Math.round(total*2)/2-Object.values(result).reduce((a,b)=>a+b,0);
+  while(remaining>=.5){
+    const id=ids.find(id=>result[id]+.5<=campusMax(id));
+    if(!id)break;
+    result[id]+=.5;remaining-=.5;
+  }
+  while(remaining<=-.5){
+    const id=ids.find(id=>result[id]>=.5);
+    if(!id)break;
+    result[id]-=.5;remaining+=.5;
+  }
+  return result;
+}
 function learningRecord(g,type,id){
   const l=learningState(g),c=l.current;
   c.study??={};c.actions??=0;c.healthSum??=0;c.samples??=0;
@@ -132,18 +194,21 @@ function learningRecord(g,type,id){
 function learningTargets(g,id){return id==='science'?['physics','chemistry','biology']:id==='humanities'?['history','politics','geography']:[id]}
 function learningStudy(g,id,random=()=>learningRandom(g)){
   const l=learningState(g),targets=g.class_id?learningTargets(g,id):[id];
-  const health=learningHealth(g),insight=learningClamp(g.attrs.insight/100);
+  const health=learningHealth(g),insight=learningClamp(g.attrs.insight/100),status=learningStatus(g);
   let total=0;
   // One outcome for this study action, with bounded gains even in story/tutoring effects.
   const roll=random(),up=.50+.20*health+.10*insight,down=.04+.16*(1-health);
-  const change=roll<up?.15+.35*random():roll<1-down?0:-(.05+.20*random());
+  const gainFactor=learningClamp(.50+.20*status.energy+.20*status.mood+.10*(1-status.stress))*(1-.18*status.stress*status.stress);
+  const positive=roll<up?.15+.35*random():0;
+  const change=positive||(roll>=1-down?-(.05+.20*random()):0);
   for(const key of targets){
     const m=l.memory[key]??={lastReview:g.day,stability:14};
     const gap=g.day-m.lastReview;
     if(gap>=4)m.stability=learningClamp(m.stability+5,14,70);
     m.lastReview=g.day;
-    const before=g.subjects[key]||0;
-    g.subjects[key]=Math.round(learningClamp(before+change,0,campusMax(key))*100)/100;
+    const before=g.subjects[key]||0,headroom=learningClamp(1-before/campusMax(key));
+    const adjusted=change>0?change*gainFactor*(.55+.45*Math.pow(headroom,.7)):change;
+    g.subjects[key]=Math.round(learningClamp(before+adjusted,0,campusMax(key))*100)/100;
     total+=g.subjects[key]-before;
     learningRecord(g,'study',key);
   }
@@ -195,19 +260,34 @@ function learningPreparation(g,day=g.day){
   return {days:Math.round(days),quality,coverage,effort:sustained,wellness,consistency,subject,resilience,badChance:.005+.18*Math.pow(1-resilience,3)};
 }
 function learningExam(g,abilities,ids,random=()=>learningRandom(g),preparation=learningPreparation(g)){
-  const p=preparation,roll=random(),bad=roll<p.badChance,good=!bad&&roll>1-(.03+.07*p.quality);
+  const p=preparation,quality=learningClamp(Number(p.quality)||0),coverage=learningClamp(Number(p.coverage)||quality);
+  const status=learningStatus(g),roll=random(),badChance=learningClamp(Number(p.badChance)||0),bad=roll<badChance,good=!bad&&roll>1-(.03+.07*quality);
   const centered=()=>random()+random()+random()-1.5;
-  const shared=centered()*(.012+.035*(1-p.resilience));
-  const shock=bad?-(.10+.12*random()):good?.025+.025*random():0;
-  const subjects={};
+  const eventFactor=bad?1-(.10+.12*random()):good?1+(.025+.025*random()):1;
+  const raw={},category=learningRankCategory(ids);
   for(const id of ids){
-    const prep=p.subject[id]??.5;
-    const mean=.90+.065*p.quality+.025*prep+.01*learningClamp(g.attrs.insight/100);
-    const dayState=.008*(learningHealth(g)-.5);
-    const noise=centered()*(.010+.025*(1-prep));
-    subjects[id]=Math.round(learningClamp(abilities[id]*(mean+shared+shock+dayState+noise),0,campusMax(id))*2)/2;
+    const prep=learningClamp(p.subject?.[id]??.5),readiness=.90+.07*prep+.03*coverage;
+    raw[id]=Math.max(0,Number(abilities[id])||0)*readiness;
   }
-  return {subjects,preparation:p,performance:bad?'失常发挥':good?'超常发挥':'正常波动'};
+  const rawTotal=Object.values(raw).reduce((sum,value)=>sum+value,0),adjustedTotal=rawTotal*eventFactor;
+  const beforePercentile=learningBottomPercentile(adjustedTotal,category);
+  const sigma=.03+.06*status.stress+.04*(1-status.energy)+.04*(1-status.mood)+.10*(1-quality);
+  const noise=2*sigma*centered();
+  let afterPercentile=null,targetTotal=adjustedTotal*status.composite;
+  if(beforePercentile!==null){
+    afterPercentile=learningClamp(learningSigmoid(learningLogit(beforePercentile)+status.shift+noise),1e-6,1-1e-6);
+    targetTotal=learningScoreAtPercentile(afterPercentile,category);
+  }
+  const subjects=learningAllocateScores(raw,targetTotal,ids);
+  return {
+    subjects,preparation:p,
+    performance:bad?'失常发挥':good?'超常发挥':'正常波动',
+    calibration:{
+      model:'henan-percentile-v2',category,rawTotal,adjustedTotal,targetTotal,
+      percentileBefore:beforePercentile,percentileAfter:afterPercentile,
+      statusShift:status.shift,statusSigma:sigma,eventFactor
+    }
+  };
 }
 function learningSummary(g){
   const p=learningPreparation(g);

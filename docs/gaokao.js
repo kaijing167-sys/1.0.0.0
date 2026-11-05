@@ -39,9 +39,9 @@ function buildGaokaoReport(g){
     const subjects=Object.fromEntries(Object.entries(exam.subjects).map(([id,value])=>[id,Math.round(value*2)/2]));
     const total=Object.values(subjects).reduce((sum,value)=>sum+value,0);
     const category=selected.includes('physics')?'physics':'history';
-    return {id:person.id,name:person.name,class_id:cls.id,combination:person.active&&g.custom_curriculum?g.subject_combination.map(id=>CAMPUS_SUBJECTS.find(s=>s[0]===id)[1]).join(""):cls.combo,active:!!person.active,abilities,performance:exam.performance,preparation:person.active&&!g.completed?preparation:undefined,subjects,total,rank:henanRank(total,category)};
+    return {id:person.id,name:person.name,class_id:cls.id,combination:person.active&&g.custom_curriculum?g.subject_combination.map(id=>CAMPUS_SUBJECTS.find(s=>s[0]===id)[1]).join(""):cls.combo,active:!!person.active,abilities,performance:exam.performance,preparation:person.active&&!g.completed?preparation:undefined,calibration:exam.calibration,subjects,total,rank:henanRank(total,category)};
   }).sort((a,b)=>b.total-a.total||a.class_id-b.class_id||a.id.localeCompare(b.id));
-  return {version:g.completed?1:2,model:"preparation-v1",year:2025,day:g.day,rows};
+  return {version:g.completed?1:2,model:"henan-percentile-v2",year:2025,day:g.day,rows};
 }
 function gaokaoResultsTable(report){
   const player=report.rows.find(p=>p.active);
@@ -49,10 +49,11 @@ function gaokaoResultsTable(report){
   if(!player)return '';
   return `<section class="final-card gaokao-report" aria-labelledby="gaokao-report-title">
     <h2 id="gaokao-report-title">我的高考成绩单</h2>
-    <p>这是属于 ${escapeHtml(player.name)} 的答卷。${report.version>=2?"学科能力是基础，近百天的持续复习、科目覆盖、劳逸状态、人物属性和当天波动共同影响实际成绩。":"这是旧版已结算的历史成绩，保留原结果。"}</p>
+    <p>这是属于 ${escapeHtml(player.name)} 的答卷。${report.version>=2?"学科能力与近百天准备先形成掌握估分，再按河南 2025 分档位次和当天体力、压力、心情校准；随机发挥只造成有限波动。":"这是旧版已结算的历史成绩，保留原结果。"}</p>
     ${player?`<p class="gaokao-player-summary"><b>${escapeHtml(player.name)} · ${player.combination} · 总分 ${formatExamScore(player.total)}</b><br>河南 2025 ${rank?.label||''}参考位次：${gaokaoRankText(rank)}${rank?.kind==='exact'?`；同分位次范围 ${rank.start.toLocaleString()}—${rank.end.toLocaleString()} 名`:rank?.kind==='top'?`；最高公布分段范围 1—${rank.end} 名`:''}</p>`:''}
     <p class="gaokao-rank-note" id="gaokao-rank-note">省位次取 2025 年河南同类别一分一段表的累计人数，物理类、历史类分别查询。小数总分向下取整查表，不插值；最高分段只显示公布范围，100 分以下不推算。官方统计含政策性照顾分，本游戏不另加分、不重复赋分，位次仅作游戏参考。</p>
     ${player.preparation?`<p>已记录近百天中的 ${player.preparation.days} 天；综合准备 ${Math.round(player.preparation.quality*100)}/100，复习覆盖 ${Math.round(player.preparation.coverage*100)}/100，身心状态 ${Math.round(player.preparation.wellness*100)}/100。${player.performance}，本次失常事件概率约 ${(player.preparation.badChance*100).toFixed(1)}%。缺少记录的时段按中性处理。</p>`:""}
+    ${player.calibration?`<p>分档校准模型：能力与准备掌握估分 ${formatExamScore(player.calibration.rawTotal)}，特殊发挥修正后 ${formatExamScore(player.calibration.adjustedTotal)}；再结合当天状态映射到一分一段表。</p>`:""}
     <dl class="personal-subjects" aria-label="我的六科成绩">${CAMPUS_SUBJECTS.filter(([id])=>Object.hasOwn(player.subjects,id)).map(([id,label])=>`<div><dt>${label}</dt><dd><strong>${formatExamScore(player.subjects[id])}</strong><span> / ${campusMax(id)}${player.abilities?` · 考前能力 ${formatExamScore(player.abilities[id])}`:""}</span></dd></div>`).join('')}</dl>
     <p class="gaokao-source">数据来源：<a href="${HENAN_2025_RANKS.source}" target="_blank" rel="noopener noreferrer">河南省教育考试院 2025 年分数段统计表</a> · <a href="${HENAN_2025_RANKS.categories.physics.pdf}" target="_blank" rel="noopener noreferrer">物理类原表</a> · <a href="${HENAN_2025_RANKS.categories.history.pdf}" target="_blank" rel="noopener noreferrer">历史类原表</a></p>
   </section>`;
