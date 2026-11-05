@@ -19,7 +19,7 @@ const DEFAULT_SETTINGS = {
   eventMusic: true,
   musicVolume: 25,
   chatMode: globalThis.QINGHE_DEFAULT_CHAT_MODE === "ai" ? "ai" : "keyword",
-  chatEndpoint: "/api/chat",
+  chatEndpoint: globalThis.QINGHE_CHAT_ENDPOINT || "/api/chat",
 };
 
 const ATTRIBUTES = [
@@ -548,13 +548,22 @@ function loadSettings(){
   try{
     saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");
   }catch{saved={}}
-  const merged={...DEFAULT_SETTINGS,...saved};
+  const merged=mergeSettings(saved);
   if(!localStorage.getItem(MUSIC_REENABLE_KEY)){
     merged.musicEnabled=true;
     localStorage.setItem(MUSIC_REENABLE_KEY,"1");
   }
   localStorage.setItem(MUSIC_OFF_MIGRATION_KEY,"1");
   localStorage.setItem(SETTINGS_KEY,JSON.stringify(merged));
+  return merged;
+}
+function mergeSettings(saved={}){
+  const source=saved&&typeof saved==="object"&&!Array.isArray(saved)?saved:{};
+  const merged={...DEFAULT_SETTINGS,...source};
+  if(source.chatEndpoint==="/api/chat"&&DEFAULT_SETTINGS.chatEndpoint!=="/api/chat"){
+    merged.chatEndpoint=DEFAULT_SETTINGS.chatEndpoint;
+  }
+  if(!merged.chatEndpoint)merged.chatEndpoint=DEFAULT_SETTINGS.chatEndpoint;
   return merged;
 }
 function persistSettings(){
@@ -1929,7 +1938,7 @@ async function importSave(file){
     if(!imported||imported.version!==2||!imported.attrs||!imported.subjects)throw new Error("invalid");
     if(!Array.isArray(imported.pendingEvents))imported.pendingEvents=[];
     game=campusValidate(imported);
-    if(parsed.settings)settings={...DEFAULT_SETTINGS,...parsed.settings};
+    if(parsed.settings)settings=mergeSettings(parsed.settings);
     persist();
     persistSettings();
     closeModal(true);

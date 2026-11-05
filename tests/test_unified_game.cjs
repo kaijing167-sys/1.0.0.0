@@ -19,6 +19,36 @@ function harness(){
  return {run:s=>vm.runInContext(s,context),el,storage,change(target){for(const fn of listeners.change)fn({target})},click(dataset){const button={dataset,disabled:false,hasAttribute:()=>false,getAttribute:()=>null,setAttribute(){},removeAttribute(){},focus(){},classList:{add(){},remove(){}}};for(const fn of listeners.click)fn({target:{closest:()=>button}})}};
 }
 
+test('GitHub Pages chat uses the configured HTTPS backend and allows only that cross-origin service',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8');
+ assert.match(html,/location\.hostname === "kaijing167-sys\.github\.io"/);
+ assert.match(html,/https:\/\/121-41-75-213\.sslip\.io\/api\/chat/);
+ assert.match(html,/game\.js\?v=49/);assert.match(html,/phone-chat\.js\?v=7/);
+
+ const source=fs.readFileSync(path.join(__dirname,'../frontend/phone-chat.js'),'utf8');
+ const start=source.indexOf('function resolveChatEndpoint');
+ const end=source.indexOf('function chatStreamEndpoint');
+ const context=vm.createContext({
+   window:{location:{href:'https://kaijing167-sys.github.io/1.0.0.0/',origin:'https://kaijing167-sys.github.io'}},
+   QINGHE_CHAT_ENDPOINT:'https://121-41-75-213.sslip.io/api/chat',
+   URL
+ });
+ vm.runInContext(source.slice(start,end),context);
+ assert.equal(vm.runInContext('resolveChatEndpoint().href',context),'https://121-41-75-213.sslip.io/api/chat');
+ assert.equal(vm.runInContext("resolveChatEndpoint('https://121-41-75-213.sslip.io/api/chat').href",context),'https://121-41-75-213.sslip.io/api/chat');
+ assert.throws(()=>vm.runInContext("resolveChatEndpoint('https://example.com/api/chat')",context),/允许/);
+});
+
+test('legacy same-origin chat settings migrate to the configured HTTPS backend',()=>{
+ const source=fs.readFileSync(path.join(__dirname,'../frontend/game.js'),'utf8');
+ const start=source.indexOf('function mergeSettings');
+ const end=source.indexOf('function persistSettings');
+ const context=vm.createContext({DEFAULT_SETTINGS:{chatMode:'ai',chatEndpoint:'https://121-41-75-213.sslip.io/api/chat'}});
+ vm.runInContext(source.slice(start,end),context);
+ assert.equal(vm.runInContext("mergeSettings({chatEndpoint:'/api/chat'}).chatEndpoint",context),'https://121-41-75-213.sslip.io/api/chat');
+ assert.equal(vm.runInContext("mergeSettings({chatEndpoint:'https://example.com/api/chat'}).chatEndpoint",context),'https://example.com/api/chat');
+});
+
 test('expanded data contains real programs for elite, ordinary and junior institutions',()=>{
  const h=harness();
  assert.equal(h.run('HENAN_2025_ADMISSIONS.stats.institutions'),1220);

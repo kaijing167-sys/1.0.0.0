@@ -5,10 +5,12 @@ let phoneSequence=0;
 function resolveChatEndpoint(value){
   const currentLocation=window.location||globalThis.location||{};
   const base=currentLocation.href||`${currentLocation.protocol||'https:'}//${currentLocation.host||'localhost'}${currentLocation.pathname||'/'}`;
-  const endpoint=new URL(value||'/api/chat',base);
+  const configured=globalThis.QINGHE_CHAT_ENDPOINT;
+  const endpoint=new URL(value||configured||'/api/chat',base);
   const localHosts=['localhost','127.0.0.1','[::1]'];
   const currentOrigin=currentLocation.origin||`${currentLocation.protocol||'https:'}//${currentLocation.host||'localhost'}`;
-  if(!['http:','https:'].includes(endpoint.protocol)||(endpoint.origin!==currentOrigin&&!localHosts.includes(endpoint.hostname)))throw Error('请输入同源后台或本机 HTTP 服务地址');
+  const configuredOrigin=configured?new URL(configured,base).origin:null;
+  if(!['http:','https:'].includes(endpoint.protocol)||(endpoint.origin!==currentOrigin&&!localHosts.includes(endpoint.hostname)&&endpoint.origin!==configuredOrigin))throw Error('请输入允许的聊天服务地址');
   return endpoint;
 }
 function chatStreamEndpoint(endpoint){
@@ -79,7 +81,7 @@ function leavePhoneChat(){
 function configurePhoneChat(){
   if(!phoneChat)return;
   if(phoneChat.busy)return toast('等待回复完成，或先返回游戏');
-  openModal(`<h2>聊天设置</h2><p>当前模式：${settings.chatMode==='ai'?'AI 接口':'本地关键词回复'}。关键词模式无需密钥或网络，按话题和人物性格匹配预设回复，理解范围有限。</p><div class="dialog-footer"><button class="primary-button" data-phone-local>使用关键词回复</button><button class="ghost-button" data-phone-ai>使用 AI 接口</button></div><p>AI 模式需要游戏后台提供聊天服务，再由后台调用 Ollama；模型地址和密钥不会发送到浏览器。</p><label class="field"><span>后台聊天服务地址</span><input id="phone-endpoint" value="${escapeHtml(settings.chatEndpoint||'/api/chat')}" placeholder="/api/chat"></label><p>默认使用当前站点的 <code>/api/chat</code>。也可填写本机调试服务地址，但不会写入存档。</p><div class="dialog-footer"><button class="ghost-button" data-phone-config-back>返回聊天</button><button class="primary-button" data-phone-config-save>保存地址</button></div>`,false);
+  openModal(`<h2>聊天设置</h2><p>当前模式：${settings.chatMode==='ai'?'AI 接口':'本地关键词回复'}。关键词模式无需密钥或网络，按话题和人物性格匹配预设回复，理解范围有限。</p><div class="dialog-footer"><button class="primary-button" data-phone-local>使用关键词回复</button><button class="ghost-button" data-phone-ai>使用 AI 接口</button></div><p>AI 模式由页面配置的服务器后台调用 Ollama；模型地址和密钥不会发送到浏览器。</p><label class="field"><span>后台聊天服务地址</span><input id="phone-endpoint" value="${escapeHtml(settings.chatEndpoint||DEFAULT_SETTINGS.chatEndpoint)}" placeholder="${escapeHtml(DEFAULT_SETTINGS.chatEndpoint)}"></label><p>页面会自动使用已配置的聊天服务，也可填写同源后台或本机调试地址；地址不会写入存档。</p><div class="dialog-footer"><button class="ghost-button" data-phone-config-back>返回聊天</button><button class="primary-button" data-phone-config-save>保存地址</button></div>`,false);
   document.querySelector('#game-dialog').classList.remove('phone-dialog');
 }
 async function sendPhoneMessage(retry=false){
@@ -129,7 +131,7 @@ async function sendPhoneMessage(retry=false){
     }
     persist();
   }catch(e){
-    if(phoneChat===session)session.error=e.name==='AbortError'?'回复等待超时，请重试。':e instanceof TypeError?'还没连上本地 AI 服务。消息已保留；配置接口后可重试。':e.message;
+    if(phoneChat===session)session.error=e.name==='AbortError'?'回复等待超时，请重试。':e instanceof TypeError?'还没连上 AI 服务。消息已保留；配置接口后可重试。':e.message;
   }finally{
     clearTimeout(timer);
     if(phoneRequest===controller)phoneRequest=null;
@@ -145,7 +147,7 @@ document.addEventListener('click',event=>{
   if(b.hasAttribute('data-phone-config'))configurePhoneChat();
   if(b.hasAttribute('data-phone-config-back'))renderPhoneChat();
   if(b.hasAttribute('data-phone-config-save')){
-    try{const value=document.querySelector('#phone-endpoint').value.trim();resolveChatEndpoint(value);settings.chatEndpoint=value||'/api/chat';persistSettings();phoneChat.error='';renderPhoneChat();}catch{toast('请输入同源后台或本机 HTTP 服务地址');}
+    try{const value=document.querySelector('#phone-endpoint').value.trim();resolveChatEndpoint(value);settings.chatEndpoint=value||DEFAULT_SETTINGS.chatEndpoint;persistSettings();phoneChat.error='';renderPhoneChat();}catch{toast('请输入同源、本机或已配置的聊天服务地址');}
   }
   if(b.hasAttribute('data-phone-retry'))sendPhoneMessage(true);
 });

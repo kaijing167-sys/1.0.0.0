@@ -28,7 +28,19 @@
   <div id="game-root"></div>
   <div id="game-dialog" class="game-dialog" hidden></div>
   <div id="game-toast" role="status" aria-live="polite"></div>
-  <script>window.QINGHE_DEFAULT_CHAT_MODE=(location.hostname==="121.41.75.213"||((location.hostname==="localhost"||location.hostname==="127.0.0.1")&&location.port==="8000"))?"ai":"keyword";</script>
+  <script>
+    window.QINGHE_DEFAULT_CHAT_MODE =
+      location.hostname === "121.41.75.213" ||
+      location.hostname === "kaijing167-sys.github.io" ||
+      ((location.hostname === "localhost" || location.hostname === "127.0.0.1") &&
+        location.port === "8000")
+        ? "ai"
+        : "keyword";
+    window.QINGHE_CHAT_ENDPOINT =
+      location.hostname === "kaijing167-sys.github.io"
+        ? "https://121-41-75-213.sslip.io/api/chat"
+        : "/api/chat";
+  </script>
   <script src="characters/characters-data.js"></script>
   <script src="school-roster-data.js?v=18"></script>
   <script src="roster.js?v=21"></script>
@@ -42,13 +54,13 @@
   <script src="recommendations-2024.js?v=1"></script>
   <script src="admissions-recommendations.js?v=3"></script>
   <script src="admissions-probability.js?v=1"></script>
-  <script src="game.js?v=48"></script>
+  <script src="game.js?v=49"></script>
   <script src="custom-tiers.js?v=1"></script>
   <script src="study-minigame.js?v=2"></script>
   <script src="exercise-minigame.js?v=9"></script>
   <script src="journey-saves.js?v=19"></script>
   <script src="keyword-chat.js?v=2"></script>
-  <script src="phone-chat.js?v=6"></script>
+  <script src="phone-chat.js?v=7"></script>
   <script src="annotate.js?v=16"></script>
 </body>
 </html>
