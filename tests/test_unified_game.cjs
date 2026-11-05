@@ -23,7 +23,7 @@ test('GitHub Pages chat uses the configured HTTPS backend and allows only that c
  const html=fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8');
  assert.match(html,/location\.hostname === "kaijing167-sys\.github\.io"/);
  assert.match(html,/https:\/\/121-41-75-213\.sslip\.io\/api\/chat/);
- assert.match(html,/game\.js\?v=49/);assert.match(html,/phone-chat\.js\?v=7/);
+ assert.match(html,/game\.js\?v=50/);assert.match(html,/phone-chat\.js\?v=7/);
 
  const source=fs.readFileSync(path.join(__dirname,'../frontend/phone-chat.js'),'utf8');
  const start=source.indexOf('function resolveChatEndpoint');
@@ -47,6 +47,27 @@ test('legacy same-origin chat settings migrate to the configured HTTPS backend',
  vm.runInContext(source.slice(start,end),context);
  assert.equal(vm.runInContext("mergeSettings({chatEndpoint:'/api/chat'}).chatEndpoint",context),'https://121-41-75-213.sslip.io/api/chat');
  assert.equal(vm.runInContext("mergeSettings({chatEndpoint:'https://example.com/api/chat'}).chatEndpoint",context),'https://example.com/api/chat');
+});
+
+test('legacy keyword mode switches to AI once on the GitHub Pages site, then respects the saved choice',()=>{
+ const source=fs.readFileSync(path.join(__dirname,'../frontend/game.js'),'utf8');
+ const load=source.slice(source.indexOf('function loadSettings'),source.indexOf('function mergeSettings'));
+ const merge=source.slice(source.indexOf('function mergeSettings'),source.indexOf('function persistSettings'));
+ const settingsKey='qinghe-game-settings-v1';
+ const storage=new Map([[settingsKey,JSON.stringify({chatMode:'keyword',chatEndpoint:'/api/chat'})]]);
+ const context=vm.createContext({
+   DEFAULT_SETTINGS:{chatMode:'ai',chatEndpoint:'https://121-41-75-213.sslip.io/api/chat'},
+   CHAT_AI_MIGRATION_KEY:'qinghe-chat-ai-migration-v1',
+   MUSIC_REENABLE_KEY:'qinghe-music-reenabled-v1',
+   MUSIC_OFF_MIGRATION_KEY:'qinghe-music-force-off-v1',
+   SETTINGS_KEY:settingsKey,
+   location:{hostname:'kaijing167-sys.github.io'},
+   localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)}
+ });
+ vm.runInContext(load+merge,context);
+ assert.equal(vm.runInContext('loadSettings().chatMode',context),'ai');
+ storage.set(settingsKey,JSON.stringify({chatMode:'keyword',chatEndpoint:'https://121-41-75-213.sslip.io/api/chat'}));
+ assert.equal(vm.runInContext('loadSettings().chatMode',context),'keyword');
 });
 
 test('expanded data contains real programs for elite, ordinary and junior institutions',()=>{

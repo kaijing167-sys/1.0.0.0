@@ -2,6 +2,7 @@ const SAVE_KEY = "qinghe-game-v2";
 const SETTINGS_KEY = "qinghe-game-settings-v1";
 const MUSIC_OFF_MIGRATION_KEY = "qinghe-music-force-off-v1";
 const MUSIC_REENABLE_KEY = "qinghe-music-reenabled-v1";
+const CHAT_AI_MIGRATION_KEY = "qinghe-chat-ai-migration-v1";
 const MUSIC_FORCE_OFF = false;
 document.body.classList.add("pixel-theme");
 const TOTAL_DAYS = 1092;
@@ -549,6 +550,11 @@ function loadSettings(){
     saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");
   }catch{saved={}}
   const merged=mergeSettings(saved);
+  const isGitHubPage=globalThis.location?.hostname==="kaijing167-sys.github.io";
+  if(isGitHubPage&&!localStorage.getItem(CHAT_AI_MIGRATION_KEY)&&saved?.chatMode==="keyword"&&saved?.chatEndpoint==="/api/chat"){
+    merged.chatMode="ai";
+  }
+  if(isGitHubPage)localStorage.setItem(CHAT_AI_MIGRATION_KEY,"1");
   if(!localStorage.getItem(MUSIC_REENABLE_KEY)){
     merged.musicEnabled=true;
     localStorage.setItem(MUSIC_REENABLE_KEY,"1");
