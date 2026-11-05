@@ -61,3 +61,24 @@
 .celebration-screen .admission-good-news .admissions-offer {color:#a02e29;}
 .personal-subjects dd span {white-space:normal;display:block;line-height:1.6;}
 @media(max-width:600px){.celebration-screen .final-score strong{font-size:clamp(42px,12vw,65px)}.celebration-screen .final-wrap{padding:20px 14px}.celebration-screen .final-card{padding:16px 12px}}
+
+/* A clear primary action with two balanced secondary buttons on the score page. */
+.celebration-screen .final-next-card>p{font-size:13px;line-height:1.9;color:#927154;margin-bottom:22px;}
+.celebration-screen .final-next-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch;margin-top:20px;}
+.celebration-screen .final-next-actions button{box-sizing:border-box;width:100%;min-width:0;margin:0;display:flex;align-items:center;gap:12px;line-height:1.4;white-space:normal;border-radius:12px;transform:none;transition:background .16s,box-shadow .16s;}
+.celebration-screen .final-next-actions .next-action-primary{grid-column:1 / -1;min-height:86px;padding:19px 20px;border:1px solid #913529;background:linear-gradient(115deg,#b54b39,#a3382e);color:#fff7e5;box-shadow:0 4px 0 #843226,0 8px 18px #82322114;text-align:left;}
+.celebration-screen .next-action-label{display:grid;gap:6px;min-width:0;}
+.celebration-screen .next-action-label strong{font-size:20px;font-weight:700;letter-spacing:.05em;color:inherit;}
+.celebration-screen .next-action-label small{font-size:11px;line-height:1.6;color:#f5d9b9;font-weight:400;}
+.celebration-screen .next-action-arrow{margin-left:auto;font-size:24px;color:#f9e5c4;}
+.celebration-screen .final-next-actions .next-action-secondary{min-height:60px;padding:14px 12px;justify-content:center;border:1px solid #cfb492;background:#fff8e9;color:#7b563c;box-shadow:0 2px 0 #ddc7a6;font-size:14px;font-weight:600;text-align:center;}
+.celebration-screen .next-action-icon{display:grid;place-items:center;flex-shrink:0;}
+.celebration-screen .next-action-primary .next-action-icon{width:42px;height:42px;border-radius:10px;background:#fff5dc18;}
+.celebration-screen .next-action-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.celebration-screen .next-action-secondary .next-action-icon svg{width:20px;height:20px;color:#a77c50;}
+@media(hover:hover){.celebration-screen .final-next-actions .next-action-primary:hover{background:linear-gradient(115deg,#bd5441,#ac4034);box-shadow:0 4px 0 #843226,0 10px 22px #82322120;}.celebration-screen .final-next-actions .next-action-secondary:hover{background:#f7ebd4;border-color:#b58c60;}}
+.celebration-screen .final-next-actions button:active{transform:none;box-shadow:inset 0 2px 5px #65422724;}
+.celebration-screen .final-next-actions button:focus-visible{outline:3px solid #be995c;outline-offset:4px;}
+@media(max-width:600px){.celebration-screen .final-next-actions{gap:12px}.celebration-screen .final-next-actions .next-action-primary{padding:17px 15px;min-height:80px}.celebration-screen .next-action-label strong{font-size:18px}.celebration-screen .final-next-actions .next-action-secondary{gap:8px;font-size:13px;min-height:56px;padding:13px 8px}}
+@media(max-width:380px){.celebration-screen .final-next-actions{grid-template-columns:1fr;}.celebration-screen .final-next-actions .next-action-secondary{justify-content:flex-start;padding-left:20px}}
+@media(prefers-reduced-motion:reduce){.celebration-screen .final-next-actions button{transition:none}}

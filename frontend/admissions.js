@@ -11,8 +11,11 @@ function admissionsPrograms(school,category){
   let cached=admissionsProgramsCache.get(school);if(!cached){cached={};admissionsProgramsCache.set(school,cached);}
   return cached[category]??=(school.groups||[]).filter(g=>g.category===category).flatMap(g=>g.programs.map(([major,minScore,meta={}])=>({major,minScore,requires:g.requires,group:g.group,degree:g.degree||'undergraduate',school:school.name,source:school.source,requirementsSource:school.requirementsSource||school.source,...meta})));
 }
-function admissionsProgramEvidence(p){return `<p>${p.degree==='junior'?'高职专科批':'普通本科批'} · 专业最低分 ${formatExamScore(p.minScore)} · 最低分参考位次 ${p.minRank?.toLocaleString()||'未公布'}${p.rankRange?`（${p.rankRange[0].toLocaleString()}—${p.rankRange[1].toLocaleString()}）`:''} · ${admissionsRequirements(p)}</p>${p.restriction?`<p>招生备注：${escapeHtml(p.restriction)}（原表信息，额外条件未自动校验）</p>`:''}${admissionsSourceLink(p.source,'官方录取数据')} · ${admissionsSourceLink(p.requirementsSource,'官方选科依据')}`}
-function admissionsChoiceEvidence(school,major,category){const p=admissionsPrograms(admissionsSchool(school),category).find(p=>admissionsNormalize(p.major)===admissionsNormalize(major));return p?admissionsProgramEvidence(p):''}
+function admissionsProgramEvidence(p,reveal=false,category=''){
+ const r=category?admissionsHistoricalReference(p.school,category,p.degree):null;
+ return `<p>${p.degree==='junior'?'高职专科批':'普通本科批'} · ${admissionsRequirements(p)}</p>${reveal?`<p>本次专业录取线 ${formatExamScore(p.minScore)} 分</p>`:r?`<p>2024 院校参考线 ${formatExamScore(r.score)} 分（不代表专业线）</p>`:'<p>暂无已核实的 2024 院校参考线</p>'}${p.restriction?`<p>招生备注：${escapeHtml(p.restriction)}（额外条件未自动校验）</p>`:''}`;
+}
+function admissionsChoiceEvidence(school,major,category){const p=admissionsPrograms(admissionsSchool(school),category).find(p=>admissionsNormalize(p.major)===admissionsNormalize(major));return p?admissionsProgramEvidence(p,false,category):''}
 let admissionsLoadPromise=null;
 function loadAdmissionsCatalog(){
   if(HENAN_2025_ADMISSIONS.loaded)return Promise.resolve();
@@ -31,10 +34,10 @@ function loadAdmissionsCatalog(){
   return admissionsLoadPromise;
 }
 function admissionsLoadingHtml(error=''){
-  $('#game-root').innerHTML=`<main id="main" class="final-screen"><div class="final-wrap"><section class="final-card" role="status"><h1>${error?'录取数据暂未载入':'正在载入河南 2025 录取数据'}</h1><p>${escapeHtml(error||'首次进入需要下载专业数据，载入后即可使用院校与专业提示。')}</p><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button>${error?'<button class="primary-button" data-admissions-page="choices">重试加载</button>':''}</section></div></main>`;
+  $('#game-root').innerHTML=`<main id="main" class="final-screen"><div class="final-wrap"><section class="final-card" role="status"><h1>${error?'录取数据暂未载入':'正在载入志愿信息'}</h1><p>${escapeHtml(error||'首次进入需要下载专业数据，载入后即可使用院校与专业提示。')}</p><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button>${error?'<button class="primary-button" data-admissions-page="choices">重试加载</button>':''}</section></div></main>`;
 }
 function admissionsChoices(){
-  return Array.from({length:5},(_,i)=>({school:String(game.admissions?.choices?.[i]?.school||''),major:String(game.admissions?.choices?.[i]?.major||'')}));
+  return Array.from({length:5},(_,i)=>({school:String(game.admissions?.choices?.[i]?.school||''),major:String(game.admissions?.choices?.[i]?.major||''),adjustment:game.admissions?.choices?.[i]?.adjustment===true}));
 }
 function evaluateAdmissions(player,choices){
   const rows=choices.map((choice,index)=>({...choice,index:index+1}));
@@ -65,6 +68,16 @@ function evaluateAdmissions(player,choices){
       status='pending';stopped=true;continue;
     }
     const detail={...row,program};
+    if(row.adjustment===true&&(score<program.minScore||!program.requires.every(s=>selected.includes(s)))){
+      const candidates=admissionsPrograms(school,category).filter(p=>p!==program&&p.degree===program.degree&&p.requires.every(s=>selected.includes(s))&&score>= (p.degree==='junior'?185:category==='physics'?427:471)&&score>p.minScore);
+      candidates.sort((a,b)=>Number(b.group===program.group)-Number(a.group===program.group)||b.minScore-a.minScore||a.major.localeCompare(b.major,'zh-CN'));
+      const alternative=candidates[0];
+      if(alternative){
+        admitted={...alternative,choice:row.index,adjusted:true,requestedMajor:row.major,requestedGroup:program.group};status='admitted';stopped=true;
+        evaluated.push({...detail,program:alternative,state:'adjusted',reason:`原专业未达到录取条件；已选择服从调剂，调剂至本校${alternative.group?'专业组 '+alternative.group+' · ':''}${alternative.major}，选科符合且成绩高于专业最低分 ${formatExamScore(alternative.minScore)} 分`});
+        continue;
+      }
+    }
     if(!program.requires.every(s=>selected.includes(s))){evaluated.push({...detail,state:'ineligible',reason:'选科不符合要求：'+admissionsRequirements(program)});continue;}
     const threshold=program.minScore,control=program.degree==='junior'?185:category==='physics'?427:471;
     if(score<threshold){evaluated.push({...detail,state:'below',reason:`查表成绩 ${formatExamScore(score)} 分，未达到 2025 年该专业最低分 ${formatExamScore(threshold)} 分`});continue;}
@@ -99,43 +112,95 @@ function renderAdmissions(){
   const result=game.admissions?.result?evaluateAdmissions(player,choices):null;
   $('#game-root').innerHTML=`<main id="main" class="final-screen"><div class="final-wrap admissions-wrap">
     <div class="eyebrow">出分 → 志愿填报 → 模拟录取</div><h1>把下一站，写进志愿里</h1>
-    <p>${escapeHtml(player.name)} · ${escapeHtml(player.combination)} · 高考 ${formatExamScore(player.total)} 分 · 河南参考位次：${gaokaoRankText(player.rank)}</p>
+    <p>${escapeHtml(player.name)} · ${escapeHtml(player.combination)} · 高考 ${formatExamScore(player.total)} 分 · 参考位次：${gaokaoRankText(player.rank)}</p>
+    ${admissionsRecommendationsHtml(player)}
     <section class="final-card"><h2>5 个志愿，按你的期待排序</h2>
-      <p>每行填写一所大学和一个专业，按第 1 至第 5 志愿依次检索。至少填写一行，其余可留空；可输入学校名称，专业可从“查看全部专业”下拉框中完整选择，手机展开后可上下滑动；也可手动填写。</p>
-      <p class="admissions-note">这是普通本科与高职专科的五志愿简化模拟。河南 2025 年实际普通本科批设置 48 个院校专业组志愿，每组可填 6 个专业。本游戏按已公布专业最低分和选科匹配，不模拟真实专业组投档、计划竞争、征集降分、调剂、体检及单科限制。超过最低分且达到常规批次线按游戏规则录取；同分待定，不随机决定。</p>
-      <form id="admissions-form"><datalist id="admissions-schools">${[...new Set([...UNIVERSITY_CATALOG.schools.map(s=>s.name),...HENAN_2025_ADMISSIONS.schools.map(s=>s.name)])].map(name=>`<option value="${escapeHtml(name)}"></option>`).join('')}</datalist>
-        ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" list="admissions-schools" placeholder="输入大学名称" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
+      <p>每行填写一所大学和一个专业，按第 1 至第 5 志愿依次检索。至少填写一行，其余可留空；可输入学校名称，专业可从“查看全部专业”下拉框中完整选择，手机展开后可上下滑动；也可手动填写。大学列表按院校排名顺序排列，未收录院校随后按校名排序；排名仅用于列表顺序，不影响录取。</p>
+      <p class="admissions-note">你正在填报五个志愿，已知信息仅供参考。本次专业录取线尚未公布；服从调剂时可在同校符合选科的其他专业中检索。录取结果将在提交后公布。</p>
+      <form id="admissions-form">
+        ${choices.map((c,i)=>`<fieldset class="admissions-choice"><legend>第 ${i+1} 志愿</legend><label for="admissions-school-${i}">大学搜索<input id="admissions-school-${i}" data-admissions-index="${i}" data-admissions-field="school" maxlength="100" placeholder="搜索大学、别名或地区，如：武汉、浙江、复旦" autocomplete="off" value="${escapeHtml(c.school)}" aria-describedby="admissions-coverage-${i}"></label><div class="admissions-school-picker admissions-major-select-label"><button type="button" class="ghost-button admissions-school-toggle" id="admissions-school-toggle-${i}" data-school-toggle="${i}" aria-expanded="false" aria-controls="admissions-school-panel-${i}">大学完整列表</button><div class="admissions-school-panel" id="admissions-school-panel-${i}" hidden><small>按院校排名排序；985 红色 · 211 黄色 · 双一流绿色。支持搜索大学、别名或地区，列表可上下滚动，点击学校选填。</small><div class="admissions-school-scroll" id="admissions-school-list-${i}" role="group" aria-label="第 ${i+1} 志愿大学列表"></div></div></div><label for="admissions-major-${i}">专业（可手动输入）<input id="admissions-major-${i}" data-admissions-index="${i}" data-admissions-field="major" maxlength="100" placeholder="手动输入，或从下方完整列表选择" autocomplete="off" value="${escapeHtml(c.major)}"></label><label class="admissions-major-select-label" for="admissions-major-select-${i}"><span id="admissions-major-count-${i}">查看全部专业（${admissionsPrograms(admissionsSchool(c.school),category).length} 个已收录选项）</span><select id="admissions-major-select-${i}" data-admissions-index="${i}" data-admissions-field="major" aria-describedby="admissions-major-help-${i}">${admissionsMajorSelectOptions(c.school,category,c.major)}</select><small id="admissions-major-help-${i}">展开后上下滑动可查看该校当前选科类别下全部已收录专业，选择后自动填入上方。不同专业组和专业代号分别列出。</small></label><label class="admissions-adjustment-label" for="admissions-adjustment-${i}">是否服从调剂<select id="admissions-adjustment-${i}" data-admissions-index="${i}" data-admissions-field="adjustment"><option value="no"${c.adjustment?'':' selected'}>不服从调剂</option><option value="yes"${c.adjustment?' selected':''}>服从调剂</option></select><small>原专业未录取时，允许调剂到该校同批次、符合选科和分数条件的其他专业或专业组。</small></label><p class="admissions-coverage" id="admissions-coverage-${i}" aria-live="polite">${escapeHtml(universityCoverage(c.school,category))}</p><div class="admissions-evidence" id="admissions-evidence-${i}">${admissionsChoiceEvidence(c.school,c.major,category)}</div></fieldset>`).join('')}
         <div id="admissions-errors" role="alert">${(game.admissions?.errors||[]).map(s=>`<p>${escapeHtml(s)}</p>`).join('')}</div>
-        <div class="dialog-footer"><button type="button" class="ghost-button" data-admissions-page="scores">← 返回成绩页</button><button type="submit" class="primary-button">提交志愿，查看模拟录取 →</button></div>
+        <div class="dialog-footer"><button type="button" class="ghost-button" data-admissions-page="scores">← 返回成绩页</button><button type="submit" class="primary-button">提交志愿，查看成功率 →</button></div>
       </form>
     </section>
     ${result?'<button type="button" class="ghost-button" data-admissions-page="admission-result">查看上次模拟结果 →</button>':''}
     ${universityPickerHtml()}
-    <details class="final-card admissions-catalog"><summary>查看当前所选院校的专业、分数和位次</summary><p>本科及高职专科普通类专业数据，不使用学校最低线代替专业最低线；中外合作、专项、提前批和艺体类未纳入。不同专业组或专业代号同名的记录会分列，请使用完整提示名称。</p>${[...new Set(choices.map(c=>admissionsSchool(c.school)).filter(Boolean))].map(s=>`<h3>${escapeHtml(s.name)}</h3><p>${admissionsSourceLink(s.source,'2025 年河南录取原表')} · ${admissionsSourceLink(s.requirementsSource||s.source,'选科依据')}</p><ul>${admissionsPrograms(s,category).map(p=>`<li>${escapeHtml(p.major)} · ${p.degree==='junior'?'专科':'本科'} · ${formatExamScore(p.minScore)} 分 · 最低分参考位次 ${p.minRank?.toLocaleString()||'未公布'} · ${admissionsRequirements(p)}${p.restriction?`<br>招生备注：${escapeHtml(p.restriction)}（额外条件未模拟）`:''}</li>`).join('')}</ul>`).join('')||'<p>先填写学校，或使用“已有录取数据”筛选选填。</p>'}<p>${admissionsSourceLink(HENAN_2025_ADMISSIONS.policy,'河南省 2025 年招生工作规定')}</p></details>
+    ${admissionsReferenceCatalogHtml(choices,category)}
   </div></main>`;
+}
+
+function admissionsSchoolDirectory(){
+  const names=new Map(),profiles=new Map();
+  for(const s of UNIVERSITY_CATALOG.schools){
+    names.set(admissionsNormalize(s.name),s);
+    for(const name of [s.name,...s.aliases||[]])profiles.set(admissionsNormalize(name),s);
+  }
+  for(const s of HENAN_2025_ADMISSIONS.schools){
+    const key=admissionsNormalize(s.name);
+    if(!names.has(key)){
+      const profile=[s.name,...s.aliases||[]].map(n=>profiles.get(admissionsNormalize(n))).find(Boolean);
+      names.set(key,{...profile,...s,province:profile?.province||'其他招生单位',city:profile?.city||''});
+    }
+  }
+  return [...names.values()];
+}
+const admissionsRankIndex=new Map(UNIVERSITY_RANKINGS.rows.map(r=>[admissionsNormalize(r.name),r]));
+const admissionsDoubleFirst=new Set(UNIVERSITY_RANKINGS.doubleFirstClass.map(admissionsNormalize));
+function admissionsSchoolRank(s){return admissionsRankIndex.get(admissionsNormalize(s.name))}
+function admissionsSchoolTags(s){
+  return (s.elite985?'<span class="school-tag school-tag-985">985</span>':'')+
+    (s.elite211?'<span class="school-tag school-tag-211">211</span>':'')+
+    (admissionsDoubleFirst.has(admissionsNormalize(s.name))?'<span class="school-tag school-tag-double">双一流</span>':'');
+}
+function admissionsSchoolMatches(query=''){
+  const key=admissionsNormalize(query).toLowerCase();
+  return admissionsSchoolDirectory().filter(s=>!key||[s.name,s.province,s.city,...s.aliases||[]].some(n=>admissionsNormalize(n).toLowerCase().includes(key)))
+    .sort((a,b)=>(admissionsSchoolRank(a)?.order??Infinity)-(admissionsSchoolRank(b)?.order??Infinity)||a.name.localeCompare(b.name,'zh-CN'));
+}
+function admissionsSchoolListHtml(query='',index=0,current=''){
+  const schools=admissionsSchoolMatches(query);
+  return '<p class="school-match-count" role="status">找到 '+schools.length+' 所大学</p>'+schools.map(s=>{
+    const rank=admissionsSchoolRank(s);
+    return '<button type="button" class="admissions-school-option'+(s.name===current?' is-selected':'')+'" data-school-pick="'+index+'" data-school-name="'+escapeHtml(s.name)+'" aria-pressed="'+(s.name===current)+'"><span class="school-option-name">'+escapeHtml(s.name)+'</span><span class="school-option-tags">'+admissionsSchoolTags(s)+'</span><small>'+escapeHtml(rank?'参考排序 · '+rank.rank+(rank.overall!==rank.rank?'（总榜 '+rank.overall+'）':''):'未列入院校排名')+'</small></button>';
+  }).join('')+(schools.length?'':'<p>没有找到，试试学校全称、别名或地区。</p>');
+}
+function refreshAdmissionsSchools(index){
+  const panel=$('#admissions-school-panel-'+index);
+  if(!panel||panel.hidden)return;
+  const query=$('#admissions-school-'+index).value;
+  $('#admissions-school-list-'+index).innerHTML=admissionsSchoolListHtml(query,index,query);
+}
+function toggleAdmissionsSchools(index){
+  const panel=$('#admissions-school-panel-'+index),button=$('#admissions-school-toggle-'+index);
+  panel.hidden=!panel.hidden;
+  button.setAttribute('aria-expanded',String(!panel.hidden));
+  if(!panel.hidden)refreshAdmissionsSchools(index);
 }
 function admissionsMajorSelectOptions(school,category,current=''){
   const programs=admissionsPrograms(admissionsSchool(school),category);
   const known=programs.some(p=>admissionsNormalize(p.major)===admissionsNormalize(current));
-  return '<option value="">'+(programs.length?'请选择专业 · 全部 '+programs.length+' 个选项（可滑动）':'暂无本类别已收录专业，请先选学校或查看数据覆盖')+'</option>'+programs.map(p=>'<option value="'+escapeHtml(p.major)+'"'+(known&&admissionsNormalize(p.major)===admissionsNormalize(current)?' selected':'')+'>'+escapeHtml(p.major)+' · '+formatExamScore(p.minScore)+' 分</option>').join('');
+  return '<option value="">'+(programs.length?'请选择专业 · 全部 '+programs.length+' 个选项（可滑动）':'暂无本类别已收录专业，请先选学校或查看数据覆盖')+'</option>'+programs.map(p=>'<option value="'+escapeHtml(p.major)+'"'+(known&&admissionsNormalize(p.major)===admissionsNormalize(current)?' selected':'')+'>'+escapeHtml(p.major)+'</option>').join('');
 }
 function admissionsMajorOptions(school,category){return admissionsPrograms(admissionsSchool(school),category).map(p=>`<option value="${escapeHtml(p.major)}"></option>`).join('')}
 function admissionsResultHtml(result){
   const p=result.admitted;
-  return `<section class="final-card admissions-result ${p?'admission-good-news':''}" role="status" aria-live="polite">${p?`<header class="admission-banner"><p class="celebration-title">喜报</p><h2>模拟录取通知</h2><p>祝贺 ${escapeHtml(admissionsPlayer()?.name)}，下一站，继续闪光！</p></header>`:`<h2>${result.status==='pending'?'录取结果待定':'本次模拟未录取'}</h2>`}${p?`<p class="admissions-offer">第 ${p.choice} 志愿<br><b>${escapeHtml(p.school)}</b><br>${escapeHtml(p.major)}</p><p>2025 年该专业最低分 ${formatExamScore(p.minScore)}；本次实考成绩 ${formatExamScore(result.actualScore??result.score)} 分；录取检索按向下取整的 ${formatExamScore(result.score)} 分查表。</p>`:`<p>${result.status==='pending'?'前面志愿存在同分或缺少数据的情况，暂不能确定最终学校。请查看原因，或修改志愿后重新模拟。':'所填志愿均未达到已收录条件；可调整学校或专业后重新模拟。'}</p>`}<details><summary>查看 5 个志愿的检索结果与来源</summary><ol>${result.rows.map(r=>`<li><b>第 ${r.index} 志愿：${escapeHtml(r.school||'留空')}${r.major?' · '+escapeHtml(r.major):''}</b><p>${escapeHtml(r.reason)}</p>${r.program?admissionsProgramEvidence(r.program):''}</li>`).join('')}</ol></details><p class="admissions-note">以上是基于 2025 年专业最低分的游戏结果，不是真实录取通知。</p></section>`;
+  if(p)return `<section class="admissions-result admission-good-news admission-notice" role="status" aria-live="polite" aria-label="录取通知书"><div class="admission-notice-inner"><header><p class="notice-kicker">青禾纪事 · 模拟录取</p><p class="notice-school">${escapeHtml(p.school)}</p><h1>录取通知书</h1><div class="notice-rule" aria-hidden="true"><span>✦</span></div></header><div class="notice-letter"><p class="notice-recipient"><b>${escapeHtml(admissionsPlayer()?.name||'同学')}</b> 同学：</p><p>祝贺你！你已被</p><p class="notice-college">${escapeHtml(p.school)}</p><p>录取至</p><p class="notice-major">${escapeHtml(p.major)}</p><p>成为新一届学子。愿你带着热爱与勇气，<br>在新的校园里，继续书写自己的故事。</p></div><footer class="notice-signature"><div><p>三年有了答案，未来仍有无限可能。</p><b>愿你前程似锦，奔赴所爱。</b><small>青禾纪事 · 青春纪念</small></div><span class="notice-seal" aria-hidden="true">青春<br>纪念</span></footer></div></section>`;
+
+  return `<section class="final-card admissions-result ${p?'admission-good-news':result.status==='unplaced'?'admission-unplaced':''}" role="status" aria-live="polite">${p?`<header class="admission-banner"><p class="celebration-title">喜报</p><h2>模拟录取通知</h2><p>祝贺 ${escapeHtml(admissionsPlayer()?.name)}，下一站，继续闪光！</p></header>`:`<header class="admission-empty-hero"><p class="eyebrow">${result.status==='pending'?'等待确认':'下一站，仍有可能'}</p><h2>${result.status==='pending'?'录取结果待定':'本次模拟未录取'}</h2><p>一次填报结果，不是青春的终点。</p></header>`}${p?`<p class="admissions-offer">第 ${p.choice} 志愿<br><b>${escapeHtml(p.school)}</b><br>${escapeHtml(p.major)}${p.group?`<br><small>专业组 ${escapeHtml(p.group)}</small>`:''}</p>${p.adjusted?`<p class="admissions-adjusted"><b>服从调剂 · 调剂录取</b><br>原填报：${escapeHtml(p.requestedMajor)}${p.requestedGroup?`（专业组 ${escapeHtml(p.requestedGroup)}）`:''}<br>调剂至：${escapeHtml(p.major)}${p.group?`（专业组 ${escapeHtml(p.group)}）`:''}</p>`:''}<p>本次该专业录取线 ${formatExamScore(p.minScore)}；本次实考成绩 ${formatExamScore(result.actualScore??result.score)} 分；录取检索按向下取整的 ${formatExamScore(result.score)} 分查表。</p>`:`<p>${result.status==='pending'?'前面志愿存在同分或缺少数据的情况，暂不能确定最终学校。请查看原因，或修改志愿后重新模拟。':'本次填报未匹配到符合录取条件的专业。查看下方逐项检索原因，调整院校与专业，或考虑服从调剂后再次模拟。'}</p>`}<details ${result.status==='unplaced'?'open':''}><summary>查看 5 个志愿的检索详情</summary><ol>${result.rows.map(r=>`<li><b>第 ${r.index} 志愿：${escapeHtml(r.school||'留空')}${r.major?' · '+escapeHtml(r.major):''}${r.school?` · ${r.adjustment?'服从调剂':'不服从调剂'}`:''}</b><p>${escapeHtml(r.reason.replaceAll('2025 年','本次'))}</p>${r.program?admissionsProgramEvidence(r.program,true):''}</li>`).join('')}</ol></details><p class="admissions-note">以上是基于本次模拟录取线的游戏结果，不是真实录取通知。</p></section>`;
 }
 function renderAdmissionsResult(){
   const choices=admissionsChoices(),result=evaluateAdmissions(admissionsPlayer(),choices);
-  $('#game-root').innerHTML=`<main id="main" class="final-screen celebration-screen"><div class="final-wrap admissions-wrap"><p class="eyebrow">我的下一站 · 模拟录取结果</p>${admissionsResultHtml(result)}<div class="dialog-footer"><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button><button class="primary-button" data-admissions-page="choices">修改志愿，重新模拟</button></div></div></main>`;
+  $('#game-root').innerHTML=`<main id="main" class="final-screen celebration-screen ${result.status==='unplaced'?'admissions-unplaced-screen':''}"><div class="final-wrap admissions-wrap ${result.admitted?'admission-notice-wrap':''}">${result.admitted?'':'<p class="eyebrow">我的下一站 · 模拟录取结果</p>'}${admissionsResultHtml(result)}<div class="dialog-footer"><button class="ghost-button" data-admissions-page="scores">返回我的成绩</button><button class="primary-button" data-admissions-page="choices">修改志愿，重新模拟</button></div></div></main>`;
 }
 function saveAdmissionsField(target){
   if(!game?.completed||target.dataset.admissionsIndex===undefined)return;
   const index=Number(target.dataset.admissionsIndex),field=target.dataset.admissionsField;
-  if(!Number.isInteger(index)||index<0||index>4||!['school','major'].includes(field))return;
-  const choices=admissionsChoices();choices[index][field]=String(target.value||'').slice(0,100);
+  if(!Number.isInteger(index)||index<0||index>4||!['school','major','adjustment'].includes(field))return;
+  const choices=admissionsChoices();choices[index][field]=field==='adjustment'?target.value==='yes':String(target.value||'').slice(0,100);
   game.admissions={choices};
   if(field==='school'){
     choices[index].major='';
+    refreshAdmissionsSchools(index);
     $('#admissions-major-'+index).value='';
     const programs=admissionsPrograms(admissionsSchool(target.value),admissionsPlayer().rank.category);
     $('#admissions-major-select-'+index).innerHTML=admissionsMajorSelectOptions(target.value,admissionsPlayer().rank.category);
@@ -152,14 +217,26 @@ function saveAdmissionsField(target){
   const resultNode=document.querySelector('.admissions-result');if(resultNode)resultNode.hidden=true;
   $('#admissions-errors').textContent='';persist();
 }
-function submitAdmissions(){
-  if(!game?.completed||!admissionsPlayer())return;
-  const choices=Array.from({length:5},(_,i)=>({school:$('#admissions-school-'+i).value.trim().slice(0,100),major:$('#admissions-major-'+i).value.trim().slice(0,100)}));
-  const result=evaluateAdmissions(admissionsPlayer(),choices);
-  game.admissions={choices,...(result.status==='invalid'?{errors:result.errors}:{result})};
-  game.postExamPage=result.status==='invalid'?'choices':'admission-result';persist();render();window.scrollTo?.({top:0,behavior:'instant'});
-}
+function submitAdmissions(){previewAdmissionsSubmission();}
+
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&!b.disabled&&b.dataset.admissionsPage)openAdmissions(b.dataset.admissionsPage)});
 document.addEventListener('input',e=>{if(!e.target.id?.startsWith('admissions-major-select-'))saveAdmissionsField(e.target)});
-document.addEventListener('change',e=>{if(e.target.id?.startsWith('admissions-major-select-'))saveAdmissionsField(e.target)});
+document.addEventListener('change',e=>{
+  const target=e.target;
+  if(target.id?.startsWith('admissions-major-select-')||target.dataset.admissionsField==='adjustment')saveAdmissionsField(target);
+});
 document.addEventListener('submit',e=>{if(e.target.id==='admissions-form'){e.preventDefault();submitAdmissions()}});
+
+document.addEventListener('click',e=>{
+  const toggle=e.target.closest('button[data-school-toggle]');
+  if(toggle){toggleAdmissionsSchools(Number(toggle.dataset.schoolToggle));return;}
+  const b=e.target.closest('button[data-school-pick]');
+  if(!b)return;
+  const i=Number(b.dataset.schoolPick),name=b.dataset.schoolName;
+  $('#admissions-school-'+i).value=name;
+  saveAdmissionsField({dataset:{admissionsIndex:String(i),admissionsField:'school'},value:name});
+  $('#admissions-school-panel-'+i).hidden=true;
+  const toggleButton=$('#admissions-school-toggle-'+i);
+  toggleButton.setAttribute('aria-expanded','false');
+  toggleButton.focus();
+});

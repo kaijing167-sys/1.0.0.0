@@ -103,7 +103,7 @@ const ACTION_IMAGES = {
   study: "assets/action-study-pixel.png?v=3",
   rest: "assets/action-rest-pixel.png?v=3",
   exercise: "assets/action-exercise-pixel.png?v=3",
-  social: "assets/action-social-pixel.png?v=3",
+  social: "assets/action-social-pixel.png?v=6",
 };
 
 function localMusicSource(category,filename){
@@ -752,7 +752,10 @@ function persist(){
   if(game){
     checkAchievements();
     localStorage.setItem(SAVE_KEY,JSON.stringify(game));
-    if(game.character_id){const rows=readCharacterSaves();rows[game.character_id]=JSON.parse(JSON.stringify(game));localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
+    if(!game.character_id&&!game.custom_id)game.custom_id='custom-'+(crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join(''));
+    localStorage.setItem(SAVE_KEY,JSON.stringify(game));
+    const roleKey=customRoleKey(game);
+    if(roleKey){const rows=readCharacterSaves();rows[roleKey]=JSON.parse(JSON.stringify(game));localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
   }
 }
 function gradeForDay(day){
@@ -1037,7 +1040,7 @@ function readCharacterSaves(){
   try{const rows=JSON.parse(localStorage.getItem(CHARACTER_SAVES_KEY)||'{}');return rows&&typeof rows==='object'&&!Array.isArray(rows)?rows:{};}catch{return {};}
 }
 function characterSave(id){
-  if(game?.character_id===id)return game;
+  if(customRoleKey(game)===id)return game;
   return readCharacterSaves()[id]||null;
 }
 function saveDate(value){
@@ -1045,21 +1048,68 @@ function saveDate(value){
   return new Date(value).toLocaleString('zh-CN',{hour12:false});
 }
 function renderLanding(){
+  if(menuScreen==='custom-attributes'){renderCustomAttributes();return;}
   const settingsButton='<button class="menu-settings" data-action="settings" aria-label="设置">⚙ <span>设置</span></button>';
   let content='';
   if(menuScreen==='stages'){
     content=`<section class="menu-stage"><button class="menu-back" data-menu="home">← 返回首页</button><p class="menu-kicker">第二页 · 选择起点</p><h1>从哪一天开始？</h1><p class="menu-subtitle">${escapeHtml(draft.name)}，把接下来的日子交给自己。</p><div class="menu-stages">${Object.entries(START_STAGES).map(([id,s])=>`<button data-menu-stage="${id}"><span>${id==='sprint100'?'100':s.label.slice(0,2)}</span><b>${id==='sprint100'?'天冲刺':'开学'}</b><small>距离高考 ${daysLeft(s.day)} 天</small></button>`).join('')}</div><p class="menu-footnote">选择起点后，进入第三页，正式开始高中生活。</p></section>`;
   }else{
-    content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><p class="menu-footnote">河南 2025 志愿版 · ${HENAN_2025_ADMISSIONS.stats.institutions} 所院校 · ${HENAN_2025_ADMISSIONS.stats.programs} 条专业录取数据</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
+    content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
   }
   $('#game-root').innerHTML=`<main class="quiet-menu pixel-menu ${menuScreen==='home'?'home-cover':''}">${settingsButton}${content}</main>`;
 }
+
+function customRoleKey(g){return g?.character_id||g?.custom_id||null}
+function savedCustomRoles(){return Object.values(readCharacterSaves()).filter(g=>g?.version===2&&g.custom_id&&!g.character_id)}
+function customRoleCardsHtml(){
+  return `<section class="custom-role-section"><h3>我的自定义角色</h3><p>用自己的名字开启青春，每个角色分别保存。</p><button class="primary-button custom-role-create" data-custom-create>＋ 创建自定义角色</button><div class="custom-role-grid">${savedCustomRoles().map(g=>`<article class="custom-role-card"><span class="custom-role-avatar" aria-hidden="true">${escapeHtml(Array.from(g.name)[0]||'我')}</span><h4>${escapeHtml(g.name)}</h4><p>${gradeForDay(g.day)} · 距高考 ${daysLeft(g.day)} 天</p><small>建档：${saveDate(g.createdAt)}</small><div class="custom-role-actions"><button class="primary-button" data-character-load="${escapeHtml(g.custom_id)}">继续游戏</button><button class="ghost-button" data-custom-rename="${escapeHtml(g.custom_id)}">修改名字</button><button class="ghost-button" data-character-start="${escapeHtml(g.custom_id)}">重新开始</button><button class="ghost-button danger-button" data-custom-delete="${escapeHtml(g.custom_id)}" aria-label="删除${escapeHtml(g.name)}的自定义存档">删除存档</button></div></article>`).join('')||'<p class="custom-role-empty">还没有自定义角色，点击上方按钮创建。</p>'}</div></section>`;
+}
+
+function deleteCustomRole(id){
+  const rows=readCharacterSaves(),saved=rows[id];
+  if(!saved||saved.character_id||saved.custom_id!==id)return toast('未找到此自定义存档');
+  if(!confirm('确定删除“'+saved.name+'”及其自动保存的全部进度吗？删除后无法恢复，手动备份不受影响。'))return;
+  let active=null;try{active=JSON.parse(localStorage.getItem(SAVE_KEY));}catch{}
+  try{
+    delete rows[id];localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));
+    if((!active?.character_id&&active?.custom_id===id)||(!game?.character_id&&game?.custom_id===id))localStorage.removeItem(SAVE_KEY);
+  }catch{return toast('删除失败，浏览器存储不可用，请重试');}
+  if(game?.custom_id===id&&!game.character_id)game=null;
+  if(draft.custom_id===id)draft={name:'',attrs:{...PRESETS.balanced},preset:'balanced',stage:'high1',track:'science'};
+  if(selectedCharacter===id)selectedCharacter=null;
+  menuScreen='home';closeModal(true);render();openCharacterSaves();toast('自定义存档已删除');
+}
+
+function openCustomRoleForm(id=''){
+  const saved=id?characterSave(id):null;
+  openModal(`<p class="menu-kicker">我的青春 · 我来命名</p><h2>${saved?'修改角色名字':'创建自定义角色'}</h2><form id="custom-role-form" data-custom-id="${escapeHtml(saved?.custom_id||'')}"><label class="custom-role-field" for="custom-role-name">角色名字<input id="custom-role-name" name="name" maxlength="30" required autocomplete="off" placeholder="给自己取个名字（1—30字）" value="${escapeHtml(saved?.name||'')}"></label>${saved?'':`<label class="custom-role-field" for="custom-role-class">开局班级<select id="custom-role-class">${CAMPUS_CLASSES.map(c=>`<option value="${c.id}" ${c.id===4?'selected':''}>${c.id}班 · ${c.combo} · ${c.level}</option>`).join('')}</select></label><p>下一步选择起点，然后从九个能力档次中选择一档，系统将为你随机生成开局属性和学科能力。</p>`}<p id="custom-role-error" role="alert"></p><div class="dialog-footer"><button type="button" class="ghost-button" data-custom-back>返回人物与存档</button><button type="submit" class="primary-button">${saved?'保存名字':'下一步：选择起点 →'}</button></div></form>`);
+  $('#custom-role-name')?.focus();
+}
+function submitCustomRole(form){
+  const name=$('#custom-role-name').value.trim();
+  if(!name||Array.from(name).length>30){$('#custom-role-error').textContent='请输入 1—30 字的角色名字。';return;}
+  const id=form.dataset.customId;
+  if(id){
+    const saved=characterSave(id);if(!saved)return toast('未找到此角色存档');
+    if(game?.custom_id===id){game.name=name;persist();}
+    else{const rows=readCharacterSaves();rows[id]={...saved,name};localStorage.setItem(CHARACTER_SAVES_KEY,JSON.stringify(rows));}
+    openCharacterSaves();toast('角色名字已更新，进度保持不变');return;
+  }
+  if(game)persist();
+  const customId='custom-'+(crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join(''));
+  const classId=Number($('#custom-role-class').value);
+  if(!campusClass(classId))return toast('请选择有效班级');
+  draft={custom_id:customId,name,attrs:{...PRESETS.balanced},preset:'balanced',stage:'high1',track:campusClass(classId).subjects.includes('physics')?'science':'humanities',class_id:classId};
+  selectedCharacter=customId;menuScreen='stages';closeModal(true);render();
+}
+
 function openCharacterSaves(id=selectedCharacter||draft.character_id||characterCatalog[0].id){
+  if(game&&!game.character_id)persist();
   selectedCharacter=id;
   const c=characterCatalog.find(c=>c.id===id)||characterCatalog[0],saved=characterSave(c.id);
   let slots=[];try{slots=JSON.parse(localStorage.getItem('qinghe-journey-slots-v1')||'[]');}catch{}
   if(!Array.isArray(slots))slots=[];
-  openModal(`<p class="menu-kicker">青春存档</p><h2>选择你的故事</h2><div class="save-characters">${characterCatalog.map(p=>`<button class="save-character ${p.id===c.id?'selected':''}" data-save-character="${p.id}" aria-pressed="${p.id===c.id}"><img src="${campusPortrait(p.id)}" alt=""><b>${escapeHtml(p.name)}</b><small>${characterSave(p.id)?'已有进度':'尚未建档'}</small></button>`).join('')}</div><section class="save-profile"><h3>${escapeHtml(c.name)} <small>${escapeHtml(c.nickname||'')}</small></h3><p>${escapeHtml(c.fields['班级'])} · ${escapeHtml(c.fields['选科组合'])} · 目标 ${escapeHtml(c.fields['目标大学'])}</p><div class="save-date"><span>建档日期</span><b>${saved?saveDate(saved.createdAt):'尚未建立存档'}</b></div>${saved?`<p>当前进度：${gradeForDay(saved.day)} · 距离高考 ${daysLeft(saved.day)} 天</p><div class="profile-stats">${ATTRIBUTES.map(([key,label])=>`<div><span>${label}</span><b>${escapeHtml(saved.attrs[key])}</b></div>`).join('')}</div>`:''}<details class="profile-details"><summary>查看人物完整属性面板</summary><dl>${Object.entries(c.fields).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl></details>${saved?`<details class="profile-details"><summary>查看当前存档学科属性</summary><dl>${CAMPUS_SUBJECTS.filter(([key])=>Number.isFinite(saved.subjects[key])).map(([key,label])=>`<div><dt>${label}</dt><dd>${saved.subjects[key]}</dd></div>`).join('')}</dl></details>`:''}<div class="dialog-footer">${saved?`<button class="primary-button" data-character-load="${c.id}">继续此存档 →</button>`:''}<button class="${saved?'ghost-button':'primary-button'}" data-character-start="${c.id}">以此人物开始</button></div></section>${game&&!game.character_id?'<button class="ghost-button" data-action="resume" data-menu-close>继续原有自定义人物存档</button>':''}${slots.some(r=>!r.empty&&r.state)?`<details class="profile-details"><summary>其他进度存档槽</summary>${slots.filter(r=>!r.empty&&r.state).map(r=>`<p>${escapeHtml(r.name)} · ${saveDate(r.state.createdAt||r.createdAt)} <button class="ghost-button" data-menu-slot="${Number(r.slot)}">读取</button></p>`).join('')}</details>`:''}`);
+  openModal(`<p class="menu-kicker">青春存档</p><h2>选择你的故事</h2>${customRoleCardsHtml()}<h3>预设人物</h3><div class="save-characters">${characterCatalog.map(p=>`<button class="save-character ${p.id===c.id?'selected':''}" data-save-character="${p.id}" aria-pressed="${p.id===c.id}"><img src="${campusPortrait(p.id)}" alt=""><b>${escapeHtml(p.name)}</b><small>${characterSave(p.id)?'已有进度':'尚未建档'}</small></button>`).join('')}</div><section class="save-profile"><h3>${escapeHtml(c.name)} <small>${escapeHtml(c.nickname||'')}</small></h3><p>${escapeHtml(c.fields['班级'])} · ${escapeHtml(c.fields['选科组合'])} · 目标 ${escapeHtml(c.fields['目标大学'])}</p><div class="save-date"><span>建档日期</span><b>${saved?saveDate(saved.createdAt):'尚未建立存档'}</b></div>${saved?`<p>当前进度：${gradeForDay(saved.day)} · 距离高考 ${daysLeft(saved.day)} 天</p><div class="profile-stats">${ATTRIBUTES.map(([key,label])=>`<div><span>${label}</span><b>${escapeHtml(saved.attrs[key])}</b></div>`).join('')}</div>`:''}<details class="profile-details"><summary>查看人物完整属性面板</summary><dl>${Object.entries(c.fields).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl></details>${saved?`<details class="profile-details"><summary>查看当前存档学科属性</summary><dl>${CAMPUS_SUBJECTS.filter(([key])=>Number.isFinite(saved.subjects[key])).map(([key,label])=>`<div><dt>${label}</dt><dd>${saved.subjects[key]}</dd></div>`).join('')}</dl></details>`:''}<div class="dialog-footer">${saved?`<button class="primary-button" data-character-load="${c.id}">继续此存档 →</button>`:''}<button class="${saved?'ghost-button':'primary-button'}" data-character-start="${c.id}">以此人物开始</button></div></section>${game&&!game.character_id?'<button class="ghost-button" data-action="resume" data-menu-close>继续原有自定义人物存档</button>':''}${slots.some(r=>!r.empty&&r.state)?`<details class="profile-details"><summary>其他进度存档槽</summary>${slots.filter(r=>!r.empty&&r.state).map(r=>`<p>${escapeHtml(r.name)} · ${saveDate(r.state.createdAt||r.createdAt)} <button class="ghost-button" data-menu-slot="${Number(r.slot)}">读取</button></p>`).join('')}</details>`:''}`);
 }
 
 
@@ -1178,12 +1228,14 @@ function renderFinal(){
               <div class="final-fact"><span>成长成就</span><strong>${game.achievements.length} / ${ACHIEVEMENTS.length}</strong></div>
             </div>
           </section>
-          <section class="final-card">
+          <section class="final-card final-next-card">
             <h2>接下来</h2>
-            <p>成绩已经公布，下一页填写 5 个大学与专业志愿，查看模拟录取结果。</p>
-            <button class="primary-button" data-admissions-page="choices">下一页：志愿填报 →</button>
-            <button class="ghost-button" data-journey-slots>进度存档槽</button>
-            <button class="primary-button" data-action="new-game">重新开始新周目 →</button>
+            <p>成绩已经公布。选好下一站，让故事继续。</p>
+            <div class="final-next-actions">
+              <button type="button" class="primary-button next-action-primary" data-admissions-page="choices"><span class="next-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M5 19l4-1L20 7a2.8 2.8 0 0 0-4-4L5 14l-1 6 6-1M13 21h8"/></svg></span><span class="next-action-label"><strong>志愿填报</strong><small>选择大学与专业，奔赴下一站</small></span><span class="next-action-arrow" aria-hidden="true">→</span></button>
+              <button type="button" class="ghost-button next-action-secondary" data-journey-slots><span class="next-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12l3 3v13H4V4h1ZM8 4v6h8V4M8 20v-6h8v6"/></svg></span><span>进度存档</span></button>
+              <button type="button" class="ghost-button next-action-secondary" data-action="new-game"><span class="next-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 1-2-6"/></svg></span><span>开启新周目</span></button>
+            </div>
           </section>
         </div>
       </div>
@@ -1221,10 +1273,12 @@ function applyTrack(id){
 function startGame(){
   const name=$("#player-name")?.value.trim()||draft.name;
   if(!name)return toast("先给自己取一个名字");
-  if(!draft.character_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
+  if(!draft.character_id&&!draft.custom_id&&remainingPoints()!==0)return toast(`还有 ${remainingPoints()} 点属性没有分配`);
+  if(draft.custom_id&&!draft.customParameters){prepareCustomAttributes(draft.stage);return;}
   draft.name=name;
   if(game)persist();
   game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
+  if(draft.custom_id){game.custom_id=draft.custom_id;applyCustomParameters(game);}
   learningState(game);
   game.createdAt=new Date().toISOString();
   menuScreen="play";
@@ -1250,9 +1304,24 @@ function performAction(type){
     showSocialOptions();
     return;
   }
+  if(type==="exercise"){
+    if(game.actionPoints<=0)return toast("本周行动已经用完");
+    learningRecord(game,"exercise");
+    // 进入运动小游戏：自动切换至轻快舒缓音乐，结束后由 settleExercise 还原菜单主题
+    if(settings.musicEnabled){
+      modalMusicRestorePending=true;
+      playTheme("calm",{force:true});
+    }
+    // 启动整圆节奏小游戏；完成后回调 settleExercise 接入原有状态系统
+    if(window.ExerciseMinigame){
+      window.ExerciseMinigame.start((result)=>settleExercise(result));
+    }else{
+      settleExercise({attempts:0,excellent:0,good:0,miss:0,score:0,average:0});
+    }
+    return;
+  }
   const effects={
     rest:{energy:24,stress:-18,mood:8,text:"你放下书本，好好休息了一会儿。"},
-    exercise:{energy:7,stress:-10,mood:12,text:"运动之后，身体和心情都轻松了一点。"},
   }[type];
   if(!effects)return;
   learningRecord(game,type);
@@ -1311,18 +1380,83 @@ function studySubject(id){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   const option=studyOptions().find(item=>item[0]===id);if(!option)return;
   const label=option[1];
+  // 关闭“今天学什么”选科面板（此时尚未消耗行动点、未切换音乐）
+  closeModal(true);
+  // 进入小测：自动切换至轻快舒缓音乐，结束后由 closeModal 还原到菜单主题
+  if(settings.musicEnabled){
+    modalMusicRestorePending=true;
+    playTheme("calm",{force:true});
+  }
+  // 启动 20 秒限时课堂小测；完成后回调 settleStudy 接入原有状态系统
+  if(window.StudyMinigame){
+    window.StudyMinigame.start(label,(correct,total)=>settleStudy(id,correct,total));
+  }else{
+    settleStudy(id,0,0);
+  }
+}
+
+// 小游戏结算：接入现有“专注学习”的行动点消耗、学习收益与周末触发逻辑，不绕过状态系统。
+// correct / total 来自 study-minigame.js；正确率驱动学科成长与心情/压力浮动。
+function settleStudy(id,correct,total){
+  if(game.actionPoints<=0)return; // 安全兜底：避免重复消耗行动点
+  const option=studyOptions().find(item=>item[0]===id);if(!option)return;
+  const label=option[1];
+  const accuracy=total>0?correct/total:0;
   const modifiers=stageModifiers();
-  const before=game.subjects[id];
-  learningStudy(game,id);
+  // 1) 消耗 1 次行动点（原有状态系统）
   game.actionPoints--;
-  game.energy=clamp(game.energy-8,0,100);
-  game.stress=clamp(game.stress+7+modifiers.stressGain,0,100);
-  game.mood=clamp(game.mood-2,0,100);
-  addLog(`专注学习${label}，能力变化 ${Math.round((game.subjects[id]-before)*100)/100} 点（学习不保证立即进步，已记录复习）。`);
+  // 2) 基础学习收益：更新遗忘记忆、计入复习（原有学习模拟）
+  learningStudy(game,id);
+  const targets=game.class_id?learningTargets(game,id):[id];
+  const before=targets.reduce((sum,k)=>sum+(game.subjects[k]||0),0);
+  // 3) 正确率驱动的学科成长加成（确定性加成，叠加在基础学习之上）
+  const bonus=+(accuracy*0.8).toFixed(2);
+  for(const k of targets){
+    game.subjects[k]=Math.round(clamp((game.subjects[k]||0)+bonus,0,campusMax(k))*100)/100;
+  }
+  // 4) 心情/压力随正确率浮动：越专注越省体力、越减压、越开心
+  const energyCost=Math.round(8-accuracy*4);
+  const stressGain=Math.round((7+modifiers.stressGain)-accuracy*10);
+  const moodGain=Math.round(-2+accuracy*12);
+  game.energy=clamp(game.energy-energyCost,0,100);
+  game.stress=clamp(game.stress+stressGain,0,100);
+  game.mood=clamp(game.mood+moodGain,0,100);
+  const gained=Math.round((targets.reduce((sum,k)=>sum+(game.subjects[k]||0),0)-before)*100)/100;
+  const verdict=accuracy>=0.8?"专注而高效":accuracy>=0.5?"稳扎稳打":"有些心不在焉";
+  game.studyQuiz={subject:id,label,correct,total,day:game.day};
+  addLog(`专注学习${label}，${verdict}（课堂小测 ${correct}/${total}），能力变化 ${gained>=0?"+":""}${gained} 点（已记录复习）。`);
   persist();
-  closeModal();
   render();
-  toast(`${label} ${game.subjects[id]>=before?"+":""}${Math.round((game.subjects[id]-before)*100)/100}`);
+  toast(`${label} 小测 ${correct}/${total} · 能力 ${gained>=0?"+":""}${gained}`);
+  if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
+}
+
+// 运动小游戏结算：接入现有“运动锻炼”的行动点消耗、体力/压力/心情变化与周末触发逻辑，不绕过状态系统。
+// result 来自 exercise-minigame.js：{attempts,excellent,good,miss,score,average}；平均分驱动收益多寡。
+function settleExercise(result){
+  if(game.actionPoints<=0)return; // 安全兜底：避免重复消耗行动点
+  const avg=result&&result.average!=null?result.average:0;
+  const e=result&&result.excellent!=null?result.excellent:0;
+  const g=result&&result.good!=null?result.good:0;
+  const m=result&&result.miss!=null?result.miss:0;
+  // 1) 消耗 1 次行动点（原有状态系统）
+  game.actionPoints--;
+  // 2) 按平均分调体力/压力/心情：≥80 收益最大，60–79 普通，40–59 递减，<40 仅基础活动
+  const energyGain = avg>=80?10 : avg>=60?7 : avg>=40?4 : 1;
+  const stressDrop = avg>=80?14 : avg>=60?10 : avg>=40?6 : 2;
+  const moodGain   = avg>=80?14 : avg>=60?11 : avg>=40?7 : 3;
+  game.energy=clamp(game.energy+energyGain,0,100);
+  game.stress=clamp(game.stress-stressDrop,0,100);
+  game.mood=clamp(game.mood+moodGain,0,100);
+  if(game.stamina!=null)game.stamina=clamp(game.stamina+(avg>=60?1:0),0,100);
+  const verdict=avg>=80?"酣畅淋漓":avg>=60?"舒展筋骨":avg>=40?"勉强活动":"草草收场";
+  game.exerciseQuiz={excellent:e,good:g,miss:m,score:result&&result.score||0,average:avg,day:game.day};
+  addLog(`运动锻炼，${verdict}（节奏小游戏 优${e}/良${g}/失${m}，平均分 ${avg}），体力+${energyGain}、压力-${stressDrop}、心情+${moodGain}。`);
+  // 3) 音乐还原到菜单主题
+  if(modalMusicRestorePending){ playTheme(settings.menuMusicTheme||"calm"); modalMusicRestorePending=false; }
+  persist();
+  render();
+  toast(`运动 ${verdict} · 平均分 ${avg}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
 }
 
@@ -1956,6 +2090,7 @@ document.addEventListener("click",event=>{
 });
 
 document.addEventListener("submit",event=>{
+  if(event.target.id==="custom-role-form"){event.preventDefault();submitCustomRole(event.target);return;}
   if(event.target.id!=="setup-form")return;
   event.preventDefault();
   startGame();
@@ -1979,9 +2114,18 @@ document.addEventListener("keydown",event=>{
 });
 
 function prepareMenuStart(id){
-  const characterId=id||draft.character_id||game?.character_id||characterCatalog[0].id;
+  if(!id){openCharacterSaves();return;}
+  const custom=characterSave(id);
+  if(custom?.custom_id&&!custom.character_id){
+    if(!confirm('此角色已有存档，重新开始会替换它的进度，继续吗？'))return;
+    if(game)persist();
+    draft={custom_id:custom.custom_id,name:custom.name,attrs:{...PRESETS.balanced},preset:'balanced',stage:custom.stage||'high1',track:custom.track,class_id:custom.origin_class_id||custom.class_id||4};
+    selectedCharacter=custom.custom_id;menuScreen='stages';closeModal(true);render();return;
+  }
+  const characterId=id;
   if(characterSave(characterId)&&!confirm('此人物已有存档。开始新故事将替换此人物的自动存档，继续吗？'))return;
   const stage=draft.stage||'high1';
+  delete draft.custom_id;
   campusDraft(characterId);
   draft.stage=stage;
   menuScreen='stages';closeModal(true);render();
@@ -1991,11 +2135,15 @@ document.addEventListener('click',event=>{
   if(b.dataset.menu==='home'){if(game)persist();menuScreen='home';closeModal(true);render();}
   if(b.dataset.menu==='start')prepareMenuStart();
   if(b.dataset.menu==='saves')openCharacterSaves();
+  if(b.hasAttribute('data-custom-create'))openCustomRoleForm();
+  if(b.dataset.customRename)openCustomRoleForm(b.dataset.customRename);
+  if(b.dataset.customDelete)deleteCustomRole(b.dataset.customDelete);
+  if(b.hasAttribute('data-custom-back'))openCharacterSaves();
   if(b.dataset.saveCharacter)openCharacterSaves(b.dataset.saveCharacter);
   if(b.dataset.characterStart){
     prepareMenuStart(b.dataset.characterStart);
   }
-  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;startGame();}
+  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;if(draft.custom_id)prepareCustomAttributes(draft.stage);else startGame();}
   if(b.dataset.characterLoad){
     try{game=campusValidate(JSON.parse(JSON.stringify(characterSave(b.dataset.characterLoad))));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取，请检查存档数据');}
   }

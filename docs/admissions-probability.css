@@ -1,0 +1,16 @@
+.admissions-chance-panel{color:#65472e;}
+.admissions-chance-panel h2{font-size:clamp(23px,4vw,31px);line-height:1.5;margin:10px 0 20px;}
+.admissions-chance-panel h2 small{display:inline-block;font-size:11px;padding:4px 9px;border:1px solid #cab085;border-radius:20px;vertical-align:middle;font-weight:400;color:#8a7355;}
+.admissions-chance-total{padding:22px;border:1px solid #c9ac7b;border-radius:13px;background:linear-gradient(125deg,#f7e8c8,#fffaed);margin-bottom:20px;}
+.admissions-chance-total>div{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.admissions-chance-total span{font-size:13px;line-height:1.7;}.admissions-chance-total strong{font-size:clamp(34px,7vw,54px);line-height:1.3;color:#8d5b2d;}
+.admissions-chance-total p{font-size:11px;line-height:1.8;margin:10px 0 0;color:#8d7554;}
+.admissions-chance-list{list-style:none;padding:0;margin:0;display:grid;gap:12px;}
+.admissions-chance-list li{border:1px solid #e1cdae;background:#fffaf0;border-radius:10px;padding:17px;}
+.admissions-chance-row{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.admissions-chance-row>div{min-width:0;}.admissions-chance-row span{font-size:11px;color:#9a7a56;}.admissions-chance-row h3{font-size:17px;margin:5px 0;line-height:1.5;overflow-wrap:anywhere;}
+.admissions-chance-row p{font-size:12px;margin:3px 0;line-height:1.7;overflow-wrap:anywhere;}.admissions-chance-row b{font-size:clamp(19px,4vw,27px);white-space:nowrap;color:#7e643e;}
+.admissions-chance-reason,.admissions-chance-note{font-size:11px;line-height:1.9;color:#947d5e;}.admissions-chance-reason{margin:10px 0 0;border-top:1px solid #ebddc7;padding-top:10px;}
+.admissions-chance-note{margin:18px 0;}.admissions-chance-actions{position:sticky;bottom:0;display:flex;justify-content:space-between;gap:12px;background:#fff8e8;padding:14px 0 2px;}
+.admissions-chance-actions button{min-height:46px;}.admissions-wrap>.admissions-chance-panel{padding:24px;margin:24px 0;border:1px solid #d8be98;border-radius:14px;background:#fffbf3;}
+@media(max-width:600px){.admissions-chance-total{padding:17px}.admissions-chance-row{gap:10px}.admissions-chance-list li{padding:14px}.admissions-chance-actions{flex-direction:column}.admissions-chance-actions button{width:100%}}

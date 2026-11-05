@@ -38,3 +38,79 @@
 .admissions-choice select:focus-visible {outline:3px solid #d8983f;outline-offset:2px;}
 .admissions-major-select-label small {font-size:12px;line-height:1.7;color:#705d45;overflow-wrap:anywhere;}
 @media(max-width:600px){.admissions-choice input{font-size:16px}.admissions-major-select-label{gap:10px}}
+
+/* Adjustment choices and a complete, responsive unplaced result screen. */
+.admissions-adjustment-label {grid-column:1 / -1;}
+.admissions-adjustment-label small {font-size:13px;line-height:1.7;color:#705d45;}
+.admissions-adjusted {padding:18px;border:2px solid #c38b57;background:#fff0cb;border-radius:10px;}
+.final-screen.admissions-unplaced-screen {box-sizing:border-box;min-height:100svh;padding:clamp(12px,3vw,36px);display:flex;align-items:stretch;}
+.admissions-unplaced-screen .final-wrap.admissions-wrap {box-sizing:border-box;width:100%;max-width:1400px;min-height:calc(100svh - 72px);margin:0 auto;display:flex;flex-direction:column;padding:clamp(16px,3vw,40px);}
+.admissions-unplaced-screen .admissions-result.admission-unplaced {flex:1;margin:12px 0 24px;padding:clamp(18px,3vw,36px);background:linear-gradient(135deg,#fff8e9,#f9e5c5);border:2px solid #c38b57;}
+.admission-unplaced .admission-empty-hero {text-align:center;padding:clamp(24px,5vw,60px) 0 24px;border-bottom:2px solid #e6c693;}
+.admissions-unplaced-screen .admission-empty-hero h2 {font-size:clamp(36px,6.5vw,80px);line-height:1.25;margin:16px 0 22px;overflow-wrap:anywhere;}
+.admission-empty-hero>p:last-child {font-size:clamp(16px,2vw,22px);}
+.admission-unplaced>p {font-size:17px;}
+.admission-unplaced details {margin-top:24px;}
+.admission-unplaced details summary {font-size:18px;font-weight:700;cursor:pointer;}
+.admission-unplaced ol {padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.admission-unplaced li {min-width:0;margin:0;padding:20px;background:#fffcf4;border:1px solid #d8b78b;border-radius:10px;overflow-wrap:anywhere;}
+.admission-unplaced li:last-child {grid-column:1 / -1;}
+.admissions-unplaced-screen .dialog-footer {margin-top:auto;display:flex;justify-content:space-between;gap:16px;}
+@media(max-width:600px){.admissions-unplaced-screen .final-wrap.admissions-wrap{min-height:calc(100svh - 24px);padding:16px 12px}.admission-unplaced ol{grid-template-columns:1fr}.admission-unplaced li{padding:16px}.admissions-unplaced-screen .admission-empty-hero h2{font-size:clamp(32px,8.5vw,48px)}}
+
+/* Searchable national school list with visible, accessible category tags. */
+.admissions-school-picker{display:grid;gap:10px;min-width:0;}
+.admissions-school-picker>small{font-size:13px;line-height:1.7;}
+.admissions-school-scroll{max-height:320px;overflow-y:auto;overscroll-behavior:contain;border:2px solid #b7834c;border-radius:8px;background:#fffaf0;scrollbar-gutter:stable;}
+.school-match-count{position:sticky;top:0;margin:0;padding:10px 14px;background:#f5e5c9;border-bottom:1px solid #d8bd91;z-index:1;font-size:13px;}
+.admissions-school-scroll .admissions-school-option{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:100%;min-height:56px;padding:12px 14px;text-align:left;background:#fffaf0;color:#4e3527;border:0;border-bottom:1px solid #e8d6b7;border-radius:0;box-shadow:none;cursor:pointer;font:inherit;}
+.admissions-school-scroll .admissions-school-option:hover,.admissions-school-scroll .admissions-school-option.is-selected{background:#f8e5bb;}
+.admissions-school-option:focus-visible{outline:3px solid #b55c28;outline-offset:-3px;}
+.school-option-name{font-weight:700;}
+.school-option-tags{display:inline-flex;gap:5px;flex-wrap:wrap;}
+.admissions-school-scroll .school-tag,.university-card .school-tag{display:inline-block;padding:3px 7px;border-radius:5px;font-size:12px;font-weight:700;line-height:1.4;}
+.school-tag.school-tag-985{background:#b4232d;color:#fff;}
+.school-tag.school-tag-211{background:#ffd65c;color:#573c00;}
+.school-tag.school-tag-double{background:#197344;color:#fff;}
+.admissions-school-option>small{margin-left:auto;font-size:12px;color:#705d45;}
+@media(max-width:600px){.admissions-school-scroll{max-height:280px}.admissions-school-option>small{flex-basis:100%;margin-left:0}.admissions-school-scroll .admissions-school-option{padding:12px;gap:7px;}}
+
+/* Each school list opens only on its own explicit button click. */
+.admissions-school-picker .admissions-school-panel[hidden]{display:none;}
+.admissions-school-panel{display:grid;gap:10px;min-width:0;}
+.admissions-school-panel>small{font-size:13px;line-height:1.7;}
+.admissions-school-toggle{justify-self:start;min-height:44px;}
+
+/* A wide, sculpted spacebar key for opening the school list. */
+.admissions-school-picker .ghost-button.admissions-school-toggle{
+  position:relative;box-sizing:border-box;justify-self:center;width:100%;max-width:760px;
+  min-height:82px;margin:8px 0 18px;padding:20px 28px 28px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid #9b734c;border-top-color:#c9a476;border-radius:14px;
+  background:linear-gradient(180deg,#fffdf3 0%,#f9efd8 65%,#eddbb9 100%);
+  color:#65462e;font-family:inherit;font-size:clamp(18px,2.4vw,23px);font-weight:700;
+  letter-spacing:.12em;line-height:1.4;text-align:center;cursor:pointer;
+  box-shadow:inset 0 3px 0 #fffef9,inset 3px 0 0 #fff7e5,inset -3px 0 0 #e8d4af,0 8px 0 #a78359,0 10px 0 #775637,0 14px 20px #67472920;
+  transform:translateY(0);transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.admissions-school-picker .admissions-school-toggle::after{
+  content:"";position:absolute;bottom:14px;left:50%;width:64px;height:5px;
+  border:solid #b79a71;border-width:0 2px 2px;border-radius:0 0 3px 3px;transform:translateX(-50%);opacity:.8;
+}
+@media(hover:hover){
+  .admissions-school-picker .admissions-school-toggle:hover{
+    background:linear-gradient(180deg,#fffef8,#fff3d5 65%,#f1dfb8);transform:translateY(-1px);
+    box-shadow:inset 0 3px 0 #fffef9,inset 3px 0 0 #fff7e5,inset -3px 0 0 #e8d4af,0 9px 0 #a78359,0 11px 0 #775637,0 16px 22px #67472926;
+  }
+}
+.admissions-school-picker .admissions-school-toggle[aria-expanded="true"],
+.admissions-school-picker .admissions-school-toggle:active{
+  transform:translateY(6px);background:linear-gradient(180deg,#f7e8c9,#efdbb2);
+  border-color:#a78359;box-shadow:inset 0 2px 4px #9b734c20,0 2px 0 #a78359,0 4px 0 #775637,0 7px 10px #67472918;
+}
+.admissions-school-picker .admissions-school-toggle:focus-visible{outline:3px solid #9a5b24;outline-offset:6px;}
+@media(max-width:600px){
+  .admissions-school-picker .ghost-button.admissions-school-toggle{min-height:74px;padding:18px 20px 26px;border-radius:12px;font-size:19px;}
+}
+@media(prefers-reduced-motion:reduce){.admissions-school-picker .admissions-school-toggle{transition:none;}}
