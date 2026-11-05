@@ -12,13 +12,13 @@ const CAMPUS_SUBJECTS = [['chinese','语文'],['math','数学'],['english','英�
 function campusClass(id){return CAMPUS_CLASSES.find(c=>c.id===Number(id))}
 function campusPortrait(id){return 'characters/portraits/'+id+(['hu-zx','zhang-z'].includes(id)?'-v2.png':'-v1.png')}
 function campusMax(id){return ['chinese','math','english','science','humanities'].includes(id)?150:100}
-function campusOptions(g){return g.class_id?CAMPUS_SUBJECTS.filter(([id])=>['chinese','math','english',...campusClass(g.class_id).subjects].includes(id)):null}
+function campusOptions(g){if(g.custom_curriculum)return CAMPUS_SUBJECTS.filter(([id])=>curriculumKeys(g).includes(id));return g.class_id?CAMPUS_SUBJECTS.filter(([id])=>['chinese','math','english',...campusClass(g.class_id).subjects].includes(id)):null}
 function campusAssign(g,id){
   const c=campusClass(id);if(!c)throw Error('无效班级');
   if(!g.origin_class_id)g.origin_class_id=c.id;
   for(const [key] of CAMPUS_SUBJECTS)if(!Number.isFinite(g.subjects[key]))g.subjects[key]=Math.round((['physics','chemistry','biology'].includes(key)?g.subjects.science:g.subjects.humanities)*2/3);
-  g.class_id=c.id;g.track=c.subjects.includes('physics')?'science':'humanities';
-  g.subject_combination=[...c.subjects];
+  g.class_id=c.id;if(!g.custom_curriculum)g.track=c.subjects.includes('physics')?'science':'humanities';
+  if(!g.custom_curriculum)g.subject_combination=[...c.subjects];
 }
 function campusDraft(id){
   const c=characterCatalog.find(c=>c.id===id);if(!c)return;
@@ -70,6 +70,7 @@ function campusMemberCard(p,c){
 }
 function campusTransfer(id){
   if(!game||game.completed||modalLocked)return;
+  if(game.custom_curriculum)return toast('本角色的课程按高一九科与升学选科安排，暂不开放转班。');
   if(!confirm('确认与目标班一名生成同学交换班级？每班保持30人，你的进度和科目能力保留。'))return;
   campusAssign(game,id);addLog('转入'+id+'班');persist();closeModal();render();campusShowClasses();
 }
@@ -106,7 +107,7 @@ document.addEventListener('change',e=>{if(e.target.id==='campus-start-class')dra
 
 // Game simulation inspired by forgetting/spacing research; parameters are game balance, not clinical estimates.
 function learningClamp(x,a=0,b=1){return Math.max(a,Math.min(b,Number.isFinite(x)?x:a))}
-function learningSubjects(g){return g.class_id?['chinese','math','english',...campusClass(g.class_id).subjects]:[ 'chinese','math','english',...(g.track==='undecided'?['science','humanities']:[g.track==='humanities'?'humanities':'science'])]}
+function learningSubjects(g){if(g.custom_curriculum)return curriculumKeys(g);return g.class_id?['chinese','math','english',...campusClass(g.class_id).subjects]:[ 'chinese','math','english',...(g.track==='undecided'?['science','humanities']:[g.track==='humanities'?'humanities':'science'])]}
 function learningState(g){
   if(!g.learning||g.learning.version!==1){
     g.learning={version:1,startDay:g.day,settledDay:g.day,seed:Math.floor(Math.random()*4294967296)>>>0,memory:{},weeks:[],current:{}};
@@ -212,3 +213,4 @@ function learningSummary(g){
   const p=learningPreparation(g);
   return `近百天已记录 ${p.days} 天 · 综合准备 ${Math.round(p.quality*100)}/100。轮换复习有助于保持知识，休息和运动有助于稳定发挥；能力值不等于高考成绩。`;
 }
+

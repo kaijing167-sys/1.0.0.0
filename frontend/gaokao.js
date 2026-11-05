@@ -30,7 +30,7 @@ function buildGaokaoReport(g){
   for(const id of ["history","politics","geography"])preparation.subject[id]??=preparation.subject.humanities??.5;
   const rows=campusMembers(state).map(person=>{
     const cls=campusClass(person.class_id);
-    const selected=['chinese','math','english',...cls.subjects];
+    const selected=person.active&&g.custom_curriculum?curriculumKeys(g):['chinese','math','english',...cls.subjects];
     const abilities=Object.fromEntries(selected.map(id=>[id,person.subjects[id]]));
     // NPCs have no recorded player history; use neutral preparation and their own attributes.
     const candidate=person.active?g:{...state,attrs:person.attrs,energy:60,stress:40,mood:60};
@@ -38,8 +38,8 @@ function buildGaokaoReport(g){
     const exam=g.completed?{subjects:{...abilities},performance:"历史成绩",preparation:null}:learningExam(candidate,abilities,selected,()=>learningRandom(g),prep);
     const subjects=Object.fromEntries(Object.entries(exam.subjects).map(([id,value])=>[id,Math.round(value*2)/2]));
     const total=Object.values(subjects).reduce((sum,value)=>sum+value,0);
-    const category=cls.subjects.includes('physics')?'physics':'history';
-    return {id:person.id,name:person.name,class_id:cls.id,combination:cls.combo,active:!!person.active,abilities,performance:exam.performance,preparation:person.active&&!g.completed?preparation:undefined,subjects,total,rank:henanRank(total,category)};
+    const category=selected.includes('physics')?'physics':'history';
+    return {id:person.id,name:person.name,class_id:cls.id,combination:person.active&&g.custom_curriculum?g.subject_combination.map(id=>CAMPUS_SUBJECTS.find(s=>s[0]===id)[1]).join(""):cls.combo,active:!!person.active,abilities,performance:exam.performance,preparation:person.active&&!g.completed?preparation:undefined,subjects,total,rank:henanRank(total,category)};
   }).sort((a,b)=>b.total-a.total||a.class_id-b.class_id||a.id.localeCompare(b.id));
   return {version:g.completed?1:2,model:"preparation-v1",year:2025,day:g.day,rows};
 }
@@ -66,3 +66,4 @@ function calculateGaokao(event){
   addLog(`高考成绩：${formatExamScore(score)} 分（实际考试成绩，能力与发挥分开计算）。`);
   completeGame(score);
 }
+

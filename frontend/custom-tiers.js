@@ -54,7 +54,7 @@ function customReadOnlyAbility(kind,key,label){
 function customRollKey(id){return 'v4:'+draft.stage+':'+draft.class_id+':'+id+(id==='t8'?':r2':'');}
 function customVisibleSignature(p){
   if(!p)return '';
-  const selected=['chinese','math','english',...campusClass(draft.class_id).subjects];
+  const selected=customDraftSubjects();
   return JSON.stringify([...ATTRIBUTES.map(([key])=>p.attrs[key]),...selected.map(key=>p.subjects[key])]);
 }
 function refreshCustomTier(id){
@@ -65,7 +65,7 @@ function refreshCustomTier(id){
   for(let attempt=0;attempt<32;attempt++){next=generateCustomTier(tier);if(!previous.has(customVisibleSignature(next)))break;}
   if(previous.has(customVisibleSignature(next))){
     next=JSON.parse(JSON.stringify(next));
-    const visible=[...ATTRIBUTES.map(([k])=>['attrs',k]),...['chinese','math','english',...campusClass(draft.class_id).subjects].map(k=>['subjects',k])];
+    const visible=[...ATTRIBUTES.map(([k])=>['attrs',k]),...customDraftSubjects().map(k=>['subjects',k])];
     // Avoid identical rerolls even if randomness is stuck; decreasing cannot add full values.
     for(const [kind,k] of visible){const old=next[kind][k],step=kind==='attrs'?1:.5;next[kind][k]=customAbilityValue(kind,k,old>0?old-step:step);if(!previous.has(customVisibleSignature(next)))break;next[kind][k]=old;}
   }
@@ -73,8 +73,8 @@ function refreshCustomTier(id){
   requestAnimationFrame(()=>document.querySelector(`[data-custom-tier-refresh="${id}"]`)?.focus({preventScroll:true}));
 }
 function renderCustomAttributes(){
-  const cls=campusClass(draft.class_id),selected=['chinese','math','english',...cls.subjects],cap=CUSTOM_STAGE_CAPS[draft.stage],tier=CUSTOM_TIERS.find(t=>t.id===draft.customTier);
-  $('#game-root').innerHTML=`<main class="custom-parameters-screen"><section class="custom-parameters-wrap"><button class="ghost-button" data-custom-param-back>← 重新选择年级</button><p class="menu-kicker">我的角色 · 九档开局</p><h1>这次，你想从哪一档开始？</h1><p>${escapeHtml(draft.name)} · ${cls.id}班 ${cls.combo} · ${START_STAGES[draft.stage].label}</p><p class="custom-cap-note">${Number.isFinite(cap)?`本起点每项能力上限 ${cap}。`:'100 天冲刺不设年级限制，人物属性上限 100；语文 140，数学与英语 145，物理/历史/政治/地理 95，化学与生物 100。'}人物属性与全部学科合计，开局满值能力最多 6 项。选择档次后，系统随机拟定能力，不能手动修改。档次越高，能力整体越强；同一档仍有随机差异。</p><div class="custom-tier-grid" role="group" aria-label="从低到高的九个能力档次">${CUSTOM_TIERS.map((t,i)=>`<div class="custom-tier-cell tier-${i}"><button type="button" class="custom-tier-option ${t.id===draft.customTier?'selected':''} tier-${i}" data-custom-tier="${t.id}" aria-pressed="${t.id===draft.customTier}"><small>第 ${i+1} 档</small><b>${t.name}</b><span>${t.desc}</span></button><button type="button" class="custom-tier-refresh" data-custom-tier-refresh="${t.id}" aria-label="刷新${t.name}档能力" title="重新生成${t.name}档能力"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.5 8A7 7 0 0 1 18 6l2 3M4 15l2 3a7 7 0 0 0 12.5-2"/></svg></button></div>`).join('')}</div>${tier?`<section class="custom-parameter-card custom-tier-preview tier-${CUSTOM_TIERS.indexOf(tier)}"><div class="custom-tier-preview-heading"><h2>${tier.name} · 你的开局能力</h2><span>已生成 · 只读预览</span></div><h3>人物属性</h3><div class="custom-tier-stats">${ATTRIBUTES.map(([k,l])=>customReadOnlyAbility('attrs',k,l)).join('')}</div><h3>学科能力</h3><div class="custom-tier-stats">${CAMPUS_SUBJECTS.filter(([k])=>selected.includes(k)).map(([k,l])=>customReadOnlyAbility('subjects',k,l)).join('')}</div><p>切换档次会保留已生成结果；点击档次旁的刷新图标，即可重新生成一组不同的数值并选中该档次。</p></section>`:'<p class="custom-tier-placeholder">选择一个档次，查看系统为你生成的开局能力。</p>'}<button class="primary-button custom-parameters-start ${tier?'tier-'+CUSTOM_TIERS.indexOf(tier):''}" data-custom-param-start ${tier?'':'disabled'}>以${tier?'“'+tier.name+'”':'所选档次'}开始高中生活 →</button></section></main>`;
+  const cls=campusClass(draft.class_id),selected=customDraftSubjects(),cap=CUSTOM_STAGE_CAPS[draft.stage],tier=CUSTOM_TIERS.find(t=>t.id===draft.customTier);
+  $('#game-root').innerHTML=`<main class="custom-parameters-screen"><section class="custom-parameters-wrap"><button class="ghost-button" data-custom-param-back>← 重新选择年级</button><p class="menu-kicker">我的角色 · 九档开局</p><h1>这次，你想从哪一档开始？</h1><p>${escapeHtml(draft.name)} · ${draft.stage==='high1'?'九科通识 · 升高二时选科':cls.id+'班 '+cls.combo} · ${START_STAGES[draft.stage].label}</p><p class="custom-cap-note">${Number.isFinite(cap)?`本起点每项能力上限 ${cap}。`:'100 天冲刺不设年级限制，人物属性上限 100；语文 140，数学与英语 145，物理/历史/政治/地理 95，化学与生物 100。'}人物属性与全部学科合计，开局满值能力最多 6 项。选择档次后，系统随机拟定能力，不能手动修改。档次越高，能力整体越强；同一档仍有随机差异。</p><div class="custom-tier-grid" role="group" aria-label="从低到高的九个能力档次">${CUSTOM_TIERS.map((t,i)=>`<div class="custom-tier-cell tier-${i}"><button type="button" class="custom-tier-option ${t.id===draft.customTier?'selected':''} tier-${i}" data-custom-tier="${t.id}" aria-pressed="${t.id===draft.customTier}"><small>第 ${i+1} 档</small><b>${t.name}</b><span>${t.desc}</span></button><button type="button" class="custom-tier-refresh" data-custom-tier-refresh="${t.id}" aria-label="刷新${t.name}档能力" title="重新生成${t.name}档能力"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.5 8A7 7 0 0 1 18 6l2 3M4 15l2 3a7 7 0 0 0 12.5-2"/></svg></button></div>`).join('')}</div>${tier?`<section class="custom-parameter-card custom-tier-preview tier-${CUSTOM_TIERS.indexOf(tier)}"><div class="custom-tier-preview-heading"><h2>${tier.name} · 你的开局能力</h2><span>已生成 · 只读预览</span></div><h3>人物属性</h3><div class="custom-tier-stats">${ATTRIBUTES.map(([k,l])=>customReadOnlyAbility('attrs',k,l)).join('')}</div><h3>学科能力</h3><div class="custom-tier-stats">${CAMPUS_SUBJECTS.filter(([k])=>selected.includes(k)).map(([k,l])=>customReadOnlyAbility('subjects',k,l)).join('')}</div><p>切换档次会保留已生成结果；点击档次旁的刷新图标，即可重新生成一组不同的数值并选中该档次。</p></section>`:'<p class="custom-tier-placeholder">选择一个档次，查看系统为你生成的开局能力。</p>'}<button class="primary-button custom-parameters-start ${tier?'tier-'+CUSTOM_TIERS.indexOf(tier):''}" data-custom-param-start ${tier?'':'disabled'}>以${tier?'“'+tier.name+'”':'所选档次'}开始高中生活 →</button></section></main>`;
 }
 function applyCustomParameters(g){
   const tier=CUSTOM_TIERS.find(t=>t.id===draft.customTier);if(!tier||!draft.customParameters)throw Error('请先选择开局档次');
@@ -89,3 +89,4 @@ document.addEventListener('click',e=>{
   if(b.hasAttribute('data-custom-param-back')){menuScreen='stages';render();}
   if(b.hasAttribute('data-custom-param-start')&&draft.customTier)startGame();
 });
+

@@ -780,6 +780,7 @@ function gradeForDay(day){
   return "高一";
 }
 function trackLabel(){
+  if(game.custom_curriculum)return game.curriculum_selected ? "3+1+2 · "+curriculumKeys(game).map(k=>CAMPUS_SUBJECTS.find(s=>s[0]===k)[1]).join(" / ") : "高一 · 九科通识";
   if(game.class_id){const c=campusClass(game.class_id);return c.id+"班 · "+c.combo+c.level;}
   if(game.track==="science")return "理科方向";
   if(game.track==="humanities")return "文科方向";
@@ -797,7 +798,7 @@ function progressForDay(day){return clamp((day-1)/(TOTAL_DAYS-1)*100,0,100)}
 function nextEvent(){
   const pending=game.pendingEvents.map(id=>EVENTS.find(event=>event.id===id)).find(Boolean);
   if(pending)return pending;
-  return EVENTS.find(event=>!game.fired.includes(event.id)&&event.day>game.day)||null;
+  return EVENTS.find(event=>(!game.custom_curriculum||event.id!=="direction")&&!game.fired.includes(event.id)&&event.day>game.day)||null;
 }
 function toast(text){
   const el=$("#game-toast");
@@ -881,7 +882,7 @@ function relationshipPanelHtml(){
 function roadmapPanelHtml(){
   const steps=[
     {label:"高一开学",day:1},
-    {label:"文理分科",day:215},
+    {label:game.custom_curriculum?"升高二选科":"文理分科",day:game.custom_curriculum?366:215},
     {label:"高三冲刺",day:731},
     {label:"高考",day:TOTAL_DAYS},
   ];
@@ -1067,7 +1068,7 @@ function renderLanding(){
   const settingsButton='<button class="menu-settings" data-action="settings" aria-label="设置">⚙ <span>设置</span></button>';
   let content='';
   if(menuScreen==='stages'){
-    content=`<section class="menu-stage"><button class="menu-back" data-menu="home">← 返回首页</button><p class="menu-kicker">第二页 · 选择起点</p><h1>从哪一天开始？</h1><p class="menu-subtitle">${escapeHtml(draft.name)}，把接下来的日子交给自己。</p><div class="menu-stages">${Object.entries(START_STAGES).map(([id,s])=>`<button data-menu-stage="${id}"><span>${id==='sprint100'?'100':s.label.slice(0,2)}</span><b>${id==='sprint100'?'天冲刺':'开学'}</b><small>距离高考 ${daysLeft(s.day)} 天</small></button>`).join('')}</div><p class="menu-footnote">选择起点后，进入第三页，正式开始高中生活。</p></section>`;
+    content=`<section class="menu-stage"><button class="menu-back" data-menu="home">← 返回首页</button><p class="menu-kicker">第二页 · 选择起点</p><h1>从哪一天开始？</h1><p class="menu-subtitle">${escapeHtml(draft.name)}，把接下来的日子交给自己。</p><div class="menu-stages">${Object.entries(START_STAGES).map(([id,s])=>`<button data-menu-stage="${id}"><span>${id==='sprint100'?'100':s.label.slice(0,2)}</span><b>${id==='sprint100'?'天冲刺':'开学'}</b><small>距离高考 ${daysLeft(s.day)} 天</small></button>`).join('')}</div><p class="menu-footnote">高一：九科通识，升高二时选科。其他起点：先选班级，再设定开局能力。</p></section>`;
   }else{
     content=`<div class="school-doodles" aria-hidden="true"><svg class="doodle-sun" viewBox="0 0 120 120"><g fill="none" stroke="#edb844" stroke-width="3.5" stroke-linecap="round"><circle cx="60" cy="60" r="23" fill="#ffe597"/><path d="M60 12v10m0 76v10M12 60h10m76 0h10M26 26l7 7m54 54 7 7M26 94l7-7m54-54 7-7"/><path d="M50 63q10 11 20 0" stroke="#bd8740"/></g></svg><svg class="doodle-plane" viewBox="0 0 240 160"><path d="M8 137c68 6 105-29 72-43-28-12-28 38 12 32 36-6 47-34 60-53" fill="none" stroke="#7fb7d3" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/><path d="m143 46 79-27-38 66-13-27-28-12Z" fill="#fffdf5" stroke="#4684aa" stroke-width="2.5" stroke-linejoin="round"/><path d="m171 58 51-39-40 50" fill="none" stroke="#4684aa" stroke-width="2"/></svg><span class="doodle-star star-one">✦</span><span class="doodle-star star-two">✧</span><span class="doodle-note">今天也要闪闪发光！</span></div><section class="menu-hero"><p class="menu-kicker">叮——你的青春已上线 ☀</p><h1>青禾纪事<span>有点热血，有点犯傻，刚好是我们。</span></h1><p class="cover-caption">下一页，去过一个超有意思的高中！</p><div class="menu-primary-actions"><button class="menu-start" data-menu="start">开始游戏 <span>→</span></button><button class="menu-save" data-menu="saves">存档</button></div></section><p class="menu-corner">试卷会写完，夏天还很长。</p>`;
   }
@@ -1097,7 +1098,7 @@ function deleteCustomRole(id){
 
 function openCustomRoleForm(id=''){
   const saved=id?characterSave(id):null;
-  openModal(`<p class="menu-kicker">我的青春 · 我来命名</p><h2>${saved?'修改角色名字':'创建自定义角色'}</h2><form id="custom-role-form" data-custom-id="${escapeHtml(saved?.custom_id||'')}"><label class="custom-role-field" for="custom-role-name">角色名字<input id="custom-role-name" name="name" maxlength="30" required autocomplete="off" placeholder="给自己取个名字（1—30字）" value="${escapeHtml(saved?.name||'')}"></label>${saved?'':`<label class="custom-role-field" for="custom-role-class">开局班级<select id="custom-role-class">${CAMPUS_CLASSES.map(c=>`<option value="${c.id}" ${c.id===4?'selected':''}>${c.id}班 · ${c.combo} · ${c.level}</option>`).join('')}</select></label><p>下一步选择起点，然后从九个能力档次中选择一档，系统将为你随机生成开局属性和学科能力。</p>`}<p id="custom-role-error" role="alert"></p><div class="dialog-footer"><button type="button" class="ghost-button" data-custom-back>返回人物与存档</button><button type="submit" class="primary-button">${saved?'保存名字':'下一步：选择起点 →'}</button></div></form>`);
+  openModal(`<p class="menu-kicker">我的青春 · 我来命名</p><h2>${saved?'修改角色名字':'创建自定义角色'}</h2><form id="custom-role-form" data-custom-id="${escapeHtml(saved?.custom_id||'')}"><label class="custom-role-field" for="custom-role-name">角色名字<input id="custom-role-name" name="name" maxlength="30" required autocomplete="off" placeholder="给自己取个名字（1—30字）" value="${escapeHtml(saved?.name||'')}"></label>${saved?'':`<p>下一步选择起点，然后从九个能力档次中选择一档，系统将为你随机生成开局属性和学科能力。</p>`}<p id="custom-role-error" role="alert"></p><div class="dialog-footer"><button type="button" class="ghost-button" data-custom-back>返回人物与存档</button><button type="submit" class="primary-button">${saved?'保存名字':'下一步：选择起点 →'}</button></div></form>`);
   $('#custom-role-name')?.focus();
 }
 function submitCustomRole(form){
@@ -1112,7 +1113,7 @@ function submitCustomRole(form){
   }
   if(game)persist();
   const customId='custom-'+(crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join(''));
-  const classId=Number($('#custom-role-class').value);
+  const classId=4;
   if(!campusClass(classId))return toast('请选择有效班级');
   draft={custom_id:customId,name,attrs:{...PRESETS.balanced},preset:'balanced',stage:'high1',track:campusClass(classId).subjects.includes('physics')?'science':'humanities',class_id:classId};
   selectedCharacter=customId;menuScreen='stages';closeModal(true);render();
@@ -1190,7 +1191,7 @@ function renderGame(){
 
           <section class="game-panel academics-panel">
             <div class="panel-heading"><h2>学业状态</h2><small>${trackLabel()}</small></div>
-            <div class="subject-grid">${(campusOptions(game)||SUBJECTS).map(([id,label])=>subjectRow(id,label)).join("")}</div>
+            <div class="subject-grid ${(campusOptions(game)||SUBJECTS).length===9?'subject-grid-nine':''}">${(campusOptions(game)||SUBJECTS).map(([id,label])=>subjectRow(id,label)).join("")}</div>
           </section>
         </div>
       </main>
@@ -1293,7 +1294,7 @@ function startGame(){
   draft.name=name;
   if(game)persist();
   game=campusStart(initialState(name,draft.attrs,draft.stage,draft.track),draft);
-  if(draft.custom_id){game.custom_id=draft.custom_id;applyCustomParameters(game);}
+  if(draft.custom_id){game.custom_id=draft.custom_id;applyCustomParameters(game);if(draft.stage==='high1'){game.custom_curriculum=true;game.curriculum_selected=false;game.subject_combination=[];game.track='undecided';}}
   learningState(game);
   game.createdAt=new Date().toISOString();
   menuScreen="play";
@@ -1670,18 +1671,20 @@ function endWeek(){
 
 function advanceWeek(){
   if(game.completed||game.day>=TOTAL_DAYS)return;
+  if(game.custom_curriculum&&!game.curriculum_selected&&game.day+DAYS_PER_WEEK>=START_STAGES.high2.day){openCurriculumPicker();return;}
   const previous=game.day;
   const toDay=Math.min(TOTAL_DAYS,game.day+DAYS_PER_WEEK);
   const losses=learningSettle(game,toDay);
   if(losses.length)addLog(`本周知识保持：${losses.map(([id,n])=>`${[...CAMPUS_SUBJECTS,...SUBJECTS].find(s=>s[0]===id)?.[1]||id} −${n}`).join("、")}。轮换复习可降低后续遗忘风险。`);
   game.day=toDay;
+  if(game.custom_curriculum)game.stage=toDay>=993?"sprint100":toDay>=731?"high3":toDay>=366?"high2":"high1";
   game.actionPoints=settings.actionsPerWeek;
   game.energy=clamp(game.energy+15,0,100);
   game.stress=clamp(game.stress-Math.round(8*stageModifiers().weeklyRecovery),0,100);
   game.weekendResolved=false;
   game.tutoringDoneThisWeek=false;
   addLog(`进入第 ${weekForDay(game.day)} 周，距离高考还有 ${daysLeft(game.day)} 天。`);
-  const due=EVENTS.filter(event=>!game.fired.includes(event.id)&&event.day>previous&&event.day<=game.day);
+  const due=EVENTS.filter(event=>(!game.custom_curriculum||event.id!=="direction")&&!game.fired.includes(event.id)&&event.day>previous&&event.day<=game.day);
   game.pendingEvents.push(...due.map(event=>event.id));
   persist();
   render();
@@ -1758,7 +1761,8 @@ function calculateExam(event,style){
   const pressureMod=style==="sprint"?-Math.max(0,game.stress-45)*0.75:0;
   const random=Math.round((Math.random()-.5)*70);
   const raw=game.class_id?campusOptions(game).reduce((sum,[id])=>sum+game.subjects[id],0)+(game.attrs.insight-60)*0.3+(game.attrs.mindset-60)*0.2-difficulty+styleMod+pressureMod+random:ability*1.95+80-difficulty+styleMod+pressureMod+random;
-  const score=clamp(Math.round(raw),120,750);
+  const examMax=game.custom_curriculum&&!game.curriculum_selected?1050:750;
+  const score=clamp(Math.round(raw),120,examMax);
   game.examResults.push({day:game.day,title:event.title,score});
   applyEffects({energy:style==="sprint"?-14:-6,stress:style==="sprint"?16:7,mood:score>=500?10:-5});
   markEventResolved(event.id);
@@ -1775,7 +1779,7 @@ function calculateExam(event,style){
   openModal(`
     <div class="eyebrow">${event.eyebrow}</div>
     <h2>${event.title}结果</h2>
-    <div class="result-score"><strong>${score}</strong><span>/ 750</span></div>
+    <div class="result-score"><strong>${score}</strong><span>/ ${examMax}</span></div>
     <div class="result-copy">${score>=650?"这次发挥非常出色，你已经站在最前面。":score>=560?"成绩稳定，继续按自己的节奏前进。":score>=460?"还有明显空间，但基础正在逐渐牢固。":"这次结果不理想，先把错题找回来。"}</div>
     <div class="dialog-footer"><button class="primary-button" data-continue-event>${event.type==="gaokao"?"查看最终结果 →":"继续 →"}</button></div>
   `, false);
@@ -2158,7 +2162,7 @@ document.addEventListener('click',event=>{
   if(b.dataset.characterStart){
     prepareMenuStart(b.dataset.characterStart);
   }
-  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;if(draft.custom_id)prepareCustomAttributes(draft.stage);else startGame();}
+  if(b.dataset.menuStage){draft.stage=b.dataset.menuStage;if(draft.custom_id)chooseCustomStage(draft.stage);else startGame();}
   if(b.dataset.characterLoad){
     try{game=campusValidate(JSON.parse(JSON.stringify(characterSave(b.dataset.characterLoad))));menuScreen='play';persist();closeModal(true);render();}catch{toast('这个存档无法读取，请检查存档数据');}
   }
@@ -2178,3 +2182,5 @@ initializeMusicLibrary().then(()=>{
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme(settings.menuMusicTheme||"calm");
   if(game)render();
 });
+
+
