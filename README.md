@@ -4,10 +4,6 @@
 
 ## 在线试玩
 
-**服务器 AI 版：[点击进入](http://121.41.75.213/play/)**：使用同源 FastAPI 后台和服务器 Ollama，不依赖外部 API Token。
-
-**GitHub Pages 在线版 v45：[点击进入](https://kaijing167-sys.github.io/1.0.0.0/?v=45)**：打开浏览器即可试玩，无需在电脑上启动服务；页面由 GitHub Pages 提供，AI 聊天沿用现有服务器接口。
-
 试玩网址：[https://kaijing167-sys.github.io/1.0.0.0/?v=45](https://kaijing167-sys.github.io/1.0.0.0/?v=45)
 
 固定试玩地址：[https://kaijing167-sys.github.io/1.0.0.0/](https://kaijing167-sys.github.io/1.0.0.0/)。上方链接带本次更新标记，便于重新加载入口页面。

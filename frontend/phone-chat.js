@@ -102,6 +102,7 @@ async function sendPhoneMessage(retry=false){
     if(settings.chatMode!=='ai'){data={reply:keywordReply(session.friend.id,rows)};}else{
     const fastReply=fastKeywordReply(session.friend.id,rows);
     if(fastReply){data={reply:fastReply,fast:true};}else{
+    try{
     const endpoint=resolveChatEndpoint(settings.chatEndpoint);
     const streamEndpoint=chatStreamEndpoint(endpoint);
     const requestBody=JSON.stringify({npcId:session.friend.id,messages:rows.slice(-20).map(r=>({role:r.role,content:r.content})),context:{playerName:owner.name,day:owner.day,grade:gradeForDay(owner.day),relationship:owner.relationships[session.friend.id]||0,mood:owner.mood,stress:owner.stress,recentEvents:owner.log.slice(0,5).map(r=>r.text)}});
@@ -115,6 +116,10 @@ async function sendPhoneMessage(retry=false){
     }else{
       data=await response.json();
       if(!response.ok)throw Error(data.error||'AI 服务暂时不可用');
+    }
+    }catch(aiErr){
+      // AI 接口不可达或出错时回退到本地关键词，确保「聊聊」始终能得到回复
+      data={reply:keywordReply(session.friend.id,rows),fallback:true};
     }
     }
     }
