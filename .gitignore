@@ -37,3 +37,5 @@ personas/
 
 # Public admissions import cache (rebuild locally)
 work/admissions-import/
+temp_social_tune/
+temp_study_bg/
