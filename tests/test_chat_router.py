@@ -96,6 +96,7 @@ def test_su_persona_keeps_refined_voice_without_imported_chat_identity():
 
     assert "轻调侃" in prompt
     assert "不要主动提" in prompt
+    assert "空泛" in prompt
     assert "梁晶晶" not in prompt
     assert "25智感" not in prompt
 
