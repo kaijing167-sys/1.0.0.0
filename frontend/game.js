@@ -7,6 +7,22 @@ const MUSIC_FORCE_OFF = false;
 document.body.classList.add("pixel-theme");
 const TOTAL_DAYS = 1092;
 const DAYS_PER_WEEK = 7;
+
+// ===== 商店 / 背包系统 =====
+const SHOP_DISABLE_DAY = 1020; // 高三冲刺开始（见 gradeForDay），小卖部暂停营业
+const SHOP_SNACK_LIMIT = 5;    // 背包内零食总上限
+const SHOP_ITEMS = {
+  latiao:    {id:"latiao",    name:"辣条",     type:"snack",      price:2,  emoji:"🌶️", effects:{mood:8,stress:-4,energy:1}, desc:"上课偷偷来一根，心情瞬间起飞。"},
+  chips:     {id:"chips",     name:"薯片",     type:"snack",      price:5,  emoji:"🥔", effects:{mood:6,stress:-2,energy:1}, desc:"咔嚓咔嚓，压力碎一地。"},
+  noodles:   {id:"noodles",   name:"泡面",     type:"snack",      price:5,  emoji:"🍜", effects:{energy:8,mood:2,stress:-1}, desc:"深夜食堂，回血神器。"},
+  cola:      {id:"cola",      name:"可乐",     type:"snack",      price:3,  emoji:"🥤", effects:{energy:4,mood:3,stress:-1}, desc:"快乐水，一口解千愁。"},
+  sprite:    {id:"sprite",    name:"雪碧",     type:"snack",      price:3,  emoji:"🫧", effects:{energy:2,mood:4,stress:-2}, desc:"透心凉，清爽一下。"},
+  icecream:  {id:"icecream",  name:"雪糕",     type:"snack",      price:4,  emoji:"🍦", effects:{mood:7,stress:-4,energy:1}, desc:"夏天和雪糕最配了。"},
+  water:     {id:"water",     name:"矿泉水",   type:"snack",      price:2,  emoji:"💧", effects:{energy:4,stress:-1},        desc:"最朴素的补给。"},
+  pen:       {id:"pen",       name:"中性笔",   type:"stationery", price:2,  emoji:"🖊️", attr:"insight", attrLabel:"学力", bonus:1, desc:"趁手的好笔，学习更专注。"},
+  notebook:  {id:"notebook",  name:"笔记本",   type:"stationery", price:5,  emoji:"📓", attr:"mindset", attrLabel:"心态", bonus:1, desc:"记下的不只是笔记，还有成长。"},
+  pencilcase:{id:"pencilcase",name:"文具盒",   type:"stationery", price:10, emoji:"📦", attr:"charm",   attrLabel:"魅力", bonus:1, desc:"整整齐齐，人也更精神。"},
+};
 const BASE_ATTR = 50;
 const EXTRA_POINTS = 40;
 const DEFAULT_SETTINGS = {
@@ -539,6 +555,8 @@ function loadGame(){
     data.tutoringDoneThisWeek=!!data.tutoringDoneThisWeek;
     if(!data.track)data.track="undecided";
     if(!data.stage)data.stage="high1";
+    if(!data.inventory||typeof data.inventory!=="object")data.inventory={};
+    if(!data.lastUsedDay||typeof data.lastUsedDay!=="object")data.lastUsedDay={};
     if(data.class_id)campusValidate(data);
     learningState(data);
     return data;
@@ -1026,6 +1044,8 @@ function initialState(name,attrs,stageId="high1",track="science"){
     tutoringCount:0,
     tutoringDoneThisWeek:false,
     weekendResolved:false,
+    inventory:{},
+    lastUsedDay:{},
     log:[{day:stage.day,text:`${name}从${stage.label}开始新的高中阶段。`}],
     completed:false,
     finalScore:null,
@@ -1141,6 +1161,7 @@ function renderGame(){
             <strong>${gradeForDay(game.day)} · ${trackLabel()}</strong>
           </div>
           <div class="top-actions"><button class="ghost-button" data-menu="home">首页</button><button class="ghost-button" data-campus-classes>我的班级</button><button class="ghost-button archive-open-button" data-action="campus-archive">▣ 档案 <span>${game.achievements.length}</span></button>
+            <button class="ghost-button shop-button" data-action="shop">🛒 商店</button>
             <button class="ghost-button music-button" data-action="toggle-music">${musicButtonLabel()}</button>
             <button class="ghost-button settings-button" data-action="settings">⚙ 设置</button>
           </div>
@@ -1831,10 +1852,140 @@ function applyEffects(effects={}){
   }
 }
 
+// ===== 商店 / 背包系统 =====
+let shopTab="shop";
+function shopClosed(){return game.day>=SHOP_DISABLE_DAY;}
+function inventoryCount(){return Object.values(game.inventory).reduce((sum,n)=>sum+(n||0),0);}
+function snackCount(){return Object.entries(game.inventory).reduce((sum,[id,n])=>sum+((SHOP_ITEMS[id]&&SHOP_ITEMS[id].type==="snack")?(n||0):0),0);}
+function effectSummary(effects){
+  const label={mood:"心情",stress:"压力",energy:"体力"};
+  return Object.entries(effects).map(([k,v])=>`${v>0?"+":""}${v} ${label[k]||k}`).join(" · ");
+}
+function openShop(tab){
+  if(tab)shopTab=tab;
+  if(game.completed)return toast("故事已结束，小卖部不再营业。");
+  openModal(shopHtml(),true);
+  $("#game-dialog").classList.add("shop-dialog");
+}
+function shopHtml(){
+  const closed=shopClosed();
+  const tabs=`<div class="shop-tabs">
+      <button class="shop-tab ${shopTab==="shop"?"active":""}" data-shop-tab="shop">🛒 小卖部</button>
+      <button class="shop-tab ${shopTab==="backpack"?"active":""}" data-shop-tab="backpack">🎒 背包 <span class="shop-badge">${inventoryCount()}</span></button>
+    </div>`;
+  const notice=closed?`<p class="shop-closed-notice">高三冲刺阶段，小卖部已暂停营业 · 背包仍可查看</p>`:"";
+  const body=shopTab==="shop"?shopShopBody(closed):shopBackpackBody(closed);
+  return `<div class="shop-wrap">
+    <div class="shop-head">
+      <h2>校园小卖部</h2>
+      <p class="shop-money">零花钱 <b>${game.money}</b> 元</p>
+    </div>
+    ${tabs}${notice}${body}
+    <div class="dialog-footer"><button class="ghost-button" data-modal-close>关闭</button></div>
+  </div>`;
+}
+function shopShopBody(closed){
+  const snacks=Object.values(SHOP_ITEMS).filter(i=>i.type==="snack");
+  const stationery=Object.values(SHOP_ITEMS).filter(i=>i.type==="stationery");
+  const snackFull=snackCount()>=SHOP_SNACK_LIMIT;
+  const section=(title,items,note)=>`<h3 class="shop-section-title">${title}</h3>
+    <div class="shop-grid">${items.map(i=>shopItemCard(i,closed)).join("")}</div>
+    ${note?`<p class="shop-limit-note">${note}</p>`:""}`;
+  return section("零食",snacks,snackFull?`零食背包已满（最多 ${SHOP_SNACK_LIMIT} 件），先去「背包」使用吧。`:"")
+    +section("文具",stationery,"");
+}
+function shopItemCard(item,closed){
+  const have=game.inventory[item.id]||0;
+  const canAfford=game.money>=item.price;
+  let disabled=false,reason="";
+  if(closed){disabled=true;reason="已暂停";}
+  else if(item.type==="stationery"&&have>=1){disabled=true;reason="已拥有";}
+  else if(item.type==="snack"&&snackCount()>=SHOP_SNACK_LIMIT){disabled=true;reason="背包已满";}
+  else if(!canAfford){disabled=true;reason="零花钱不足";}
+  const effectText=item.type==="snack"?effectSummary(item.effects):`永久 +${item.bonus} ${item.attrLabel}`;
+  return `<article class="shop-card">
+    <div class="shop-card-emoji">${item.emoji}</div>
+    <div class="shop-card-body">
+      <h4>${item.name}${have>0?`<span class="shop-owned">×${have}</span>`:""}</h4>
+      <p class="shop-desc">${item.desc}</p>
+      <p class="shop-effect">${effectText}</p>
+    </div>
+    <div class="shop-card-action">
+      <span class="shop-price">¥${item.price}</span>
+      <button class="primary-button shop-buy" data-buy-item="${item.id}" ${disabled?"disabled":""}>${disabled?reason:"购买"}</button>
+    </div>
+  </article>`;
+}
+function shopBackpackBody(closed){
+  const owned=Object.entries(game.inventory).filter(([,n])=>n>0);
+  if(!owned.length)return `<p class="shop-empty">背包还是空的，去「小卖部」逛逛吧。</p>`;
+  const snacks=owned.filter(([id])=>SHOP_ITEMS[id].type==="snack");
+  const stationery=owned.filter(([id])=>SHOP_ITEMS[id].type==="stationery");
+  const card=(id,n)=>{
+    const item=SHOP_ITEMS[id];
+    let disabled=false,reason="";
+    if(closed){disabled=true;reason="已暂停";}
+    else if(item.type==="snack"&&game.lastUsedDay[id]===game.day){disabled=true;reason="今日已用";}
+    const effectText=item.type==="snack"?effectSummary(item.effects):`永久 +${item.bonus} ${item.attrLabel}`;
+    return `<article class="shop-card shop-card-owned">
+      <div class="shop-card-emoji">${item.emoji}</div>
+      <div class="shop-card-body">
+        <h4>${item.name}<span class="shop-owned">×${n}</span></h4>
+        <p class="shop-effect">${effectText}</p>
+      </div>
+      <div class="shop-card-action">
+        <button class="ghost-button shop-use" data-use-item="${id}" ${disabled?"disabled":""}>${disabled?reason:"使用"}</button>
+      </div>
+    </article>`;
+  };
+  const part=(title,items)=>items.length?`<h3 class="shop-section-title">${title}</h3><div class="shop-grid">${items.map(([id,n])=>card(id,n)).join("")}</div>`:"";
+  return part("零食",snacks)+part("文具",stationery);
+}
+function buyItem(id){
+  const item=SHOP_ITEMS[id];
+  if(!item)return;
+  if(shopClosed())return toast("高三冲刺阶段，小卖部已暂停营业。");
+  if(game.money<item.price)return toast("零花钱不够，买不起这件。");
+  const have=game.inventory[id]||0;
+  if(item.type==="stationery"&&have>=1)return toast("这件文具你已经有了。");
+  if(item.type==="snack"&&snackCount()>=SHOP_SNACK_LIMIT)return toast("零食背包已满，先去使用吧。");
+  game.money-=item.price;
+  game.inventory[id]=have+1;
+  game.log.push({day:game.day,text:`在「小卖部」花 ${item.price} 元买了 ${item.name}。`});
+  persist();
+  openShop();
+  toast(`已购买 ${item.name}`);
+}
+function useItem(id){
+  const item=SHOP_ITEMS[id];
+  if(!item)return;
+  const have=game.inventory[id]||0;
+  if(have<=0)return toast("背包里没有这件物品。");
+  if(shopClosed())return toast("高三冲刺阶段，背包物品暂停使用。");
+  let logText;
+  if(item.type==="snack"){
+    if(game.lastUsedDay[id]===game.day)return toast("今天已经用过这件零食了，明天再来吧。");
+    applyEffects(item.effects);
+    game.lastUsedDay[id]=game.day;
+    logText=`使用了 ${item.name}（${effectSummary(item.effects)}）。`;
+  }else{
+    const key=item.attr;
+    game.attrs[key]=clamp(game.attrs[key]+(item.bonus||1),0,100);
+    logText=`使用了 ${item.name}，永久提升 ${item.attrLabel} +${item.bonus||1}。`;
+  }
+  game.inventory[id]=have-1;
+  if(game.inventory[id]<=0)delete game.inventory[id];
+  game.log.push({day:game.day,text:logText});
+  persist();
+  openShop();
+  toast(`已使用 ${item.name}`);
+}
+// ===== 商店 / 背包系统 结束 =====
+
 function openModal(html, closable=true){
   const dialog=$("#game-dialog");
   modalLocked=!closable;
-  dialog.classList.remove("archive-dialog","phone-dialog");
+  dialog.classList.remove("archive-dialog","phone-dialog","shop-dialog");
   dialog.hidden=false;
   dialog.innerHTML=`<section class="dialog-card">${closable?'<button class="dialog-close" data-modal-close aria-label="关闭">×</button>':""}${html}</section>`;
   document.body.classList.add("modal-open");
@@ -1845,7 +1996,7 @@ function closeModal(force=false){
   const dialog=$("#game-dialog");
   dialog.hidden=true;
   dialog.innerHTML="";
-  dialog.classList.remove("archive-dialog","phone-dialog");
+  dialog.classList.remove("archive-dialog","phone-dialog","shop-dialog");
   document.body.classList.remove("modal-open");
   currentModal=null;
   modalLocked=false;
@@ -2085,6 +2236,10 @@ document.addEventListener("click",event=>{
   if(button.dataset.action==="toggle-music")return toggleMusic();
   if(button.dataset.action==="settings")return openSettings();
   if(button.dataset.action==="campus-archive")return openCampusArchive("relations");
+  if(button.dataset.action==="shop")return openShop();
+  if(button.dataset.shopTab)return openShop(button.dataset.shopTab);
+  if(button.dataset.buyItem)return buyItem(button.dataset.buyItem);
+  if(button.dataset.useItem)return useItem(button.dataset.useItem);
   if(button.dataset.action==="all-achievements")return openModal(allAchievementsHtml());
   if(button.dataset.action==="music-library")return openMusicLibrary();
   if(button.dataset.action==="back-settings")return openSettings();

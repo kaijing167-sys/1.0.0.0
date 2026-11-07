@@ -1,0 +1,73 @@
+/* 商店 / 背包系统样式（青禾纪事 · 像素版） */
+#game-dialog.shop-dialog{
+  align-items:flex-start;
+}
+#game-dialog.shop-dialog .dialog-card{
+  max-width:680px;
+  width:min(680px,100vw - 32px);
+  padding:22px 22px 18px;
+}
+.shop-wrap{font-family:"STSong","SimSun",serif;color:#276579;}
+.shop-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  border-bottom:3px solid #2b3a55;padding-bottom:10px;margin-bottom:14px;
+}
+.shop-head h2{font-size:24px;font-weight:600;margin:0;color:#2b3a55;}
+.shop-money{font-size:12px;color:#718a91;margin:0;}
+.shop-money b{font-size:18px;color:#347d94;}
+.shop-tabs{display:flex;gap:8px;margin-bottom:12px;}
+.shop-tab{
+  flex:1;border:2px solid #cdd9dc;background:#f4faf9;color:#5a6f76;
+  border-radius:8px;padding:9px 10px;font-size:13px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.shop-tab.active{background:#347d94;border-color:#2b3a55;color:#fff;box-shadow:3px 3px 0 #2b3a55;}
+.shop-badge{
+  display:inline-block;min-width:18px;padding:0 5px;border-radius:999px;
+  background:#fff;color:#347d94;font-size:11px;line-height:18px;text-align:center;
+}
+.shop-tab.active .shop-badge{background:#fff;color:#347d94;}
+.shop-closed-notice{
+  background:#fff4e5;border:2px dashed #e0992f;color:#9a6212;
+  border-radius:8px;padding:9px 12px;font-size:12px;margin-bottom:12px;line-height:1.7;
+}
+.shop-section-title{
+  font-size:14px;font-weight:600;color:#2b3a55;margin:14px 0 8px;
+  padding-left:8px;border-left:4px solid #347d94;
+}
+.shop-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;
+}
+.shop-card{
+  display:flex;align-items:stretch;gap:10px;
+  background:#fbfdfd;border:2px solid #d4e0e3;border-radius:10px;padding:10px;
+}
+.shop-card-owned{background:#eef6f4;}
+.shop-card-emoji{
+  font-size:30px;line-height:1;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;width:42px;
+}
+.shop-card-body{flex:1;min-width:0;}
+.shop-card-body h4{font-size:14px;margin:0 0 4px;color:#2b3a55;display:flex;align-items:center;gap:6px;}
+.shop-owned{
+  font-size:11px;color:#347d94;background:#e3eef0;border-radius:6px;padding:0 6px;line-height:16px;
+}
+.shop-desc{font-size:11px;color:#718a91;margin:0 0 4px;line-height:1.5;}
+.shop-effect{font-size:11px;color:#347d94;margin:0;font-weight:600;}
+.shop-card-action{
+  flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px;
+}
+.shop-price{font-size:13px;color:#b5651d;font-weight:700;white-space:nowrap;}
+.shop-buy{padding:7px 12px;font-size:12px;white-space:nowrap;}
+.shop-use{padding:7px 14px;font-size:12px;white-space:nowrap;}
+.shop-card .primary-button[disabled],
+.shop-card .ghost-button[disabled]{
+  opacity:.5;cursor:not-allowed;filter:grayscale(.3);
+}
+.shop-limit-note{font-size:11px;color:#9a6212;margin:8px 0 0;line-height:1.6;}
+.shop-empty{font-size:13px;color:#718a91;text-align:center;padding:24px 0;line-height:1.8;}
+@media (max-width:480px){
+  #game-dialog.shop-dialog .dialog-card{width:100vw;padding:18px 14px;}
+  .shop-grid{grid-template-columns:1fr;}
+  .shop-head h2{font-size:20px;}
+}
