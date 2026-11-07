@@ -17,17 +17,27 @@ body:not(.pixel-theme) .phone-dialog .dialog-card{width:min(440px,100%);max-widt
 @media(max-width:600px){.phone-messages{padding:12px 14px}.phone-compose{padding:10px 12px}.phone-message>div{max-width:76%}.phone-status{padding:0 18px}.phone-message p{font-size:14px}.phone-empty{padding-top:10vh}}
 @media(prefers-reduced-motion:reduce){.phone-messages{scroll-behavior:auto}}
 
-/* Desktop keeps the phone feel without stretching the chat into a tall strip. */
+/* Desktop: a comfortably proportioned chat panel (not a narrow phone strip). */
 @media(min-width:621px){
   #game-dialog.phone-dialog{padding:clamp(12px,3vh,28px);background:rgba(9,17,33,.76)}
-  #game-dialog.phone-dialog .dialog-card{width:min(430px,calc(100vw - 32px));max-width:430px;height:min(760px,calc(100dvh - 40px));max-height:calc(100dvh - 40px);margin:0;padding:0;border:4px solid #111b32;border-radius:18px;box-shadow:0 18px 50px rgba(5,11,24,.45),inset 0 0 0 3px #fff4d4}
+  #game-dialog.phone-dialog .dialog-card{
+    width:min(600px,calc(100vw - 40px));
+    max-width:600px;
+    height:min(740px,calc(100dvh - 40px));
+    max-height:calc(100dvh - 40px);
+    margin:0;padding:0;
+    border:3px solid var(--px-navy);
+    border-radius:14px;
+    box-shadow:0 18px 50px rgba(5,11,24,.45),4px 4px 0 var(--px-night);
+    overflow:hidden;
+  }
   #game-dialog.phone-dialog .phone-screen{height:100%;min-height:0}
-  #game-dialog.phone-dialog .phone-messages{min-height:0;padding:14px 20px}
+  #game-dialog.phone-dialog .phone-messages{min-height:0;padding:16px 22px}
   #game-dialog.phone-dialog .phone-message{margin-bottom:16px}
-  #game-dialog.phone-dialog .phone-message>div{max-width:78%}
-  #game-dialog.phone-dialog .phone-message p{padding:10px 12px;line-height:1.65}
-  #game-dialog.phone-dialog .phone-empty{padding:clamp(28px,8vh,64px) 12px}
-  #game-dialog.phone-dialog .phone-compose{padding:10px 18px}
+  #game-dialog.phone-dialog .phone-message>div{max-width:76%}
+  #game-dialog.phone-dialog .phone-message p{padding:11px 14px;line-height:1.7}
+  #game-dialog.phone-dialog .phone-empty{padding:clamp(28px,8vh,64px) 16px}
+  #game-dialog.phone-dialog .phone-compose{padding:12px 20px}
 }
 @media(max-width:620px){
   #game-dialog.phone-dialog{padding:0;background:#ededed}
