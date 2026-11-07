@@ -91,6 +91,15 @@ def test_compact_server_prompt_keeps_persona_and_safety(monkeypatch):
     assert len(prompt) < len(npc_personas.NPC_PERSONAS["lin"])
 
 
+def test_su_persona_keeps_refined_voice_without_imported_chat_identity():
+    prompt = npc_personas.NPC_PERSONAS["su"]
+
+    assert "轻调侃" in prompt
+    assert "不要主动提" in prompt
+    assert "梁晶晶" not in prompt
+    assert "25智感" not in prompt
+
+
 def test_generated_runtime_persona_overrides_builtin_character(tmp_path, monkeypatch):
     runtime_dir = tmp_path / "personas"
     su_dir = runtime_dir / "su"
