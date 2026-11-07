@@ -23,7 +23,7 @@ test('GitHub Pages chat uses the configured HTTPS backend and allows only that c
  const html=fs.readFileSync(path.join(__dirname,'../docs/index.html'),'utf8');
  assert.match(html,/location\.hostname === "kaijing167-sys\.github\.io"/);
  assert.match(html,/https:\/\/121-41-75-213\.sslip\.io\/api\/chat/);
- assert.match(html,/game\.js\?v=51/);assert.match(html,/phone-chat\.js\?v=7/);
+ assert.match(html,/game\.js\?v=51/);assert.match(html,/phone-chat\.js\?v=8/);
 
  const source=fs.readFileSync(path.join(__dirname,'../frontend/phone-chat.js'),'utf8');
  const start=source.indexOf('function resolveChatEndpoint');
@@ -435,13 +435,14 @@ test('per-character saves keep creation date and independent progress on restore
  h.run("delete game.createdAt;persist();openCharacterSaves('hu-zx')");assert.match(h.el('#game-dialog').innerHTML,/旧存档未记录建档日期/);
 });
 
-test('social opens full-screen phone; missing AI keeps message and does not consume an action',async()=>{
+test('social opens full-screen phone; AI failure falls back to a local reply',async()=>{
  const h=harness();h.run("campusDraft('hu-zx');startGame();resolveSocialChoice('su')");
  assert.match(h.el('#game-dialog').innerHTML,/phone-screen/);assert.equal(h.run('game.actionPoints'),4);
  h.run("settings.chatMode='ai';fetch=async()=>({ok:false,json:async()=>({error:'尚未配置 AI'})})");
  h.el('#phone-message-input').value='数学考试没考好，怎么办？';await h.run('sendPhoneMessage()');
- assert.equal(h.run('game.actionPoints'),4);assert.equal(h.run('game.chatHistory.su.length'),1);
- assert.match(h.el('#game-dialog').innerHTML,/尚未配置 AI/);assert.match(h.el('#game-dialog').innerHTML,/重试回复/);
+ assert.equal(h.run('game.actionPoints'),3);assert.equal(h.run('game.chatHistory.su.length'),2);
+ assert.match(h.run('phoneHistory().at(-1).content'),/失落|题不会|哪一科|一起|先/);
+ assert.doesNotMatch(h.el('#game-dialog').innerHTML,/AI 服务暂时不可用/);
 });
 test('AI receives exact messages and game context; retry charges once, then history survives save',async()=>{
  const h=harness();h.run("settings.chatMode='ai';campusDraft('hu-zx');startGame();openPhoneChat('su');fetch=async(url,opts)=>{globalThis.sent=JSON.parse(opts.body);return {ok:true,json:async()=>({reply:'哪类题扣分最多？我们一起看看。'})}}");
