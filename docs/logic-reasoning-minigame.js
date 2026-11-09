@@ -184,9 +184,9 @@
     const cells = grid.querySelectorAll(".lr-cell");
     cells.forEach(cell => {
       const v = Number(cell.textContent);
+      // 不提示“当前应点”的格子：玩家需自行在方阵中找寻下一个数字
       cell.classList.remove("lr-current", "lr-done", "lr-wrong", "lr-shake");
       if (v < state.target) cell.classList.add("lr-done");
-      else if (v === state.target) cell.classList.add("lr-current");
     });
   }
 
