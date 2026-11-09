@@ -1,0 +1,50 @@
+/* 逻辑推理小游戏样式（青禾纪事 · 像素版） */
+.game-dialog:has(.lr){
+  background:radial-gradient(circle at 50% 0%,#1b2c4a,#0a1322 70%);
+  backdrop-filter:none;
+}
+.dialog-card:has(.lr){
+  width:min(440px,100%);
+  border:4px solid #5b6bd6;border-radius:0;
+  background:rgba(14,22,40,.94);
+  box-shadow:0 0 0 4px #0a1322,8px 8px 0 0 rgba(0,0,0,.45);
+  padding:20px 20px 16px;color:#e8ecff;image-rendering:pixelated;
+  font-family:"Courier New",ui-monospace,"DejaVu Sans Mono",monospace;
+}
+.dialog-card:has(.lr) .eyebrow{color:#8fa0ff;font-weight:700}
+.dialog-card:has(.lr) h2{font-family:inherit;font-size:19px;font-weight:700;color:#cdd6ff;margin:2px 0 6px}
+.dialog-card:has(.lr)>p{color:#9aa6d6;font-size:12px;line-height:1.6;margin:0}
+.dialog-card:has(.lr) .dialog-close{color:#9aa6d6}
+.lr .lr-hud{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px;font-size:12px;color:#9aa6d6}
+.lr .lr-hud b{color:#ffe27a;font-size:15px;font-variant-numeric:tabular-nums}
+.lr .lr-hud .lr-target{margin-left:auto;color:#aef0e6;font-weight:700}
+.lr .lr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:4px 0 12px}
+.lr .lr-cell{
+  aspect-ratio:1/1;border:3px solid #5b6bd6;border-radius:0;background:#16224a;color:#eafff9;
+  font-size:20px;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:3px 3px 0 0 rgba(0,0,0,.45);transition:background .1s steps(2),border-color .1s steps(2);
+  display:flex;align-items:center;justify-content:center;padding:0;
+}
+.lr .lr-cell:hover{background:#1d2f63;border-color:#aef0e6}
+.lr .lr-cell.lr-current{background:#2f8f86;border-color:#ffd23f;color:#fff;animation:lr-pulse 1s steps(2) infinite}
+.lr .lr-cell.lr-done{background:#0e1630;border-color:#2a3a66;color:#54618f;cursor:default;box-shadow:none}
+.lr .lr-cell.lr-wrong{background:#6b2a22;border-color:#ff7a6b;color:#ffd7d0}
+.lr .lr-cell.lr-shake{animation:lr-shake .4s steps(4)}
+@keyframes lr-pulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes lr-shake{0%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}100%{transform:translateX(0)}}
+.lr .lr-fb{text-align:center;min-height:20px;margin:2px 0 8px;font-size:13px;font-weight:700}
+.lr .lr-fb-ok{color:#ffd23f}
+.lr .lr-fb-no{color:#ff7a6b}
+.lr .lr-result{text-align:center;padding:8px 0 4px}
+.lr .lr-result-rating{font-family:inherit;font-size:54px;font-weight:700;color:#aef0e6;line-height:1;text-shadow:3px 3px 0 #0a1322}
+.lr .lr-result-sub{text-align:center;font-size:13px;color:#9aa6d6;margin:8px 0 4px}
+.lr .lr-gains{margin:10px 0 4px;border-top:2px dashed #2a3a66;padding-top:10px;font-size:12px;color:#cdd6ff;line-height:1.9}
+.lr .lr-gains b{color:#ffe27a}
+.lr .dialog-footer .primary-button{border:3px solid #0a1322;border-radius:0;background:#2f8f86;color:#eafff9;
+  padding:10px 24px;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;box-shadow:4px 4px 0 0 rgba(0,0,0,.45);font-family:inherit}
+.lr .dialog-footer .primary-button:hover{background:#3aa79c}
+@media (max-width:560px){
+  .dialog-card:has(.lr){padding:16px 14px 12px}
+  .lr .lr-cell{font-size:18px;border-width:2px}
+  .lr .lr-grid{gap:4px}
+}

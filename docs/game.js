@@ -1325,16 +1325,12 @@ function startGame(){
   setTimeout(()=>openEvent(opening),260);
 }
 
+let studyMode="quiz"; // 专注学习训练模式：quiz=课堂小测，logic=逻辑推理
+
 function performAction(type){
   if(game.actionPoints<=0)return toast("本周行动已经用完");
   if(type==="study"){
-    openModal(`
-      <div class="eyebrow">LEARNING · 专注学习</div>
-      <h2>今天学什么？</h2>
-      <p>学习可能进步、持平或暂时退步，学力、体力和压力影响概率。长期不复习会增加遗忘风险。每次消耗 1 次行动。</p>
-      <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)} · 本周遗忘风险约 ${Math.round(learningRisk(game,id,game.day+7)*100)}%</small></button>`).join("")}</div>
-      <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
-    `);
+    openStudyPanel();
     return;
   }
   if(type==="social"){
@@ -1466,6 +1462,98 @@ function settleStudy(id,correct,total){
   render();
   toast(`${label} 小测 ${correct}/${total} · 能力 ${gained>=0?"+":""}${gained}`);
   if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
+}
+
+// 专注学习面板：含「课堂小测 / 逻辑推理」模式切换
+function openStudyPanel(){
+  if(game.actionPoints<=0)return toast("本周行动已经用完");
+  openModal(`
+    <div class="eyebrow">LEARNING · 专注学习</div>
+    <h2>今天学什么？</h2>
+    <p>学习可能进步、持平或暂时退步，学力、体力和压力影响概率。长期不复习会增加遗忘风险。每次消耗 1 次行动。</p>
+    <div class="study-mode-toggle">
+      <button class="study-mode-btn ${studyMode==="quiz"?"active":""}" data-study-mode="quiz">课堂小测</button>
+      <button class="study-mode-btn ${studyMode==="logic"?"active":""}" data-study-mode="logic">逻辑推理</button>
+    </div>
+    <p class="study-mode-hint">${studyMode==="logic"?"5×5 数字顺序搜索：从 1 依次点到 25，越准越快收获越多。":"20 秒限时加减法，越快越准收获越多。"}</p>
+    <div class="choice-list">${studyOptions().map(([id,label])=>`<button class="choice-button" data-study="${id}"><strong>${label}</strong><small>当前能力 ${game.subjects[id]} / ${campusMax(id)} · 本周遗忘风险约 ${Math.round(learningRisk(game,id,game.day+7)*100)}%</small></button>`).join("")}</div>
+    <div class="dialog-footer"><button class="ghost-button" data-modal-close>取消</button></div>
+  `);
+}
+function setStudyMode(mode){
+  if(mode!=="quiz"&&mode!=="logic")return;
+  studyMode=mode;
+  openStudyPanel();
+}
+function startStudy(id){
+  if(studyMode==="logic")return studyLogic(id);
+  return studySubject(id);
+}
+// 逻辑推理：关闭选科面板后启动小游戏；音乐切「舒缓」，结束后由 logicExit 还原菜单主题
+function studyLogic(id){
+  if(game.actionPoints<=0)return toast("本周行动已经用完");
+  const option=studyOptions().find(o=>o[0]===id);if(!option)return;
+  const label=option[1];
+  closeModal(true);
+  if(settings.musicEnabled){
+    modalMusicRestorePending=true;
+    playTheme("calm",{force:true});
+  }
+  if(window.LogicReasoningMinigame){
+    window.LogicReasoningMinigame.start(label,(result)=>settleLogic(id,result),(()=>logicExit()));
+  }else{
+    settleLogic(id,{seconds:60,mistakes:0,score:50,rating:"C"});
+    logicExit();
+  }
+}
+function logicExit(){
+  closeModal(true);
+  if(game.actionPoints===0&&!game.weekendResolved)setTimeout(openWeekend,320);
+}
+// 逻辑推理评级：S 85~100 / A 70~84 / B 50~69 / C 0~49
+function ratingFor(score){
+  if(score>=85)return "S";
+  if(score>=70)return "A";
+  if(score>=50)return "B";
+  return "C";
+}
+// 逻辑推理结算：接入现有“专注学习”的行动点消耗、学习收益与周末触发逻辑，不绕过状态系统。
+// result 来自 logic-reasoning-minigame.js：{seconds,mistakes,score,rating}；综合评分驱动学科/属性加成。
+function settleLogic(id,result){
+  if(game.actionPoints<=0)return null; // 安全兜底：避免重复消耗行动点
+  const option=studyOptions().find(item=>item[0]===id);if(!option)return null;
+  const label=option[1];
+  const score=result.score||0, rating=result.rating||ratingFor(score);
+  const t=Math.max(0,Math.min(1,score/100));
+  // 1) 消耗 1 次行动点（原有状态系统）
+  game.actionPoints--;
+  // 2) 基础学习收益：更新遗忘记忆、计入复习（原有学习模拟）
+  learningStudy(game,id);
+  const targets=game.class_id?learningTargets(game,id):[id];
+  const before=targets.reduce((sum,k)=>sum+(game.subjects[k]||0),0);
+  // 3) 学科成长：在原有学习收益上追加 0.30～0.80（按综合评分）
+  const subjectBonus=+(0.30+t*0.50).toFixed(2);
+  for(const k of targets){
+    game.subjects[k]=Math.round(clamp((game.subjects[k]||0)+subjectBonus,0,campusMax(k))*100)/100;
+  }
+  const gained=Math.round((targets.reduce((sum,k)=>sum+(game.subjects[k]||0),0)-before)*100)/100;
+  // 4) 推理训练带来的属性浮动（点错只计失误不即时扣属性）
+  const insightBonus=+(0.05+t*0.10).toFixed(3);
+  const mindsetBonus=+(0.05+t*0.10).toFixed(3);
+  game.attrs.insight=clamp(game.attrs.insight+insightBonus,0,100);
+  game.attrs.mindset=clamp(game.attrs.mindset+mindsetBonus,0,100);
+  const energyCost=Math.round(8-t*4);   // 表现越好消耗越少：8→4
+  const stressGain=Math.round(6-t*8);   // 高分减压(-2)、低分加压(+6)
+  const moodGain=Math.round(t*8);       // 0→8
+  game.energy=clamp(game.energy-energyCost,0,100);
+  game.stress=clamp(game.stress+stressGain,0,100);
+  game.mood=clamp(game.mood+moodGain,0,100);
+  const gains={subject:gained,subjectLabel:label,insight:insightBonus,mindset:mindsetBonus,energy:-energyCost,stress:stressGain,mood:moodGain,rating,score,seconds:result.seconds,mistakes:result.mistakes};
+  game.studyLogic={subject:id,label,seconds:result.seconds,mistakes:result.mistakes,score,rating,day:game.day};
+  addLog(`逻辑推理${label}，${rating}评级（用时 ${result.seconds}s · 失误 ${result.mistakes}），学科 +${gained}，学力/心态小幅提升。`);
+  persist();
+  render();
+  return gains;
 }
 
 // 运动小游戏结算：接入现有“运动锻炼”的行动点消耗、体力/压力/心情变化与周末触发逻辑，不绕过状态系统。
@@ -2220,7 +2308,8 @@ document.addEventListener("click",event=>{
   if(button.dataset.stage)return applyStage(button.dataset.stage);
   if(button.dataset.track)return applyTrack(button.dataset.track);
   if(button.dataset.attr)return changeAttribute(button.dataset.attr,Number(button.dataset.delta));
-  if(button.dataset.study)return studySubject(button.dataset.study);
+  if(button.dataset.studyMode)return setStudyMode(button.dataset.studyMode);
+  if(button.dataset.study)return startStudy(button.dataset.study);
   if(button.dataset.socialFriend)return resolveSocialChoice(button.dataset.socialFriend);
   if(button.dataset.archiveTab)return openCampusArchive(button.dataset.archiveTab);
   if(button.dataset.tutoring)return resolveTutoringChoice(button.dataset.tutoring);

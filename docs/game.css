@@ -619,3 +619,12 @@ body.pref-reduced-motion *,body.pref-reduced-motion *:before,body.pref-reduced-m
 .gaokao-table .gaokao-current, .gaokao-table .gaokao-current th:first-child { background: #fff3ce; color: #57431a; }
 .gaokao-table small { display: block; font-size: 10px; font-weight: normal; }
 .gaokao-source a { color: #326483; text-decoration: underline; }
+
+/* 专注学习：课堂小测 / 逻辑推理 模式切换 */
+.study-mode-toggle{display:flex;gap:8px;margin:14px 0 6px}
+.study-mode-btn{
+  flex:1;border:2px solid #cdd9dc;background:#f4faf9;color:#5a6f76;
+  border-radius:8px;padding:9px 10px;font-size:13px;cursor:pointer;font-family:inherit;
+}
+.study-mode-btn.active{background:#347d94;border-color:#2b3a55;color:#fff;box-shadow:3px 3px 0 #2b3a55}
+.study-mode-hint{font-size:12px;color:#718a91;margin:2px 0 10px;line-height:1.6}

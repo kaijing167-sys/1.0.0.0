@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>逻辑推理小游戏 · 试玩</title>
+  <link rel="stylesheet" href="game.css">
+  <link rel="stylesheet" href="logic-reasoning-minigame.css">
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#eef7f5;margin:0;padding:24px;color:#2f6679}
+    .wrap{max-width:680px;margin:0 auto}
+    h1{font-size:22px;margin:0 0 4px}
+    .sub{color:#64818b;font-size:13px;margin:0 0 18px;line-height:1.6}
+    .bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    button{font-family:inherit;border:0;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer}
+    .b-primary{background:#377f98;color:#fff8dc}
+    .panel{background:#fff;border-radius:14px;padding:16px;box-shadow:0 8px 24px rgba(20,50,60,.12)}
+    pre{white-space:pre-wrap;word-break:break-word;font-size:12px;line-height:1.6;color:#3c7280;margin:0}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>逻辑推理 · 5×5 数字顺序搜索（试玩）</h1>
+    <p class="sub">独立试玩页（不依赖主游戏）。点「开始试玩」进入：从 1 依次点到 25，相邻不能出现连续数字。点错会变红并提示，不推进。棋盘生成、计分评级与正式版完全一致，此处仅预览交互与像素风视觉。</p>
+    <div class="bar">
+      <button class="b-primary" id="play">开始试玩</button>
+    </div>
+    <div class="panel"><pre id="out">等待操作…</pre></div>
+  </div>
+
+  <script>
+    /* stub：对齐 game.js 的弹窗接口，供 logic-reasoning-minigame.js 独立运行 */
+    window.openModal = function (html, closable) {
+      var old = document.getElementById("game-dialog");
+      if (old && old.parentNode) old.parentNode.removeChild(old);
+      var dlg = document.createElement("div");
+      dlg.className = "game-dialog";
+      dlg.id = "game-dialog";
+      dlg.innerHTML = '<div class="dialog-card">' + html + "</div>";
+      document.body.appendChild(dlg);
+    };
+    window.closeModal = function () {
+      var d = document.getElementById("game-dialog");
+      if (d && d.parentNode) d.parentNode.removeChild(d);
+    };
+  </script>
+  <script src="logic-reasoning-minigame.js?v=1"></script>
+  <script>
+    const out = document.getElementById("out");
+    document.getElementById("play").addEventListener("click", function () {
+      out.textContent = "已进入逻辑推理，从 1 开始依次点击～";
+      window.LogicReasoningMinigame.start("数学", function (result) {
+        out.textContent = "结算结果：用时 " + result.seconds + "s · 失误 " + result.mistakes +
+          " · 综合 " + result.score + " 分 · 评级 " + result.rating;
+        return {subject:0.5, subjectLabel:"数学", insight:0.1, mindset:0.1, energy:-6, stress:-1, mood:6, rating:result.rating, score:result.score, seconds:result.seconds, mistakes:result.mistakes};
+      }, function () {
+        out.textContent += "\n（已关闭试玩弹窗）";
+      });
+    });
+  </script>
+</body>
+</html>
