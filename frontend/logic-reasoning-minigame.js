@@ -163,7 +163,6 @@
         <h2>数字顺序搜索</h2>
         <p>${escapeText(label)} · 从 <b>1</b> 开始依次点完 1～25，相邻不能出现连续数字。点错会变红，不推进。</p>
         <div class="lr-hud">
-          <span>目标 <b id="lr-target">1</b></span>
           <span>进度 <b id="lr-progress">0</b>/${COUNT}</span>
           <span>失误 <b id="lr-miss">0</b></span>
           <span class="lr-target">用时 <b id="lr-time">0.0s</b></span>
@@ -191,10 +190,8 @@
   }
 
   function updateHud() {
-    const t = document.getElementById("lr-target");
     const p = document.getElementById("lr-progress");
     const m = document.getElementById("lr-miss");
-    if (t) t.textContent = Math.min(state.target, COUNT);
     if (p) p.textContent = state.target - 1;
     if (m) m.textContent = state.mistakes;
   }
