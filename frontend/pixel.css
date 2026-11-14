@@ -371,7 +371,7 @@ button:disabled{opacity:.62;filter:saturate(.55)}
   top:10px;
   z-index:24;
   width:min(880px,calc(100% - 28px));
-  margin:10px 0 0 18px;
+  margin:10px auto 0;
   border:3px solid var(--px-night);
   border-radius:2px;
   background:

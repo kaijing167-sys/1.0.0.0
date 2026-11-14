@@ -211,7 +211,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #78b3c5;outline-offse
   display:block;
   width:min(760px,calc(100% - 28px));
   min-height:0;
-  margin:10px 0 0 18px;
+  margin:10px auto 0;
   padding:9px 11px 10px;
   border:1px solid rgba(188,217,220,.9);
   border-radius:13px;
