@@ -127,16 +127,33 @@ function localMusicSource(category,filename){
   const path=`music-local/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`;
   try{return new URL(path,location.href).href;}catch{return path;}
 }
-function musicTrack(id,label,category,filename){
-  return [id,label,localMusicSource(category,filename)];
+function musicTrack(id,label,category,filename,legacyFilename){
+  return [id,label,localMusicSource(category,filename),legacyFilename?localMusicSource(category,legacyFilename):null];
+}
+// 原版音频优先；尚未导入时回退到仓库内已有的版本，避免线上曲目突然静音
+async function resolvePreferredMusicSources(){
+  const pending=[];
+  for(const theme of Object.values(MUSIC_THEMES)){
+    for(const track of theme.tracks){
+      const [id,,preferred,legacy]=track;
+      if(!legacy||musicCache.has(id))continue;
+      pending.push((async()=>{
+        try{
+          const response=await fetch(preferred,{method:"HEAD",cache:"no-store"});
+          if(!response.ok)track[2]=legacy;
+        }catch{track[2]=legacy;}
+      })());
+    }
+  }
+  await Promise.all(pending);
 }
 
 const MUSIC_THEMES = {
   bright: {
     label: "✨ 美好 · 欢快",
     tracks: [
-      musicTrack("bright-qinghuaci","青花瓷（戏腔版）· 张曦匀","美好欢快","青花瓷 (戏腔版) - 张曦匀.mp3"),
-      musicTrack("bright-daoxiang","稻香（女声版）· 余不不","美好欢快","稻香 (女声版) - 余不不.mp3"),
+      musicTrack("bright-qinghuaci","青花瓷 · 周杰伦","美好欢快","青花瓷 - 周杰伦.mp3","青花瓷 (戏腔版) - 张曦匀.mp3"),
+      musicTrack("bright-daoxiang","稻香 · 周杰伦","美好欢快","稻香 - 周杰伦.mp3","稻香 (女声版) - 余不不.mp3"),
       musicTrack("bright-summer-wind","夏天的风 · 温岚","美好欢快","夏天的风 - 温岚.mp3"),
       musicTrack("bright-childhood","童年 · 罗大佑","美好欢快","童年 - 罗大佑.mp3"),
       musicTrack("bright-best-view","最美的风景 · 许鹤缤","美好欢快","最美的风景 - 许鹤缤.mp3"),
@@ -146,30 +163,30 @@ const MUSIC_THEMES = {
   love: {
     label: "💗 恋爱",
     tracks: [
-      musicTrack("love-us","我们俩 · 顾训、白旭","恋爱","我们俩 - 顾训、白旭.mp3"),
-      musicTrack("love-red-heels","红色高跟鞋（氛围版）· 池鱼","恋爱","红色高跟鞋 (氛围版) - 池鱼.mp3"),
+      musicTrack("love-us","我们俩 · 许嵩","恋爱","我们俩 - 许嵩.mp3","我们俩 - 顾训、白旭.mp3"),
+      musicTrack("love-red-heels","红色高跟鞋 · 蔡健雅","恋爱","红色高跟鞋 - 蔡健雅.mp3","红色高跟鞋 (氛围版) - 池鱼.mp3"),
       musicTrack("love-courage","勇气 · 梁静茹","恋爱","勇气 - 梁静茹.mp3"),
-      musicTrack("love-friends","普通朋友（温柔女声版）· 贾丽丽","恋爱","普通朋友（温柔女声版） - 贾丽丽.mp3"),
+      musicTrack("love-friends","普通朋友 · 陶喆","恋爱","普通朋友 - 陶喆.mp3","普通朋友（温柔女声版） - 贾丽丽.mp3"),
       musicTrack("love-nothing-wrong","有何不可 · 许嵩","恋爱","有何不可 - 许嵩.mp3"),
-      musicTrack("love-love-song","情歌（女声版）· 六月","恋爱","情歌 (女声版) - 六月.mp3"),
-      musicTrack("love-like-you","喜欢你（港风女声版）· 嘉欣","恋爱","喜欢你 (港风女声版) - 嘉欣.mp3"),
+      musicTrack("love-love-song","情歌 · 梁静茹","恋爱","情歌 - 梁静茹.mp3","情歌 (女声版) - 六月.mp3"),
+      musicTrack("love-like-you","喜欢你 · Beyond","恋爱","喜欢你 - Beyond.mp3","喜欢你 (港风女声版) - 嘉欣.mp3"),
     ],
   },
   breakup: {
     label: "💔 分手",
     tracks: [
       musicTrack("breakup-miss","我怀念的 · 孙燕姿","分手","我怀念的 - 孙燕姿.mp3"),
-      musicTrack("breakup-quiet","安静（吉他弹唱版）· 王俊凯","分手","安静 (吉他弹唱版) - 王俊凯.mp3"),
-      musicTrack("breakup-rain-love","雨爱 · 张德伊玲","分手","雨爱 - 张德伊玲.mp3"),
-      musicTrack("breakup-preference","偏爱 · 杨瑜婷","分手","偏爱 - 杨瑜婷.mp3"),
-      musicTrack("breakup-step-back","退后 · 沈听川","分手","退后 - 沈听川.mp3"),
+      musicTrack("breakup-quiet","安静 · 周杰伦","分手","安静 - 周杰伦.mp3","安静 (吉他弹唱版) - 王俊凯.mp3"),
+      musicTrack("breakup-rain-love","雨爱 · 杨丞琳","分手","雨爱 - 杨丞琳.mp3","雨爱 - 张德伊玲.mp3"),
+      musicTrack("breakup-preference","偏爱 · 张芸京","分手","偏爱 - 张芸京.mp3","偏爱 - 杨瑜婷.mp3"),
+      musicTrack("breakup-step-back","退后 · 周杰伦","分手","退后 - 周杰伦.mp3","退后 - 沈听川.mp3"),
       musicTrack("breakup-serious-snow","认真的雪 · 薛之谦","分手","认真的雪 - 薛之谦.mp3"),
     ],
   },
   sad: {
     label: "😔 忧伤",
     tracks: [
-      musicTrack("sad-ten-years","十年（女声版）· 范茹","忧伤","十年 (女声版) - 范茹.mp3"),
+      musicTrack("sad-ten-years","十年 · 陈奕迅","忧伤","十年 - 陈奕迅.mp3","十年 (女声版) - 范茹.mp3"),
       musicTrack("sad-see-you-again","See You Again · Wiz Khalifa","忧伤","See You Again (feat. Charlie Puth) - Wiz Khalifa、Charlie Puth.mp3"),
     ],
   },
@@ -2413,7 +2430,8 @@ document.addEventListener('change',event=>{
 
 render();
 if(location.hash==="#classes"&&game)campusShowClasses();
-initializeMusicLibrary().then(()=>{
+initializeMusicLibrary().then(async()=>{
+  await resolvePreferredMusicSources();
   pauseMusic();
   if(!MUSIC_FORCE_OFF&&game&&!game.completed)playTheme(settings.menuMusicTheme||"calm");
   if(game)render();
