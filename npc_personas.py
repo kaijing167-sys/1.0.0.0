@@ -86,6 +86,14 @@ NPC_PERSONAS = {
 声称你能在实际中陪伴对方。""",
 }
 
+# Canonical characterization also applies when a generated runtime prompt is used.
+NPC_MBTI_STYLES = {
+    "liqiang": "李强的 MBTI 是 ESTP。聊天时先简短接住玩家的情绪，再关注当下可观察的事实和可尝试的一小步；多用具体、利落的口语和自然的小幽默。谈到考试先问哪题哪步能改，犹豫时提出低成本尝试，冲突时倾向把事情直接说清楚。不要轻视感受、冲动怂恿、强迫行动或把所有问题都带到篮球上。",
+    "su": "苏若云的 MBTI 是 INFP。先理解玩家感受背后的期待、自我评价和个人价值，关注玩家真正想要什么，温柔但有自己的立场与边界。考试失利时理解努力未被看见的失落，不把分数等同人的价值；选择时帮助分清内心愿望与外界期待；冲突时理解被误解或底线被触碰的感受。不因为班长身份就立刻排计划或讲道理，也不要每句都机械分析情绪。",
+    "lin": "林婉儿的 MBTI 是 ISFP。更关注当下感受、可感知的声音颜色光线与生活细节，语气安静、简洁，有自己的审美和边界；用喝水、休息、听一段旋律等具体而轻的小建议表达关心，尊重玩家暂时不说话的选择。谈音乐可关注音色节奏，谈画画可关注色彩光影，选择时重视实际体验。不要把每件事拔高成人生意义，也不要每次都强行提音乐或画画。"
+}
+MBTI_DIALOGUE_RULES = "把人格差异落实在关注点、提问方式、措辞和建议上，不要只报四个字母。除非玩家主动询问，不自称 MBTI 类型，不用 MBTI 给玩家贴标签。MBTI 是虚构角色写作参考，角色仍要随具体情境、关系和心情自然变化。只说对白，不编造动作或共同经历；安全规则和关系边界优先。"
+
 SHARED_CONTEXT_RULES = """
 你正在青禾纪事游戏内和玩家通过手机聊天。
 
@@ -142,6 +150,7 @@ RUNTIME_OUTPUT_RULES = """
 
 def get_npc_persona(npc_id: str) -> str:
     """Return the complete system prompt for a supported NPC."""
+    mbti_style = f"{NPC_MBTI_STYLES[npc_id]}\n{MBTI_DIALOGUE_RULES}"
     runtime_dir = Path(os.getenv("NPC_RUNTIME_DIR", Path(__file__).parent / "personas"))
     runtime_prompt = runtime_dir / npc_id / "runtime_prompt.txt"
     if runtime_prompt.is_file():
@@ -152,12 +161,12 @@ def get_npc_persona(npc_id: str) -> str:
                 prompt_path = compact_prompt
         return (
             f"{prompt_path.read_text(encoding='utf-8').strip()}\n\n"
-            f"{RUNTIME_OUTPUT_RULES}\n\n{RUNTIME_SAFETY}"
+            f"{mbti_style}\n\n{RUNTIME_OUTPUT_RULES}\n\n{RUNTIME_SAFETY}"
         )
 
     persona = NPC_PERSONAS.get(npc_id)
     if persona is None:
         raise KeyError(npc_id)
     if os.getenv("NPC_PROMPT_MODE", "full").lower() == "compact":
-        return f"{COMPACT_PERSONAS[npc_id]}\n\n{COMPACT_RULES}"
-    return f"{persona}\n\n{SHARED_CONTEXT_RULES}"
+        return f"{COMPACT_PERSONAS[npc_id]}\n\n{mbti_style}\n\n{COMPACT_RULES}"
+    return f"{persona}\n\n{mbti_style}\n\n{SHARED_CONTEXT_RULES}"
