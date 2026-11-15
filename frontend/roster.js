@@ -44,7 +44,7 @@ function campusShowClasses(){
 function campusMembers(g){
   const members=campusPopulation.students.map(p=>({...p,subjects:{...p.subjects},attrs:{...p.attrs}}));
   for(const p of characterCatalog){
-    members.push({id:p.id,name:p.name,class_id:p.initial_state.class_id,generated:false,
+    members.push({id:p.id,name:p.name,gender:p.fields['性别'],class_id:p.initial_state.class_id,generated:false,
       subjects:Object.fromEntries(CAMPUS_SUBJECTS.map(([id])=>[id,p.initial_state.attrs[id]])),
       attrs:{insight:Number(p.fields['学习能力'])||60,stamina:p.initial_state.attrs.stamina,mindset:Number(p.fields['考场抗压'])||60,charm:Number(p.fields['魅力'])||60}});
   }
@@ -61,12 +61,13 @@ function campusMembers(g){
     if(!exchange)throw Error('目标班没有可交换名额');
     exchange.class_id=origin;player.class_id=g.class_id;
   }
+  if(['男','女'].includes(g.gender))player.gender=g.gender;
   player.name=g.name;player.subjects={...g.subjects};player.attrs={...g.attrs};player.active=true;
   return members;
 }
 function campusMemberCard(p,c){
   const total=['chinese','math','english',...c.subjects].reduce((n,id)=>n+(p.subjects[id]||0),0);
-  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.generated?'（生成）':'（已给定）'} · 六科 ${Math.round(total*100)/100}/750</summary><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
+  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.generated?'（生成）':'（已给定）'} · 性别：${escapeHtml(p.gender||'未设置')} · 六科 ${Math.round(total*100)/100}/750</summary><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
 }
 function campusTransfer(id){
   if(!game||game.completed||modalLocked)return;

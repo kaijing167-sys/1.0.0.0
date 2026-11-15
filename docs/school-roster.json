@@ -16,7 +16,7 @@
   "students": [
     {
       "id": "generated-2-01",
-      "name": "2班同学01",
+      "name": "罗辰远",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -35,11 +35,12 @@
         "stamina": 72.21,
         "mindset": 84.45,
         "charm": 44.89
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-02",
-      "name": "2班同学02",
+      "name": "彭依瑶",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -58,11 +59,12 @@
         "stamina": 56.91,
         "mindset": 40.3,
         "charm": 52.9
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-03",
-      "name": "2班同学03",
+      "name": "褚景瑞",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -81,11 +83,12 @@
         "stamina": 78.72,
         "mindset": 68.87,
         "charm": 39.31
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-04",
-      "name": "2班同学04",
+      "name": "许俊铭",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -104,11 +107,12 @@
         "stamina": 67.99,
         "mindset": 53.27,
         "charm": 61.6
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-05",
-      "name": "2班同学05",
+      "name": "袁晓璇",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -127,11 +131,12 @@
         "stamina": 62.34,
         "mindset": 56.58,
         "charm": 40.29
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-06",
-      "name": "2班同学06",
+      "name": "戚浩凯",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -150,11 +155,12 @@
         "stamina": 73.02,
         "mindset": 66.8,
         "charm": 52.59
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-07",
-      "name": "2班同学07",
+      "name": "韦若璇",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -173,11 +179,12 @@
         "stamina": 61.29,
         "mindset": 71.05,
         "charm": 51.98
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-08",
-      "name": "2班同学08",
+      "name": "柳舒璇",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -196,11 +203,12 @@
         "stamina": 71.89,
         "mindset": 40.51,
         "charm": 66.1
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-09",
-      "name": "2班同学09",
+      "name": "鲍辰航",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -219,11 +227,12 @@
         "stamina": 67.45,
         "mindset": 69.11,
         "charm": 46.88
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-10",
-      "name": "2班同学10",
+      "name": "华舒岚",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -242,11 +251,12 @@
         "stamina": 70.36,
         "mindset": 79.97,
         "charm": 36.67
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-11",
-      "name": "2班同学11",
+      "name": "俞嘉霖",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -265,11 +275,12 @@
         "stamina": 55.33,
         "mindset": 79.01,
         "charm": 64.35
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-12",
-      "name": "2班同学12",
+      "name": "华梦然",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -288,11 +299,12 @@
         "stamina": 74.37,
         "mindset": 53.15,
         "charm": 63.64
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-13",
-      "name": "2班同学13",
+      "name": "喻博尧",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -311,11 +323,12 @@
         "stamina": 66.38,
         "mindset": 48.86,
         "charm": 54.51
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-14",
-      "name": "2班同学14",
+      "name": "孔明瑞",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -334,11 +347,12 @@
         "stamina": 69.53,
         "mindset": 60.29,
         "charm": 49.81
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-15",
-      "name": "2班同学15",
+      "name": "喻佳瑶",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -357,11 +371,12 @@
         "stamina": 35.36,
         "mindset": 67.43,
         "charm": 49.88
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-16",
-      "name": "2班同学16",
+      "name": "薛泽远",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -372,7 +387,7 @@
         "chemistry": 74.89,
         "biology": 75.86,
         "history": 73.15,
-        "politics": 66.0,
+        "politics": 66,
         "geography": 77.07
       },
       "attrs": {
@@ -380,11 +395,12 @@
         "stamina": 81.15,
         "mindset": 74.93,
         "charm": 62.38
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-17",
-      "name": "2班同学17",
+      "name": "范修霖",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -403,11 +419,12 @@
         "stamina": 65.35,
         "mindset": 71.61,
         "charm": 57.61
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-18",
-      "name": "2班同学18",
+      "name": "卫一哲",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -426,11 +443,12 @@
         "stamina": 46.32,
         "mindset": 55.18,
         "charm": 67.02
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-19",
-      "name": "2班同学19",
+      "name": "谢清萱",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -449,11 +467,12 @@
         "stamina": 74.87,
         "mindset": 76.09,
         "charm": 70.27
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-20",
-      "name": "2班同学20",
+      "name": "郝亦然",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -472,11 +491,12 @@
         "stamina": 63.86,
         "mindset": 65.61,
         "charm": 81.54
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-21",
-      "name": "2班同学21",
+      "name": "梁韵晴",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -495,11 +515,12 @@
         "stamina": 73.73,
         "mindset": 60.3,
         "charm": 49.79
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-22",
-      "name": "2班同学22",
+      "name": "魏舒岚",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -518,11 +539,12 @@
         "stamina": 60.79,
         "mindset": 47.8,
         "charm": 74.63
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-23",
-      "name": "2班同学23",
+      "name": "雷雨涵",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -541,11 +563,12 @@
         "stamina": 55.55,
         "mindset": 74.47,
         "charm": 74.39
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-24",
-      "name": "2班同学24",
+      "name": "叶安芮",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -564,11 +587,12 @@
         "stamina": 48.37,
         "mindset": 55.3,
         "charm": 65.4
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-25",
-      "name": "2班同学25",
+      "name": "梁远阳",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -587,11 +611,12 @@
         "stamina": 64.74,
         "mindset": 50.12,
         "charm": 63.72
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-2-26",
-      "name": "2班同学26",
+      "name": "严韵然",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -610,11 +635,12 @@
         "stamina": 59.91,
         "mindset": 71.88,
         "charm": 42.51
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-27",
-      "name": "2班同学27",
+      "name": "孟沐悦",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -633,11 +659,12 @@
         "stamina": 42.28,
         "mindset": 47.17,
         "charm": 68.94
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-2-28",
-      "name": "2班同学28",
+      "name": "章可妍",
       "class_id": 2,
       "generated": true,
       "subjects": {
@@ -656,11 +683,12 @@
         "stamina": 52.49,
         "mindset": 60.52,
         "charm": 47.47
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-01",
-      "name": "4班同学01",
+      "name": "施佳瑶",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -679,11 +707,12 @@
         "stamina": 69.61,
         "mindset": 54.83,
         "charm": 90.58
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-02",
-      "name": "4班同学02",
+      "name": "秦沐萱",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -702,11 +731,12 @@
         "stamina": 66.31,
         "mindset": 46.8,
         "charm": 66.25
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-03",
-      "name": "4班同学03",
+      "name": "褚诗萱",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -725,11 +755,12 @@
         "stamina": 43.5,
         "mindset": 63.4,
         "charm": 48.85
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-04",
-      "name": "4班同学04",
+      "name": "梁昕然",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -748,11 +779,12 @@
         "stamina": 47.71,
         "mindset": 48.35,
         "charm": 46.08
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-05",
-      "name": "4班同学05",
+      "name": "孟睿铭",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -771,11 +803,12 @@
         "stamina": 63.57,
         "mindset": 67.29,
         "charm": 52.35
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-06",
-      "name": "4班同学06",
+      "name": "窦浩轩",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -794,11 +827,12 @@
         "stamina": 74.28,
         "mindset": 42.59,
         "charm": 60.87
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-07",
-      "name": "4班同学07",
+      "name": "唐俊哲",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -817,11 +851,12 @@
         "stamina": 63.01,
         "mindset": 68.37,
         "charm": 64.48
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-08",
-      "name": "4班同学08",
+      "name": "秦一尧",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -840,11 +875,12 @@
         "stamina": 79.17,
         "mindset": 50.18,
         "charm": 76.4
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-09",
-      "name": "4班同学09",
+      "name": "严博铭",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -863,11 +899,12 @@
         "stamina": 85.85,
         "mindset": 64.47,
         "charm": 41.26
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-10",
-      "name": "4班同学10",
+      "name": "孙文谦",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -886,11 +923,12 @@
         "stamina": 71.94,
         "mindset": 71.53,
         "charm": 59.11
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-11",
-      "name": "4班同学11",
+      "name": "许宇然",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -909,11 +947,12 @@
         "stamina": 53.59,
         "mindset": 48.32,
         "charm": 67.37
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-12",
-      "name": "4班同学12",
+      "name": "戚泽瑞",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -930,13 +969,14 @@
       "attrs": {
         "insight": 72.14,
         "stamina": 64.79,
-        "mindset": 75.0,
+        "mindset": 75,
         "charm": 58.47
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-13",
-      "name": "4班同学13",
+      "name": "邵可然",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -955,11 +995,12 @@
         "stamina": 57.45,
         "mindset": 61.53,
         "charm": 54.57
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-14",
-      "name": "4班同学14",
+      "name": "方远尧",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -978,11 +1019,12 @@
         "stamina": 70.69,
         "mindset": 66.75,
         "charm": 68.76
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-15",
-      "name": "4班同学15",
+      "name": "章可然",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1001,11 +1043,12 @@
         "stamina": 62.11,
         "mindset": 51.64,
         "charm": 54.27
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-16",
-      "name": "4班同学16",
+      "name": "孟宇硕",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1024,11 +1067,12 @@
         "stamina": 54.73,
         "mindset": 48.6,
         "charm": 47.29
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-17",
-      "name": "4班同学17",
+      "name": "陶婉晴",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1045,13 +1089,14 @@
       "attrs": {
         "insight": 69.36,
         "stamina": 48.41,
-        "mindset": 71.0,
+        "mindset": 71,
         "charm": 73.4
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-18",
-      "name": "4班同学18",
+      "name": "魏宇阳",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1070,11 +1115,12 @@
         "stamina": 76.01,
         "mindset": 64.43,
         "charm": 87.45
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-19",
-      "name": "4班同学19",
+      "name": "梁奕哲",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1093,11 +1139,12 @@
         "stamina": 76.59,
         "mindset": 81.12,
         "charm": 46.68
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-20",
-      "name": "4班同学20",
+      "name": "彭亦谦",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1116,11 +1163,12 @@
         "stamina": 54.31,
         "mindset": 59.13,
         "charm": 57.68
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-21",
-      "name": "4班同学21",
+      "name": "韩依瑶",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1139,11 +1187,12 @@
         "stamina": 28.71,
         "mindset": 58.59,
         "charm": 45.71
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-22",
-      "name": "4班同学22",
+      "name": "沈承阳",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1162,11 +1211,12 @@
         "stamina": 45.65,
         "mindset": 65.91,
         "charm": 70.63
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-23",
-      "name": "4班同学23",
+      "name": "曹可涵",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1185,11 +1235,12 @@
         "stamina": 46.19,
         "mindset": 39.86,
         "charm": 52.29
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-24",
-      "name": "4班同学24",
+      "name": "傅知瑶",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1208,11 +1259,12 @@
         "stamina": 54.26,
         "mindset": 61.17,
         "charm": 66.94
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-25",
-      "name": "4班同学25",
+      "name": "毕泽谦",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1231,11 +1283,12 @@
         "stamina": 42.76,
         "mindset": 59.94,
         "charm": 62.3
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-26",
-      "name": "4班同学26",
+      "name": "邓婉岚",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1254,11 +1307,12 @@
         "stamina": 51.68,
         "mindset": 85.44,
         "charm": 82.36
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-27",
-      "name": "4班同学27",
+      "name": "王嘉铭",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1277,11 +1331,12 @@
         "stamina": 50.4,
         "mindset": 52.66,
         "charm": 53.27
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-28",
-      "name": "4班同学28",
+      "name": "雷沐芮",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1300,11 +1355,12 @@
         "stamina": 49.01,
         "mindset": 69.26,
         "charm": 62.38
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-4-29",
-      "name": "4班同学29",
+      "name": "徐辰硕",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1323,11 +1379,12 @@
         "stamina": 74.03,
         "mindset": 39.07,
         "charm": 56.24
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-4-30",
-      "name": "4班同学30",
+      "name": "周思竹",
       "class_id": 4,
       "generated": true,
       "subjects": {
@@ -1346,11 +1403,12 @@
         "stamina": 67.99,
         "mindset": 60.48,
         "charm": 59.97
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-01",
-      "name": "7班同学01",
+      "name": "曾亦哲",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1369,17 +1427,18 @@
         "stamina": 55.2,
         "mindset": 48.51,
         "charm": 70.62
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-02",
-      "name": "7班同学02",
+      "name": "费一轩",
       "class_id": 7,
       "generated": true,
       "subjects": {
         "chinese": 74.22,
         "math": 77.93,
-        "english": 135.0,
+        "english": 135,
         "physics": 44.97,
         "chemistry": 36.13,
         "biology": 64.79,
@@ -1392,11 +1451,12 @@
         "stamina": 39.84,
         "mindset": 74.18,
         "charm": 62.31
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-03",
-      "name": "7班同学03",
+      "name": "邓泽熙",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1412,14 +1472,15 @@
       },
       "attrs": {
         "insight": 57.42,
-        "stamina": 52.0,
+        "stamina": 52,
         "mindset": 84.76,
         "charm": 60.62
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-04",
-      "name": "7班同学04",
+      "name": "蒋宇铭",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1438,11 +1499,12 @@
         "stamina": 66.68,
         "mindset": 45.28,
         "charm": 79.09
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-05",
-      "name": "7班同学05",
+      "name": "徐诗玥",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1461,11 +1523,12 @@
         "stamina": 75.31,
         "mindset": 72.28,
         "charm": 58.3
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-06",
-      "name": "7班同学06",
+      "name": "周俊阳",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1484,11 +1547,12 @@
         "stamina": 65.16,
         "mindset": 49.27,
         "charm": 51.32
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-07",
-      "name": "7班同学07",
+      "name": "范梦彤",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1507,11 +1571,12 @@
         "stamina": 67.75,
         "mindset": 45.82,
         "charm": 48.52
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-08",
-      "name": "7班同学08",
+      "name": "彭沐宁",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1530,11 +1595,12 @@
         "stamina": 53.59,
         "mindset": 83.21,
         "charm": 60.07
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-09",
-      "name": "7班同学09",
+      "name": "徐文凯",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1549,15 +1615,16 @@
         "geography": 62.03
       },
       "attrs": {
-        "insight": 63.0,
+        "insight": 63,
         "stamina": 66.74,
         "mindset": 63.18,
         "charm": 95.44
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-10",
-      "name": "7班同学10",
+      "name": "萧梦桐",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1572,15 +1639,16 @@
         "geography": 50.69
       },
       "attrs": {
-        "insight": 78.0,
+        "insight": 78,
         "stamina": 72.67,
         "mindset": 70.17,
         "charm": 33.57
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-11",
-      "name": "7班同学11",
+      "name": "唐嘉宇",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1599,16 +1667,17 @@
         "stamina": 32.94,
         "mindset": 48.93,
         "charm": 59.99
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-12",
-      "name": "7班同学12",
+      "name": "雷佳希",
       "class_id": 7,
       "generated": true,
       "subjects": {
         "chinese": 85.54,
-        "math": 73.0,
+        "math": 73,
         "english": 88.95,
         "physics": 64.76,
         "chemistry": 68.2,
@@ -1622,11 +1691,12 @@
         "stamina": 57.46,
         "mindset": 60.49,
         "charm": 74.63
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-13",
-      "name": "7班同学13",
+      "name": "范晓竹",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1645,11 +1715,12 @@
         "stamina": 27.89,
         "mindset": 59.53,
         "charm": 66.99
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-14",
-      "name": "7班同学14",
+      "name": "顾一哲",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1668,11 +1739,12 @@
         "stamina": 49.03,
         "mindset": 76.97,
         "charm": 62.95
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-15",
-      "name": "7班同学15",
+      "name": "施以夏",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1691,11 +1763,12 @@
         "stamina": 75.51,
         "mindset": 51.78,
         "charm": 59.72
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-16",
-      "name": "7班同学16",
+      "name": "李俊远",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1714,11 +1787,12 @@
         "stamina": 38.45,
         "mindset": 55.28,
         "charm": 70.22
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-17",
-      "name": "7班同学17",
+      "name": "秦昕桐",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1737,11 +1811,12 @@
         "stamina": 61.54,
         "mindset": 62.57,
         "charm": 48.28
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-18",
-      "name": "7班同学18",
+      "name": "鲁睿尧",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1760,11 +1835,12 @@
         "stamina": 61.97,
         "mindset": 50.77,
         "charm": 58.88
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-19",
-      "name": "7班同学19",
+      "name": "任书宁",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1783,11 +1859,12 @@
         "stamina": 55.69,
         "mindset": 67.11,
         "charm": 59.59
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-20",
-      "name": "7班同学20",
+      "name": "彭俊轩",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1806,11 +1883,12 @@
         "stamina": 47.62,
         "mindset": 61.4,
         "charm": 49.46
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-21",
-      "name": "7班同学21",
+      "name": "谢安玥",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1829,11 +1907,12 @@
         "stamina": 47.48,
         "mindset": 65.97,
         "charm": 38.78
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-22",
-      "name": "7班同学22",
+      "name": "常语瑶",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1852,11 +1931,12 @@
         "stamina": 46.65,
         "mindset": 61.27,
         "charm": 62.82
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-23",
-      "name": "7班同学23",
+      "name": "姚沐涵",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1875,11 +1955,12 @@
         "stamina": 73.43,
         "mindset": 80.16,
         "charm": 66.24
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-24",
-      "name": "7班同学24",
+      "name": "傅清音",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1898,11 +1979,12 @@
         "stamina": 67.36,
         "mindset": 68.49,
         "charm": 56.53
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-25",
-      "name": "7班同学25",
+      "name": "奚泽辰",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1921,17 +2003,18 @@
         "stamina": 62.79,
         "mindset": 44.86,
         "charm": 53.99
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-26",
-      "name": "7班同学26",
+      "name": "邓承尧",
       "class_id": 7,
       "generated": true,
       "subjects": {
         "chinese": 87.73,
         "math": 102.29,
-        "english": 85.0,
+        "english": 85,
         "physics": 77.33,
         "chemistry": 56.15,
         "biology": 53.83,
@@ -1944,11 +2027,12 @@
         "stamina": 65.88,
         "mindset": 52.33,
         "charm": 77.64
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-27",
-      "name": "7班同学27",
+      "name": "倪诗夏",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1967,11 +2051,12 @@
         "stamina": 74.38,
         "mindset": 77.47,
         "charm": 67.69
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-28",
-      "name": "7班同学28",
+      "name": "褚博熙",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -1990,11 +2075,12 @@
         "stamina": 56.12,
         "mindset": 54.24,
         "charm": 57.91
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-7-29",
-      "name": "7班同学29",
+      "name": "姚星怡",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -2013,11 +2099,12 @@
         "stamina": 49.95,
         "mindset": 24.19,
         "charm": 80.32
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-7-30",
-      "name": "7班同学30",
+      "name": "江承川",
       "class_id": 7,
       "generated": true,
       "subjects": {
@@ -2036,11 +2123,12 @@
         "stamina": 89.99,
         "mindset": 55.77,
         "charm": 50.15
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-01",
-      "name": "8班同学01",
+      "name": "高奕谦",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2059,11 +2147,12 @@
         "stamina": 47.98,
         "mindset": 56.99,
         "charm": 64.79
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-02",
-      "name": "8班同学02",
+      "name": "杜一辰",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2082,11 +2171,12 @@
         "stamina": 73.19,
         "mindset": 54.89,
         "charm": 56.37
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-03",
-      "name": "8班同学03",
+      "name": "吴嘉硕",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2105,11 +2195,12 @@
         "stamina": 62.85,
         "mindset": 54.87,
         "charm": 58.75
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-04",
-      "name": "8班同学04",
+      "name": "卫睿川",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2128,11 +2219,12 @@
         "stamina": 58.26,
         "mindset": 79.92,
         "charm": 77.48
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-05",
-      "name": "8班同学05",
+      "name": "赵婉芮",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2151,15 +2243,16 @@
         "stamina": 65.95,
         "mindset": 63.23,
         "charm": 55.75
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-06",
-      "name": "8班同学06",
+      "name": "柏景尧",
       "class_id": 8,
       "generated": true,
       "subjects": {
-        "chinese": 112.0,
+        "chinese": 112,
         "math": 91.08,
         "english": 101.14,
         "physics": 60.78,
@@ -2174,11 +2267,12 @@
         "stamina": 68.74,
         "mindset": 51.79,
         "charm": 63.83
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-07",
-      "name": "8班同学07",
+      "name": "黄远谦",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2197,11 +2291,12 @@
         "stamina": 61.29,
         "mindset": 59.78,
         "charm": 63.29
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-08",
-      "name": "8班同学08",
+      "name": "江俊轩",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2220,11 +2315,12 @@
         "stamina": 53.87,
         "mindset": 64.31,
         "charm": 69.92
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-09",
-      "name": "8班同学09",
+      "name": "鲁晓芮",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2243,11 +2339,12 @@
         "stamina": 70.99,
         "mindset": 30.17,
         "charm": 60.2
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-10",
-      "name": "8班同学10",
+      "name": "俞知璇",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2258,7 +2355,7 @@
         "chemistry": 53.3,
         "biology": 54.34,
         "history": 52.52,
-        "politics": 72.0,
+        "politics": 72,
         "geography": 65.23
       },
       "attrs": {
@@ -2266,11 +2363,12 @@
         "stamina": 78.45,
         "mindset": 55.55,
         "charm": 69.81
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-11",
-      "name": "8班同学11",
+      "name": "杜奕衡",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2289,11 +2387,12 @@
         "stamina": 59.37,
         "mindset": 54.85,
         "charm": 54.67
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-12",
-      "name": "8班同学12",
+      "name": "周辰阳",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2312,11 +2411,12 @@
         "stamina": 51.17,
         "mindset": 58.68,
         "charm": 65.7
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-13",
-      "name": "8班同学13",
+      "name": "孟思璇",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2335,11 +2435,12 @@
         "stamina": 65.86,
         "mindset": 56.68,
         "charm": 71.14
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-14",
-      "name": "8班同学14",
+      "name": "韦泽宇",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2358,11 +2459,12 @@
         "stamina": 39.89,
         "mindset": 43.61,
         "charm": 63.52
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-15",
-      "name": "8班同学15",
+      "name": "黄泽宁",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2381,11 +2483,12 @@
         "stamina": 74.34,
         "mindset": 66.02,
         "charm": 56.24
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-16",
-      "name": "8班同学16",
+      "name": "喻睿远",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2404,11 +2507,12 @@
         "stamina": 61.86,
         "mindset": 57.8,
         "charm": 55.6
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-17",
-      "name": "8班同学17",
+      "name": "韦奕瑞",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2427,11 +2531,12 @@
         "stamina": 51.27,
         "mindset": 18.53,
         "charm": 70.36
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-18",
-      "name": "8班同学18",
+      "name": "唐知竹",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2450,11 +2555,12 @@
         "stamina": 55.28,
         "mindset": 36.63,
         "charm": 56.69
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-19",
-      "name": "8班同学19",
+      "name": "汪子硕",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2473,11 +2579,12 @@
         "stamina": 47.61,
         "mindset": 63.82,
         "charm": 68.94
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-20",
-      "name": "8班同学20",
+      "name": "方安妍",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2496,11 +2603,12 @@
         "stamina": 69.92,
         "mindset": 50.33,
         "charm": 40.69
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-21",
-      "name": "8班同学21",
+      "name": "华承远",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2511,7 +2619,7 @@
         "chemistry": 53.66,
         "biology": 95.65,
         "history": 44.95,
-        "politics": 68.0,
+        "politics": 68,
         "geography": 54.11
       },
       "attrs": {
@@ -2519,11 +2627,12 @@
         "stamina": 54.5,
         "mindset": 69.8,
         "charm": 82.29
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-22",
-      "name": "8班同学22",
+      "name": "卫亦硕",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2542,11 +2651,12 @@
         "stamina": 59.38,
         "mindset": 86.67,
         "charm": 60.55
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-23",
-      "name": "8班同学23",
+      "name": "赵诗夏",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2565,11 +2675,12 @@
         "stamina": 51.12,
         "mindset": 45.73,
         "charm": 55.18
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-24",
-      "name": "8班同学24",
+      "name": "宋泽哲",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2588,11 +2699,12 @@
         "stamina": 55.72,
         "mindset": 82.39,
         "charm": 56.24
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-25",
-      "name": "8班同学25",
+      "name": "蒋雨玥",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2611,11 +2723,12 @@
         "stamina": 55.8,
         "mindset": 44.14,
         "charm": 58.4
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-8-26",
-      "name": "8班同学26",
+      "name": "傅辰然",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2632,13 +2745,14 @@
       "attrs": {
         "insight": 44.35,
         "stamina": 53.5,
-        "mindset": 54.0,
+        "mindset": 54,
         "charm": 66.37
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-27",
-      "name": "8班同学27",
+      "name": "陆书哲",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2657,11 +2771,12 @@
         "stamina": 67.53,
         "mindset": 75.2,
         "charm": 51.56
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-8-28",
-      "name": "8班同学28",
+      "name": "魏婉岚",
       "class_id": 8,
       "generated": true,
       "subjects": {
@@ -2680,11 +2795,12 @@
         "stamina": 86.07,
         "mindset": 56.95,
         "charm": 73.72
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-01",
-      "name": "11班同学01",
+      "name": "吴嘉阳",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2703,11 +2819,12 @@
         "stamina": 43.6,
         "mindset": 54.18,
         "charm": 31.11
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-02",
-      "name": "11班同学02",
+      "name": "施逸瑞",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2726,11 +2843,12 @@
         "stamina": 64.08,
         "mindset": 81.25,
         "charm": 59.47
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-03",
-      "name": "11班同学03",
+      "name": "金沐萱",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2749,11 +2867,12 @@
         "stamina": 53.39,
         "mindset": 48.04,
         "charm": 44.24
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-04",
-      "name": "11班同学04",
+      "name": "李知彤",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2772,11 +2891,12 @@
         "stamina": 62.66,
         "mindset": 43.75,
         "charm": 70.01
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-05",
-      "name": "11班同学05",
+      "name": "倪远然",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2795,11 +2915,12 @@
         "stamina": 61.99,
         "mindset": 45.59,
         "charm": 64.61
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-06",
-      "name": "11班同学06",
+      "name": "林嘉凯",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2818,11 +2939,12 @@
         "stamina": 55.47,
         "mindset": 61.24,
         "charm": 51.96
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-07",
-      "name": "11班同学07",
+      "name": "田昕然",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2841,11 +2963,12 @@
         "stamina": 52.9,
         "mindset": 72.91,
         "charm": 56.85
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-08",
-      "name": "11班同学08",
+      "name": "杜韵瑶",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2864,11 +2987,12 @@
         "stamina": 63.21,
         "mindset": 47.01,
         "charm": 72.66
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-09",
-      "name": "11班同学09",
+      "name": "罗舒玥",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2887,11 +3011,12 @@
         "stamina": 54.39,
         "mindset": 55.39,
         "charm": 53.65
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-10",
-      "name": "11班同学10",
+      "name": "张思晴",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2909,12 +3034,13 @@
         "insight": 44.12,
         "stamina": 85.72,
         "mindset": 59.56,
-        "charm": 64.0
-      }
+        "charm": 64
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-11",
-      "name": "11班同学11",
+      "name": "陈远凯",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2933,11 +3059,12 @@
         "stamina": 59.14,
         "mindset": 51.68,
         "charm": 62.68
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-12",
-      "name": "11班同学12",
+      "name": "林浩熙",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2956,11 +3083,12 @@
         "stamina": 44.47,
         "mindset": 45.96,
         "charm": 78.28
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-13",
-      "name": "11班同学13",
+      "name": "俞嘉辰",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -2979,17 +3107,18 @@
         "stamina": 61.87,
         "mindset": 68.91,
         "charm": 51.6
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-14",
-      "name": "11班同学14",
+      "name": "苏博泽",
       "class_id": 11,
       "generated": true,
       "subjects": {
         "chinese": 133.31,
         "math": 99.78,
-        "english": 119.0,
+        "english": 119,
         "physics": 76.9,
         "chemistry": 70.75,
         "biology": 59.79,
@@ -3002,11 +3131,12 @@
         "stamina": 81.9,
         "mindset": 59.47,
         "charm": 63.56
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-15",
-      "name": "11班同学15",
+      "name": "傅雨怡",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3025,11 +3155,12 @@
         "stamina": 72.88,
         "mindset": 65.97,
         "charm": 67.69
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-16",
-      "name": "11班同学16",
+      "name": "郑亦远",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3048,11 +3179,12 @@
         "stamina": 52.92,
         "mindset": 53.07,
         "charm": 38.14
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-17",
-      "name": "11班同学17",
+      "name": "高书宁",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3071,11 +3203,12 @@
         "stamina": 56.53,
         "mindset": 59.27,
         "charm": 82.43
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-18",
-      "name": "11班同学18",
+      "name": "高奕川",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3094,11 +3227,12 @@
         "stamina": 66.35,
         "mindset": 52.85,
         "charm": 59.61
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-19",
-      "name": "11班同学19",
+      "name": "俞嘉航",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3117,11 +3251,12 @@
         "stamina": 54.21,
         "mindset": 71.29,
         "charm": 55.86
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-20",
-      "name": "11班同学20",
+      "name": "黄浩凯",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3140,11 +3275,12 @@
         "stamina": 53.19,
         "mindset": 43.11,
         "charm": 57.26
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-21",
-      "name": "11班同学21",
+      "name": "邹佳芮",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3163,11 +3299,12 @@
         "stamina": 86.19,
         "mindset": 55.98,
         "charm": 53.64
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-22",
-      "name": "11班同学22",
+      "name": "王文熙",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3186,11 +3323,12 @@
         "stamina": 74.74,
         "mindset": 52.83,
         "charm": 79.27
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-23",
-      "name": "11班同学23",
+      "name": "华韵怡",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3209,11 +3347,12 @@
         "stamina": 46.54,
         "mindset": 59.44,
         "charm": 57.23
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-24",
-      "name": "11班同学24",
+      "name": "宋若桐",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3232,11 +3371,12 @@
         "stamina": 55.45,
         "mindset": 76.57,
         "charm": 54.39
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-25",
-      "name": "11班同学25",
+      "name": "郝景宇",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3255,11 +3395,12 @@
         "stamina": 52.22,
         "mindset": 81.21,
         "charm": 40.21
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-26",
-      "name": "11班同学26",
+      "name": "苗景凯",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3278,11 +3419,12 @@
         "stamina": 54.04,
         "mindset": 78.7,
         "charm": 73.25
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-11-27",
-      "name": "11班同学27",
+      "name": "喻诗萱",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3301,11 +3443,12 @@
         "stamina": 57.32,
         "mindset": 83.57,
         "charm": 64.31
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-28",
-      "name": "11班同学28",
+      "name": "傅梦玥",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3324,11 +3467,12 @@
         "stamina": 70.19,
         "mindset": 47.19,
         "charm": 62.99
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-29",
-      "name": "11班同学29",
+      "name": "汪安婧",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3347,11 +3491,12 @@
         "stamina": 59.84,
         "mindset": 61.94,
         "charm": 79.14
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-11-30",
-      "name": "11班同学30",
+      "name": "宋晓悦",
       "class_id": 11,
       "generated": true,
       "subjects": {
@@ -3370,11 +3515,12 @@
         "stamina": 50.68,
         "mindset": 53.64,
         "charm": 77.88
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-01",
-      "name": "13班同学01",
+      "name": "奚逸凯",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3393,11 +3539,12 @@
         "stamina": 71.58,
         "mindset": 63.43,
         "charm": 62.85
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-02",
-      "name": "13班同学02",
+      "name": "曾安夏",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3416,11 +3563,12 @@
         "stamina": 60.93,
         "mindset": 62.67,
         "charm": 40.4
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-03",
-      "name": "13班同学03",
+      "name": "吴承宇",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3439,11 +3587,12 @@
         "stamina": 55.97,
         "mindset": 56.66,
         "charm": 51.76
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-04",
-      "name": "13班同学04",
+      "name": "袁辰泽",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3452,7 +3601,7 @@
         "english": 112.9,
         "physics": 50.7,
         "chemistry": 51.78,
-        "biology": 53.0,
+        "biology": 53,
         "history": 60.08,
         "politics": 71.25,
         "geography": 59.35
@@ -3462,11 +3611,12 @@
         "stamina": 53.4,
         "mindset": 68.69,
         "charm": 71.55
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-05",
-      "name": "13班同学05",
+      "name": "曾依悦",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3485,11 +3635,12 @@
         "stamina": 58.29,
         "mindset": 60.01,
         "charm": 41.58
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-06",
-      "name": "13班同学06",
+      "name": "尹一阳",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3508,11 +3659,12 @@
         "stamina": 70.89,
         "mindset": 59.22,
         "charm": 58.59
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-07",
-      "name": "13班同学07",
+      "name": "姚嘉宁",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3531,11 +3683,12 @@
         "stamina": 51.14,
         "mindset": 44.24,
         "charm": 66.42
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-08",
-      "name": "13班同学08",
+      "name": "唐远谦",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3554,11 +3707,12 @@
         "stamina": 50.95,
         "mindset": 79.6,
         "charm": 62.85
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-09",
-      "name": "13班同学09",
+      "name": "郝晓然",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3577,11 +3731,12 @@
         "stamina": 64.99,
         "mindset": 56.12,
         "charm": 45.56
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-10",
-      "name": "13班同学10",
+      "name": "孔昕萱",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3600,11 +3755,12 @@
         "stamina": 45.05,
         "mindset": 44.35,
         "charm": 78.13
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-11",
-      "name": "13班同学11",
+      "name": "沈逸谦",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3623,11 +3779,12 @@
         "stamina": 36.47,
         "mindset": 64.61,
         "charm": 63.15
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-12",
-      "name": "13班同学12",
+      "name": "孙浩川",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3646,11 +3803,12 @@
         "stamina": 65.55,
         "mindset": 71.3,
         "charm": 47.73
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-13",
-      "name": "13班同学13",
+      "name": "喻一宁",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3669,11 +3827,12 @@
         "stamina": 67.86,
         "mindset": 46.99,
         "charm": 59.91
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-14",
-      "name": "13班同学14",
+      "name": "尹明宁",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3692,11 +3851,12 @@
         "stamina": 60.62,
         "mindset": 60.77,
         "charm": 71.89
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-15",
-      "name": "13班同学15",
+      "name": "魏知晴",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3715,11 +3875,12 @@
         "stamina": 77.38,
         "mindset": 48.6,
         "charm": 81.44
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-16",
-      "name": "13班同学16",
+      "name": "梁承衡",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3738,11 +3899,12 @@
         "stamina": 73.22,
         "mindset": 53.93,
         "charm": 34.92
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-17",
-      "name": "13班同学17",
+      "name": "蒋辰宇",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3761,11 +3923,12 @@
         "stamina": 61.07,
         "mindset": 62.79,
         "charm": 58.29
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-18",
-      "name": "13班同学18",
+      "name": "程清萱",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3784,11 +3947,12 @@
         "stamina": 76.49,
         "mindset": 76.35,
         "charm": 52.38
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-19",
-      "name": "13班同学19",
+      "name": "魏辰轩",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3807,11 +3971,12 @@
         "stamina": 50.63,
         "mindset": 69.08,
         "charm": 56.85
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-20",
-      "name": "13班同学20",
+      "name": "曹思玥",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3828,13 +3993,14 @@
       "attrs": {
         "insight": 70.88,
         "stamina": 41.16,
-        "mindset": 56.0,
+        "mindset": 56,
         "charm": 54.46
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-21",
-      "name": "13班同学21",
+      "name": "张睿哲",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3853,11 +4019,12 @@
         "stamina": 46.03,
         "mindset": 50.3,
         "charm": 78.35
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-22",
-      "name": "13班同学22",
+      "name": "方梦玥",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3876,11 +4043,12 @@
         "stamina": 63.65,
         "mindset": 59.35,
         "charm": 64.73
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-23",
-      "name": "13班同学23",
+      "name": "范嘉阳",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3899,11 +4067,12 @@
         "stamina": 66.23,
         "mindset": 81.48,
         "charm": 53.92
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-24",
-      "name": "13班同学24",
+      "name": "孔舒玥",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3922,11 +4091,12 @@
         "stamina": 62.21,
         "mindset": 84.82,
         "charm": 53.69
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-25",
-      "name": "13班同学25",
+      "name": "鲁宇硕",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3945,11 +4115,12 @@
         "stamina": 19.32,
         "mindset": 69.66,
         "charm": 51.25
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-26",
-      "name": "13班同学26",
+      "name": "钟可妍",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3968,11 +4139,12 @@
         "stamina": 53.85,
         "mindset": 64.64,
         "charm": 60.52
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-27",
-      "name": "13班同学27",
+      "name": "钱诗芮",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -3991,11 +4163,12 @@
         "stamina": 70.18,
         "mindset": 39.53,
         "charm": 64.49
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-28",
-      "name": "13班同学28",
+      "name": "李舒希",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -4014,11 +4187,12 @@
         "stamina": 62.69,
         "mindset": 76.37,
         "charm": 77.57
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-13-29",
-      "name": "13班同学29",
+      "name": "程奕瑞",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -4037,11 +4211,12 @@
         "stamina": 44.33,
         "mindset": 70.6,
         "charm": 59.86
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-13-30",
-      "name": "13班同学30",
+      "name": "贺修瑞",
       "class_id": 13,
       "generated": true,
       "subjects": {
@@ -4056,15 +4231,16 @@
         "geography": 68.03
       },
       "attrs": {
-        "insight": 53.0,
+        "insight": 53,
         "stamina": 37.9,
         "mindset": 52.5,
         "charm": 60.28
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-01",
-      "name": "14班同学01",
+      "name": "鲍泽宁",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4083,11 +4259,12 @@
         "stamina": 73.22,
         "mindset": 59.98,
         "charm": 53.59
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-02",
-      "name": "14班同学02",
+      "name": "吕亦尧",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4106,11 +4283,12 @@
         "stamina": 61.09,
         "mindset": 83.07,
         "charm": 42.22
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-03",
-      "name": "14班同学03",
+      "name": "韩梦宁",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4129,11 +4307,12 @@
         "stamina": 41.39,
         "mindset": 57.96,
         "charm": 63.61
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-04",
-      "name": "14班同学04",
+      "name": "杜可妍",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4152,11 +4331,12 @@
         "stamina": 69.87,
         "mindset": 38.04,
         "charm": 85.83
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-05",
-      "name": "14班同学05",
+      "name": "廖亦宁",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4175,11 +4355,12 @@
         "stamina": 53.49,
         "mindset": 56.82,
         "charm": 39.47
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-06",
-      "name": "14班同学06",
+      "name": "奚若涵",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4198,11 +4379,12 @@
         "stamina": 56.72,
         "mindset": 54.5,
         "charm": 76.81
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-07",
-      "name": "14班同学07",
+      "name": "华嘉谦",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4221,11 +4403,12 @@
         "stamina": 57.21,
         "mindset": 48.25,
         "charm": 51.67
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-08",
-      "name": "14班同学08",
+      "name": "毕晓岚",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4244,16 +4427,17 @@
         "stamina": 85.52,
         "mindset": 70.04,
         "charm": 77.57
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-09",
-      "name": "14班同学09",
+      "name": "郑昕希",
       "class_id": 14,
       "generated": true,
       "subjects": {
         "chinese": 89.6,
-        "math": 83.0,
+        "math": 83,
         "english": 106.7,
         "physics": 32.49,
         "chemistry": 60.54,
@@ -4267,16 +4451,17 @@
         "stamina": 74.41,
         "mindset": 68.1,
         "charm": 69.7
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-10",
-      "name": "14班同学10",
+      "name": "梁子谦",
       "class_id": 14,
       "generated": true,
       "subjects": {
         "chinese": 67.78,
-        "math": 69.0,
+        "math": 69,
         "english": 108.34,
         "physics": 55.21,
         "chemistry": 53.52,
@@ -4290,11 +4475,12 @@
         "stamina": 45.96,
         "mindset": 59.73,
         "charm": 71.84
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-11",
-      "name": "14班同学11",
+      "name": "沈清竹",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4313,11 +4499,12 @@
         "stamina": 71.11,
         "mindset": 71.11,
         "charm": 47.93
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-12",
-      "name": "14班同学12",
+      "name": "孙佳岚",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4336,11 +4523,12 @@
         "stamina": 70.17,
         "mindset": 72.75,
         "charm": 84.32
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-13",
-      "name": "14班同学13",
+      "name": "鲍景辰",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4359,11 +4547,12 @@
         "stamina": 57.78,
         "mindset": 61.44,
         "charm": 61.22
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-14",
-      "name": "14班同学14",
+      "name": "王一宁",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4382,11 +4571,12 @@
         "stamina": 81.49,
         "mindset": 64.35,
         "charm": 75.36
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-15",
-      "name": "14班同学15",
+      "name": "赵俊衡",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4405,11 +4595,12 @@
         "stamina": 55.61,
         "mindset": 59.4,
         "charm": 49.88
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-16",
-      "name": "14班同学16",
+      "name": "褚安涵",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4428,11 +4619,12 @@
         "stamina": 70.56,
         "mindset": 59.93,
         "charm": 44.91
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-17",
-      "name": "14班同学17",
+      "name": "鲁雨夏",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4451,11 +4643,12 @@
         "stamina": 53.08,
         "mindset": 83.59,
         "charm": 60.16
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-18",
-      "name": "14班同学18",
+      "name": "林以芮",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4474,11 +4667,12 @@
         "stamina": 64.49,
         "mindset": 40.3,
         "charm": 45.19
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-19",
-      "name": "14班同学19",
+      "name": "卫一川",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4497,11 +4691,12 @@
         "stamina": 60.25,
         "mindset": 46.56,
         "charm": 58.01
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-20",
-      "name": "14班同学20",
+      "name": "唐清音",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4520,11 +4715,12 @@
         "stamina": 56.57,
         "mindset": 37.61,
         "charm": 58.98
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-21",
-      "name": "14班同学21",
+      "name": "冯可萱",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4543,11 +4739,12 @@
         "stamina": 66.19,
         "mindset": 66.25,
         "charm": 49.43
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-22",
-      "name": "14班同学22",
+      "name": "姚舒玥",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4566,11 +4763,12 @@
         "stamina": 50.24,
         "mindset": 62.47,
         "charm": 66.55
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-23",
-      "name": "14班同学23",
+      "name": "金昕希",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4589,11 +4787,12 @@
         "stamina": 70.05,
         "mindset": 58.39,
         "charm": 60.39
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-24",
-      "name": "14班同学24",
+      "name": "吕逸辰",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4612,11 +4811,12 @@
         "stamina": 53.14,
         "mindset": 41.63,
         "charm": 25.85
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-25",
-      "name": "14班同学25",
+      "name": "俞知宁",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4635,11 +4835,12 @@
         "stamina": 63.94,
         "mindset": 64.07,
         "charm": 85.14
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-26",
-      "name": "14班同学26",
+      "name": "梁修阳",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4658,11 +4859,12 @@
         "stamina": 63.22,
         "mindset": 45.74,
         "charm": 82.66
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-27",
-      "name": "14班同学27",
+      "name": "章博远",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4681,11 +4883,12 @@
         "stamina": 36.97,
         "mindset": 57.26,
         "charm": 54.84
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-28",
-      "name": "14班同学28",
+      "name": "曹沐竹",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4697,18 +4900,19 @@
         "biology": 71.23,
         "history": 82.54,
         "politics": 59.77,
-        "geography": 69.0
+        "geography": 69
       },
       "attrs": {
         "insight": 65.24,
         "stamina": 67.38,
-        "mindset": 48.0,
+        "mindset": 48,
         "charm": 70.06
-      }
+      },
+      "gender": "女"
     },
     {
       "id": "generated-14-29",
-      "name": "14班同学29",
+      "name": "窦景远",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4727,11 +4931,12 @@
         "stamina": 65.54,
         "mindset": 52.75,
         "charm": 53.97
-      }
+      },
+      "gender": "男"
     },
     {
       "id": "generated-14-30",
-      "name": "14班同学30",
+      "name": "梁景硕",
       "class_id": 14,
       "generated": true,
       "subjects": {
@@ -4750,7 +4955,8 @@
         "stamina": 42.95,
         "mindset": 66.82,
         "charm": 70.55
-      }
+      },
+      "gender": "男"
     }
   ]
 }
