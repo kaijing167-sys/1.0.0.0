@@ -12,6 +12,7 @@ const CAMPUS_CLASSES = [
 const CAMPUS_NPCS = [
   {
     "id": "liqiang",
+    "mbti": "ESTP",
     "name": "李强",
     "gender": "男",
     "class_id": 8,
@@ -19,6 +20,7 @@ const CAMPUS_NPCS = [
   },
   {
     "id": "su",
+    "mbti": "INFP",
     "name": "苏若云",
     "gender": "女",
     "class_id": 11,
@@ -26,6 +28,7 @@ const CAMPUS_NPCS = [
   },
   {
     "id": "lin",
+    "mbti": "ISFP",
     "name": "林婉儿",
     "gender": "女",
     "class_id": 7,
@@ -42,7 +45,7 @@ function campusShowNpc(id){
   const friend=FRIENDS.find(p=>p.id===id);
   const member=campusMembers(game).find(p=>p.npc_id===id);
   if(typeof phoneChat!=='undefined'&&phoneChat)leavePhoneChat();
-  openModal(`<h2>${escapeHtml(npc.name)}</h2><p>性别：${npc.gender} · 所属班级：${campusNpcClassLabel(id)}</p><p>${escapeHtml(friend.desc)}</p><p>与你的关系：${relationshipLabel(game.relationships[id]||0)}</p>${campusMemberCard(member,campusClass(member.class_id))}<div class="dialog-footer"><button class="primary-button" data-social-friend="${id}" ${game.completed||game.actionPoints<=0?'disabled':''}>和${escapeHtml(npc.name)}聊聊</button><button class="ghost-button" data-campus-classes>查看班级名单</button></div>`);
+  openModal(`<h2>${escapeHtml(npc.name)}</h2><p>性别：${npc.gender} · MBTI：${npc.mbti} · 所属班级：${campusNpcClassLabel(id)}</p><p>${escapeHtml(friend.desc)}</p><p>与你的关系：${relationshipLabel(game.relationships[id]||0)}</p>${campusMemberCard(member,campusClass(member.class_id))}<div class="dialog-footer"><button class="primary-button" data-social-friend="${id}" ${game.completed||game.actionPoints<=0?'disabled':''}>和${escapeHtml(npc.name)}聊聊</button><button class="ghost-button" data-campus-classes>查看班级名单</button></div>`);
 }
 const CAMPUS_SUBJECTS = [['chinese','语文'],['math','数学'],['english','英语'],['physics','物理'],['chemistry','化学'],['biology','生物'],['history','历史'],['politics','政治'],['geography','地理']];
 function campusClass(id){return CAMPUS_CLASSES.find(c=>c.id===Number(id))}
@@ -82,7 +85,7 @@ function campusMembers(g){
   for(const npc of CAMPUS_NPCS){
     const seat=members.find(p=>p.id===npc.member_id);
     if(!seat)throw Error('NPC 班级名额不存在');
-    Object.assign(seat,{id:'npc-'+npc.id,npc_id:npc.id,name:npc.name,gender:npc.gender,class_id:npc.class_id,generated:false});
+    Object.assign(seat,{id:'npc-'+npc.id,npc_id:npc.id,name:npc.name,gender:npc.gender,mbti:npc.mbti,class_id:npc.class_id,generated:false});
   }
   for(const p of characterCatalog){
     members.push({id:p.id,name:p.name,gender:p.fields['性别'],class_id:p.initial_state.class_id,generated:false,
@@ -108,7 +111,7 @@ function campusMembers(g){
 }
 function campusMemberCard(p,c){
   const total=['chinese','math','english',...c.subjects].reduce((n,id)=>n+(p.subjects[id]||0),0);
-  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.npc_id?'（剧情 NPC）':p.generated?'（生成）':'（已给定）'} · 性别：${escapeHtml(p.gender||'未设置')} · 六科 ${Math.round(total*100)/100}/750</summary><p>所属班级：${c.id}班 · ${c.combo}${c.level}${p.npc_id?` <button class="ghost-button" data-campus-npc="${p.npc_id}">查看${escapeHtml(p.name)}资料</button>`:''}</p><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
+  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.npc_id?'（剧情 NPC）':p.generated?'（生成）':'（已给定）'} · 性别：${escapeHtml(p.gender||'未设置')}${p.mbti?` · MBTI：${escapeHtml(p.mbti)}`:''} · 六科 ${Math.round(total*100)/100}/750</summary><p>所属班级：${c.id}班 · ${c.combo}${c.level}${p.npc_id?` <button class="ghost-button" data-campus-npc="${p.npc_id}">查看${escapeHtml(p.name)}资料</button>`:''}</p><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
 }
 function campusTransfer(id){
   if(!game||game.completed||modalLocked)return;

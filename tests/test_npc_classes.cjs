@@ -53,6 +53,7 @@ test('every story friend occupies one fixed class seat across transfers and save
 test('clicking NPC names opens class details; profiles lead into chats with matching class labels',()=>{
   const h=harness();
   const npcs=JSON.parse(h.run('JSON.stringify(CAMPUS_NPCS)'));
+  assert.deepEqual(Object.fromEntries(npcs.map(n=>[n.id,n.mbti])),{liqiang:'ESTP',su:'INFP',lin:'ISFP'});
   for(const npc of npcs){
     h.context.npcId=npc.id;
     const panel=h.run('relationshipPanelHtml()');
@@ -61,8 +62,10 @@ test('clicking NPC names opens class details; profiles lead into chats with matc
     assert.ok(h.context.html.includes(npc.name));
     assert.ok(h.context.html.includes('所属班级：'+npc.class_id+'班'));
     assert.ok(h.context.html.includes('性别：'+npc.gender));
+    assert.ok(h.context.html.includes('MBTI：'+npc.mbti));
     h.click({socialFriend:npc.id});
     assert.ok(h.context.html.includes('phone-screen'));
+    assert.ok(h.context.html.includes(npc.mbti));
     assert.ok(h.context.html.includes(npc.class_id+'班'));
     assert.equal(h.run('game.actionPoints'),4);
     h.click({campusNpc:npc.id});
@@ -79,7 +82,7 @@ test('published scripts match their frontend counterparts and use updated cache 
   for(const name of ['roster.js','game.js','phone-chat.js','index.html']){
     assert.equal(source(name),fs.readFileSync(path.join(__dirname,'../docs',name),'utf8'));
   }
-  assert.match(source('index.html'),/roster\.js\?v=49/);
+  assert.match(source('index.html'),/roster\.js\?v=50/);
   assert.match(source('index.html'),/game\.js\?v=56/);
-  assert.match(source('index.html'),/phone-chat\.js\?v=9/);
+  assert.match(source('index.html'),/phone-chat\.js\?v=10/);
 });
