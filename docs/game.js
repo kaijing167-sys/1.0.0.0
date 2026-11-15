@@ -901,8 +901,8 @@ function relationshipPanelHtml(){
               <div class="relationship-top">
                 <span class="relationship-avatar">${friend.initial}</span>
                 <span class="relationship-copy">
-                  <strong>${friend.name} · ${relationshipLabel(relationship)}</strong>
-                  <small>${friend.desc}${placeName?` · 喜欢去${placeName}`:""}</small>
+                  <strong><button class="ghost-button" data-campus-npc="${friend.id}" aria-label="查看${friend.name}的班级和资料">${friend.name}</button> · ${relationshipLabel(relationship)}</strong>
+                  <small>${campusNpcClassLabel(friend.id)} · ${friend.desc}${placeName?` · 喜欢去${placeName}`:""}</small>
                 </span>
                 <button class="relationship-chat" data-social-friend="${friend.id}" ${game.actionPoints<=0?"disabled":""}>聊聊</button>
               </div>
@@ -967,7 +967,7 @@ function campusArchiveHtml(tab="relations"){
           return `<article class="relationship-item">
             <div class="relationship-top">
               <span class="relationship-avatar">${friend.initial}</span>
-              <span class="relationship-copy"><strong>${friend.name} · ${relationshipLabel(relationship)}</strong><small>${friend.desc}${placeName?` · 喜欢去${placeName}`:""}</small></span>
+              <span class="relationship-copy"><strong><button class="ghost-button" data-campus-npc="${friend.id}" aria-label="查看${friend.name}的班级和资料">${friend.name}</button> · ${relationshipLabel(relationship)}</strong><small>${campusNpcClassLabel(friend.id)} · ${friend.desc}${placeName?` · 喜欢去${placeName}`:""}</small></span>
               <button class="relationship-chat" data-social-friend="${friend.id}" ${game.actionPoints<=0?"disabled":""}>聊聊</button>
             </div>
             <div class="mini-bar"><i style="width:${clamp(relationship,0,100)}%"></i></div>
@@ -1399,7 +1399,7 @@ function showSocialOptions(){
         const placeName=place&&place.name.startsWith("去")?place.name.slice(1):place?.name;
         return `<button class="choice-button" data-social-friend="${friend.id}">
           <strong>${friend.name} · ${relationshipLabel(relationship)}</strong>
-          <small>${friend.desc} · 羁绊 ${relationship} / 100${placeName?` · 喜欢去${placeName}`:""}</small>
+          <small>${campusNpcClassLabel(friend.id)} · ${friend.desc} · 羁绊 ${relationship} / 100${placeName?` · 喜欢去${placeName}`:""}</small>
         </button>`;
       }).join("")}
     </div>
@@ -1716,7 +1716,7 @@ function showFriendSelect(){
     <div class="choice-list">
       ${FRIENDS.map(friend=>{
         const relationship=game.relationships[friend.id]||0;
-        return `<button class="choice-button" data-outing-friend="${friend.id}"><strong>${friend.name} · ${relationshipLabel(relationship)}</strong><small>${friend.desc} · 关系 ${relationship} / 100</small></button>`;
+        return `<button class="choice-button" data-outing-friend="${friend.id}"><strong>${friend.name} · ${relationshipLabel(relationship)}</strong><small>${campusNpcClassLabel(friend.id)} · ${friend.desc} · 关系 ${relationship} / 100</small></button>`;
       }).join("")}
     </div>
     <div class="dialog-footer"><button class="ghost-button" data-action="weekend-back">返回</button></div>

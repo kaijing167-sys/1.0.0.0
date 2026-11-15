@@ -8,6 +8,42 @@ const CAMPUS_CLASSES = [
   {id:13,combo:'政史地',level:'普通班',subjects:['politics','history','geography'],size:30},
   {id:14,combo:'史政生',level:'普通班',subjects:['history','politics','biology'],size:30}
 ];
+// Story NPCs occupy fixed generated seats, keeping every class at 30 students.
+const CAMPUS_NPCS = [
+  {
+    "id": "liqiang",
+    "name": "李强",
+    "gender": "男",
+    "class_id": 8,
+    "member_id": "generated-8-21"
+  },
+  {
+    "id": "su",
+    "name": "苏若云",
+    "gender": "女",
+    "class_id": 11,
+    "member_id": "generated-11-21"
+  },
+  {
+    "id": "lin",
+    "name": "林婉儿",
+    "gender": "女",
+    "class_id": 7,
+    "member_id": "generated-7-10"
+  }
+];
+function campusNpc(id){return CAMPUS_NPCS.find(p=>p.id===id)}
+function campusNpcClassLabel(id){
+  const npc=campusNpc(id),c=npc&&campusClass(npc.class_id);
+  return c?`${c.id}班 · ${c.combo}${c.level}`:'';
+}
+function campusShowNpc(id){
+  const npc=campusNpc(id);if(!game||!npc)return;
+  const friend=FRIENDS.find(p=>p.id===id);
+  const member=campusMembers(game).find(p=>p.npc_id===id);
+  if(typeof phoneChat!=='undefined'&&phoneChat)leavePhoneChat();
+  openModal(`<h2>${escapeHtml(npc.name)}</h2><p>性别：${npc.gender} · 所属班级：${campusNpcClassLabel(id)}</p><p>${escapeHtml(friend.desc)}</p><p>与你的关系：${relationshipLabel(game.relationships[id]||0)}</p>${campusMemberCard(member,campusClass(member.class_id))}<div class="dialog-footer"><button class="primary-button" data-social-friend="${id}" ${game.completed||game.actionPoints<=0?'disabled':''}>和${escapeHtml(npc.name)}聊聊</button><button class="ghost-button" data-campus-classes>查看班级名单</button></div>`);
+}
 const CAMPUS_SUBJECTS = [['chinese','语文'],['math','数学'],['english','英语'],['physics','物理'],['chemistry','化学'],['biology','生物'],['history','历史'],['politics','政治'],['geography','地理']];
 function campusClass(id){return CAMPUS_CLASSES.find(c=>c.id===Number(id))}
 function campusPortrait(id){return 'characters/portraits/'+id+(['hu-zx','zhang-z'].includes(id)?'-v2.png':'-v1.png')}
@@ -36,13 +72,18 @@ function campusCards(){return `<section class="roster"><h2>选择人物</h2><p>�
 function campusShowClasses(){
   if(!game)return toast('先选择人物并开始游戏');
   const population=campusMembers(game);
-  openModal(`<h2>我的班级</h2><p>全校210人，每班30人，包含给定人物。其余同学使用固定生成的正态分布属性；换班与一名生成同学交换名额，保留进度和科目能力。</p>${CAMPUS_CLASSES.map(c=>{
+  openModal(`<h2>我的班级</h2><p>全校210人，每班30人，包含给定人物和剧情 NPC。其余同学使用固定生成的正态分布属性；换班与一名生成同学交换名额，保留进度和科目能力。</p>${CAMPUS_CLASSES.map(c=>{
     const members=population.filter(p=>p.class_id===c.id);
     return `<section class="class-row"><b>${c.id}班 · ${c.combo}${c.level}</b><p>${members.length}人（含已录入人物）</p><button data-campus-transfer="${c.id}" ${game.completed||game.class_id===c.id?'disabled':''}>${game.class_id===c.id?'当前班级':'转入此班'}</button><details><summary>查看30名同学及属性</summary>${members.map(p=>campusMemberCard(p,c)).join('')}</details></section>`;
   }).join('')}`);
 }
 function campusMembers(g){
   const members=campusPopulation.students.map(p=>({...p,subjects:{...p.subjects},attrs:{...p.attrs}}));
+  for(const npc of CAMPUS_NPCS){
+    const seat=members.find(p=>p.id===npc.member_id);
+    if(!seat)throw Error('NPC 班级名额不存在');
+    Object.assign(seat,{id:'npc-'+npc.id,npc_id:npc.id,name:npc.name,gender:npc.gender,class_id:npc.class_id,generated:false});
+  }
   for(const p of characterCatalog){
     members.push({id:p.id,name:p.name,gender:p.fields['性别'],class_id:p.initial_state.class_id,generated:false,
       subjects:Object.fromEntries(CAMPUS_SUBJECTS.map(([id])=>[id,p.initial_state.attrs[id]])),
@@ -67,7 +108,7 @@ function campusMembers(g){
 }
 function campusMemberCard(p,c){
   const total=['chinese','math','english',...c.subjects].reduce((n,id)=>n+(p.subjects[id]||0),0);
-  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.generated?'（生成）':'（已给定）'} · 性别：${escapeHtml(p.gender||'未设置')} · 六科 ${Math.round(total*100)/100}/750</summary><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
+  return `<details class="class-student"><summary>${escapeHtml(p.name)}${p.active?'（当前人物）':p.npc_id?'（剧情 NPC）':p.generated?'（生成）':'（已给定）'} · 性别：${escapeHtml(p.gender||'未设置')} · 六科 ${Math.round(total*100)/100}/750</summary><p>所属班级：${c.id}班 · ${c.combo}${c.level}${p.npc_id?` <button class="ghost-button" data-campus-npc="${p.npc_id}">查看${escapeHtml(p.name)}资料</button>`:''}</p><p>${CAMPUS_SUBJECTS.map(([id,label])=>`${label} ${p.subjects[id]??0}/${campusMax(id)}`).join(' · ')}</p><p>${[['insight','学力'],['stamina','体质'],['mindset','心态'],['charm','魅力']].map(([id,label])=>`${label} ${p.attrs[id]}/100`).join(' · ')}</p></details>`;
 }
 function campusTransfer(id){
   if(!game||game.completed||modalLocked)return;
@@ -99,6 +140,7 @@ function campusValidate(g){
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b||b.disabled)return;
+  if(b.dataset.campusNpc)campusShowNpc(b.dataset.campusNpc);
   if(b.dataset.roster)campusDraft(b.dataset.roster);
   if(b.hasAttribute('data-custom-role')){draft={name:'',attrs:{...PRESETS.balanced},preset:'balanced',stage:'high1',track:'science'};renderLanding();}
   if(b.hasAttribute('data-campus-classes'))campusShowClasses();
