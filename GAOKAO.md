@@ -32,3 +32,9 @@
 ```powershell
 node --test --test-isolation=none tests/test_game_rules.cjs tests/test_game_ui.cjs tests/test_unified_game.cjs tests/test_learning.cjs
 ```
+
+## v52 再选科成绩展示与计分
+
+语文、数学、英语及首选物理／历史使用原始分。化学、生物、政治、地理四门均列出卷面分和 A—E 模拟赋分；选中的两科按赋分计入六科总分，未选两科仅作对照，不计入总分。赋分按约 15/35/35/13/2% 的等级比例，在 86—100、71—85、56—70、41—55、30—40 区间线性换算。成绩页使用“2025 参考位次”等中性文案，不显示省份名称。
+
+游戏没有四门科目的真实考生逐科原始分分布，因此等级区间以本局模拟考生分数确定；这不是对真实考生的精确赋分。已有结算存档保持原分数。规则依据：[等级赋分办法](https://www.haeea.cn/a/202402/43269_69d1d830.shtml)，[2025 年新高考政策问答](https://www.haeea.cn/attach/file/20250526/20250526151948_0983_74fe03ee.pdf)。
